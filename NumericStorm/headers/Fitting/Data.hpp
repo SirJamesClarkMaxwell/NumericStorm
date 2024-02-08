@@ -4,7 +4,7 @@
 #include "Fitting.hpp"
 namespace NumericStorm 
 {
-namespace 
+namespace Fitting
 {
 class Data 
 {
