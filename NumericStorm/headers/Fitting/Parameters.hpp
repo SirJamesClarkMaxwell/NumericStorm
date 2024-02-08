@@ -28,13 +28,17 @@ public:
 
 
 protected: 
-	bool setModel() {}; //<- add argumetns
-	bool setErrorModel() {}; //<- add argumetns
+	inline void setModel(Model modeToSet) 
+		{ m_model = modelToSet; m_modelSet = true; }; 
+	inline void setErrorModel(ErrorModel errorModelToSet) 
+		{ m_errorModel = errorModelToSetl; m_ErrorModelSet = true; }; 
+
+protected:
 	std::array<double, size_p> m_parameters;
 	double m_error;
-	auto m_additionalArguments; // <- change to additionalArgumetns
-	auto m_model;// <- change to model
-	auto m_errorModel;// <- change to errorModel
+	AdditionalParameters& m_additionalParameters; 
+	Model& m_model;
+	ErrorModel& m_erorModel;
 	bool m_ModelSet;
 	bool m_ErrorModelSet;
 
