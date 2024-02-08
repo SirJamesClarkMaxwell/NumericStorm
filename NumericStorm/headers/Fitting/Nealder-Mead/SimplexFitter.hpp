@@ -6,11 +6,15 @@ namespace NumericStorm
 {
 namespace Fitting 
 {
-
-class SimpelxFitter :public Fitter 
+template<size_t size_p>
+class SimplexFitter :public Fitter<size_p>
 {
 
 public:
+	SimpelexFitter() = default;
+	~SimplexFitter() {};
+protected:
+	SimplexFigure<size_p + 1> m_simplexFigure;
 
 };
 }
