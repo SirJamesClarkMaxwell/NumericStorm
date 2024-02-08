@@ -6,6 +6,7 @@
 #include <memory>
 #include <functional>
 
+
 #include "./Fitting/Fitter.hpp"
 #include "./Fitting/Parameters.hpp"
 #include "./Fitting/Data.hpp"
@@ -19,3 +20,5 @@
 
 
 #include "./Fitting/Nealder-Mead/SimplexFitter.hpp"
+#include "./Fitting/Nealder-Mead/SimplexFigure.hpp"
+#include "./Fitting/Nealder-Mead/SimplexPoint.hpp"
