@@ -12,3 +12,6 @@
 #include "./Fitting/Model.hpp"
 #include "./Fitting/AdditionalParameters.hpp"
 #include "./Fitting/ErrorModel.hpp"
+
+#include "./Fitting/Exeptions/NoModelSetExeption.hpp"
+#include "./Fitting/Exeptions/NoModelSetExeption.hpp"
