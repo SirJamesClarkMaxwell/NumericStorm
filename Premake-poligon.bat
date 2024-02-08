@@ -1,10 +1,10 @@
 @echo off
 
 REM Set the path to the directory containing Premake5 executable
-set PREMAKE_DIR=D:\programming\numerical\NumericStorm
+set PREMAKE_DIR=E:\Programing\C++\NumericStorm-library
 
 REM Set the path to the directory containing your main project Premake5 script
-set PROJECT_DIR=D:\programming\numerical\NumericStorm
+set PROJECT_DIR=E:\Programing\C++\NumericStorm-library
 
 REM Debug: Print directory paths
 echo "Premake Directory: %PREMAKE_DIR%"
