@@ -6,7 +6,9 @@ project "NumericStorm"
     -- Source files
     files { 
         "src/*.cpp",
+        "src/Fitting/*.cpp",
         "headers/*.hpp",
+        "headers/Fitting/*.hpp"
          }
 
     -- Header files
