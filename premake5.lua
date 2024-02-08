@@ -23,7 +23,7 @@ project "App"
     includedirs { 
         "./NumericStorm/headers/",
         "include",
-        "headers"
+        "headers "
 
     }
     targetdir ("bin/%{cfg.buildcfg}") 
