@@ -1,119 +1,89 @@
 #pragma once
 #include "../Parameters.hpp"
+#include <concepts>
+#include <type_traits>
 
 namespace NumericStorm 
 {
 namespace Fitting 
 {
-template< size_t size_p>
-class SimplexPoint :public Parameters <size_p>
-{
-public:
-	SimplexPoint() = default;
-	SimplexPoint(std::array<double, size_p> parameters)
-		:Parameters<size_p>(parameters) {};
-	double& operator[](int index)
-	{
-		if (index >= size_p) { return this->m_parameters[0]; }
-		return this->m_parameters[index];
-	}
-	const double& operator[](int index) const
-	{
-		if (index >= size_p) { return this->m_parameters[0]; }
-		return this->m_parameters[index];
-	}
 
-	bool operator ==(const Parameters<size_p>& other) const
-	{
-		return this->m_parameters == other.getParameters();
-	}
 
-	bool operator ==(const std::array<double, size_p>& other) const
-	{
-		return this->m_parameters == other;
-	}
-	Parameters<size_p>& operator = (const Parameters<size_p>& other)
-	{
-		if (this == &other)
-			return *this;
-		this->m_parameters = other.getParameters();
-		return *this;
-	}
-	Parameters<size_p>& operator += (const Parameters<size_p>& other)
-	{
-		for (size_t i = 0; i < size_p; i++)
-			this->m_parameters[i] += other[i];
-		return *this;
-	}
+    template <std::size_t parameter_size>
+    class SimplexPoint : public Parameters<parameter_size> {
+    public:
+        using Parameters<parameter_size>::m_parameters; 
 
-	template <typename T>
-		requires (std::is_arithmetic_v<T>)
-	Parameters<size_p>& operator += (const T& other)
-	{
-		for (size_t i = 0; i < size_p; i++)
-			this->m_parameters[i] += other;
-		return *this;
-	}
-	
-	Parameters<size_p>& operator -= (const Parameters<size_p>& other)
-	{
-		for (size_t i = 0; i < size_p; i++)
-			this->m_parameters[i] -= other[i];
-		return *this;
-	};
+        SimplexPoint() = default;
+        SimplexPoint(std::array<double, parameter_size> parameters)
+            : Parameters<parameter_size>(parameters) {};
 
-	template <typename T>
-		requires (std::is_arithmetic_v<T>)
-	Parameters<size_p>& operator -= (const T& other)
-	{
-		for (size_t i = 0; i < size_p; i++)
-			this->m_parameters[i] -= other;
-		return *this;
-	};
-	Parameters<size_p>& operator *= (const auto& other)
-	{
-		for (size_t i = 0; i < size_p; i++)
-			this->m_parameters[i] *= other;
-		return *this;
-	};
-	Parameters<size_p>& operator /= (const auto& other)
-	{
-		for (size_t i = 0; i < size_p; i++)
-			this->m_parameters[i] /= other;
-		return *this;
-	};
+        // Operator overloads
+        double& operator[](int index) {
+            return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
+        }
 
-	Parameters<size_p> operator + (const Parameters<size_p>& other) const
-	{
-		auto result = *this;
-		result += other;
-		return result;
-	};
-	Parameters<size_p> operator - (const Parameters<size_p>& other)const
-	{
-		auto result = *this;
-		result -= other;
-		return result;
-	};
+        const double& operator[](int index) const {
+            return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
+        }
 
-	inline Parameters<size_p> operator + (const auto& other) const
-	{
-		auto result = *this; result += other; return result;
-	};
-	inline Parameters<size_p> operator - (const auto& other) const
-	{
-		auto result = *this; result -= other; return result;
-	};
-	inline Parameters<size_p> operator * (const auto& other) const
-	{
-		auto result = *this; result *= other; return result;
-	};
-	inline Parameters<size_p> operator / (const auto& other) const
-	{
-		auto result = *this; result /= other; return result;
-	};
+        bool operator==(const Parameters<parameter_size>& other) const { return 
+            m_parameters == other.getParameters(); }
+        bool operator==(const std::array<double, parameter_size>& other) const {
+            return m_parameters == other;
+        };
+        SimplexPoint<parameter_size>& operator=(const Parameters<parameter_size>& other) {
+            if (this != &other)
+                m_parameters = other.getParameters();
+            return *this;
+        }
 
-};
+        SimplexPoint<parameter_size>& operator+=(const Parameters<parameter_size>& other) {
+            for (int i = 0; i < parameter_size; ++i)
+                m_parameters[i] += other[i];
+            return *this;
+        }
+        SimplexPoint<parameter_size>& operator-=(const Parameters<parameter_size>& other) {
+            for (int i = 0; i < parameter_size; ++i)
+                m_parameters[i] -= other[i];
+            return *this;
+        }
+        SimplexPoint<parameter_size>& operator*=(const auto& other) {
+            for (std::size_t i = 0; i < parameter_size; ++i)
+                m_parameters[i] *= other;
+            return *this;
+        }
+        SimplexPoint<parameter_size>& operator/=(const auto& other) {
+            for (std::size_t i = 0; i < parameter_size; ++i)
+                m_parameters[i] /= other;
+            return *this;
+        }
+
+        SimplexPoint<parameter_size>& operator+(const Parameters<parameter_size>& other) const {
+            SimplexPoint result = *this;
+            result += other;
+            return result;
+        }
+        SimplexPoint<parameter_size>& operator-(const Parameters<parameter_size>& other) const {
+            SimplexPoint result = *this;
+            result -= other;
+            return result;
+        }
+        SimplexPoint<parameter_size>& operator*(const auto& other) const {
+            SimplexPoint result = *this;
+            result *= other;
+            return result;
+        }
+        SimplexPoint<parameter_size>& operator/(const auto& other) const {
+            SimplexPoint result = *this;
+            result /= other;
+            return result;
+        }
+
+    private:
+        // Helper functions can be added here if needed
+    };
+
 
 
 }
