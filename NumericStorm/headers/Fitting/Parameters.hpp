@@ -2,7 +2,10 @@
 #include <array>
 #include <iostream>
 #include <stdexcept>
-#include "Fitting.hpp"
+#include "Data.hpp"
+#include "Model.hpp"
+#include "ErrorModel.hpp"
+#include "AdditionalParameters.hpp"
 
 namespace NumericStorm {
 namespace Fitting {

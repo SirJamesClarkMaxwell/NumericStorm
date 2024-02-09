@@ -1,5 +1,6 @@
 #pragma once
-
+#include "FitterSettings.hpp"
+#include "Parameters.hpp"
 namespace NumericStorm 
 {
 namespace Fitting 
