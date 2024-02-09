@@ -8,16 +8,16 @@
 namespace NumericStorm {
 namespace Fitting {
 
-template <size_t size_p>
+template <size_t parameter_size>
 class Model {
 public:
     Model() = default;
     virtual ~Model() {};
-    virtual Data& operator()(const Parameters<size_p>& parameters,
+    virtual Data& operator()(const Parameters<parameter_size>& parameters,
         const AdditionalParameters& additionalParameters) = 0;
 
 protected:
-    std::function<Data& (const Parameters<size_p>& parameters,
+    std::function<Data& (const Parameters<parameter_size>& parameters,
         const AdditionalParameters& additionalParameters)> m_model;
 };
 }

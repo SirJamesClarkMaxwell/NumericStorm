@@ -32,8 +32,6 @@ public:
 	{
 		return this->m_parameters == other;
 	}
-
-	template<typename T_o>
 	Parameters<size_p>& operator = (const Parameters<size_p>& other)
 	{
 		if (this == &other)
@@ -41,8 +39,6 @@ public:
 		this->m_parameters = other.getParameters();
 		return *this;
 	}
-
-	template<typename T_o>
 	Parameters<size_p>& operator += (const Parameters<size_p>& other)
 	{
 		for (size_t i = 0; i < size_p; i++)

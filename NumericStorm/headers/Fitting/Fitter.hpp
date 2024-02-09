@@ -5,18 +5,18 @@ namespace NumericStorm
 {
 namespace Fitting 
 {
-template<size_t size_p>
+template<size_t parameter_size>
 class Fitter
 {
 public:
-	Fitter <size_p>() = default;
-	virtual Parameters<size_p>* getFittedParameters() = 0;
+	Fitter() {};// = default;
+	virtual Parameters<parameter_size>* getFittedParameters() = 0;
 	virtual void minimize() = 0;
-	virtual void setUp(FitterSettings<size_p>* fitterSettings) = 0;
+	virtual void setUp(FitterSettings<parameter_size>* fitterSettings) = 0;
 protected:
-	Parameters<size_p>* m_fittedParamters;
-	Parameters<size_p>* m_proposedParameters;
-	FitterSettings<size_p>* m_fitterSettings;
+	Parameters<parameter_size>* m_fittedParamters;
+	Parameters<parameter_size>* m_proposedParameters;
+	FitterSettings<parameter_size>* m_fitterSettings;
 
 };
 
