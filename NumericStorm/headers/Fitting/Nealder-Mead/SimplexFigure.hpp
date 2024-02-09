@@ -8,7 +8,8 @@ template<size_t s_f>
 class SimplexFigure {
 public:
     SimplexFigure<s_f>() = default;
-    SimplexFigure<s_f>() {}; // This constructor needs an implementation
+    SimplexFigure<s_f>(std::array<SimplexPoint<s_f-1>,s_f> points)
+    :m_points(points){}; // This constructor needs an implementation
     void sort(bool reverse = true) 
     {
         std::sort(m_points.begin(), m_points.end());
