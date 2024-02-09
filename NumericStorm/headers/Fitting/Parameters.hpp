@@ -10,6 +10,9 @@
 namespace NumericStorm {
 namespace Fitting {
 
+    template <size_t parameter_size>
+    class Model;
+
 template <size_t parameter_size>
 class Parameters {
 public:
@@ -29,7 +32,7 @@ protected:
     std::array<double, parameter_size> m_parameters;
     double m_error;
     AdditionalParameters m_additionalParameters;
-    Model<parameter_size>* m_model;
+    std::unique_ptr<Model<parameter_size>> m_model;
     ErrorModel* m_errorModel;
     bool m_ModelSet;
     bool m_ErrorModelSet;

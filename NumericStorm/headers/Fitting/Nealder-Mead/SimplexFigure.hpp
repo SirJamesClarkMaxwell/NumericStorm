@@ -1,5 +1,5 @@
 #pragma once
-#include "Fitting.hpp"
+#include "SimplexPoint.hpp"
 
 
 namespace NumericStorm {
