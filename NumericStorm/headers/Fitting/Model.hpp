@@ -12,7 +12,7 @@ template <size_t parameter_size>
 class Model {
 public:
     Model() = default;
-    virtual ~Model() {};
+    virtual ~Model() = 0;
     virtual Data& operator()(const Parameters<parameter_size>& parameters,
         const AdditionalParameters& additionalParameters) = 0;
 

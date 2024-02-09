@@ -10,6 +10,9 @@
 namespace NumericStorm {
 namespace Fitting {
 
+    template <size_t parameter_size>
+    class Model;
+
 template <size_t parameter_size>
 class Parameters {
 public:
