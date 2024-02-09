@@ -4,12 +4,12 @@
 
 namespace NumericStorm {
 namespace Fitting {
-template<size_t s_f>
+template<size_t figure_size>
 class SimplexFigure {
 public:
-    SimplexFigure<s_f>() = default;
-    SimplexFigure<s_f>(std::array<SimplexPoint<s_f-1>,s_f> points)
-    :m_points(points){}; // This constructor needs an implementation
+    SimplexFigure() = default;
+    SimplexFigure(std::array<SimplexPoint<figure_size-1>,figure_size> points)
+    :m_points(points){};
     void sort(bool reverse = true) 
     {
         std::sort(m_points.begin(), m_points.end());
@@ -17,8 +17,8 @@ public:
             std::reverse(m_points.begin(), m_points.end());
     }
 protected:
-    std::array<SimplexPoint<s_f - 1>, s_f> m_points;
-    SimplexPoint<s_f - 1> m_proposalPoint;
+    std::array<SimplexPoint<figure_size - 1>, figure_size> m_points;
+    SimplexPoint<figure_size - 1> m_proposalPoint;
 };
 }
 }
