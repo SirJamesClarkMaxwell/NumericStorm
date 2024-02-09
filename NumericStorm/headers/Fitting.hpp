@@ -16,8 +16,8 @@
 #include "./Fitting/ErrorModel.hpp"
 #include "./Fitting/FitterSettings.hpp"
 
-#include "./Fitting/Exeptions/NoSetErrorModelExeption.hpp"
-#include "./Fitting/Exeptions/NoSetModelExeption.hpp"
+#include "./Fitting/Exceptions/NoSetErrorModelExeption.hpp"
+#include "./Fitting/Exceptions/NoSetModelExeption.hpp"
 
 
 #include "./Fitting/Nealder-Mead/SimplexFitter.hpp"
