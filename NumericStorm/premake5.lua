@@ -8,7 +8,9 @@ project "NumericStorm"
         "src/*.cpp",
         "src/Fitting/*.cpp",
         "headers/*.hpp",
-        "headers/Fitting/*.hpp"
+        "headers/Fitting/*.hpp",
+        "headers/Fitting/Exceptions/*.hpp",
+        "headers/Fitting/Nealder-Mead/*.hpp"
          }
 
     -- Header files
