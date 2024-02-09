@@ -1,5 +1,5 @@
 #pragma once
-#include "Fitting.hpp" 
+#include "../Parameters.hpp"
 
 namespace NumericStorm 
 {
@@ -11,7 +11,7 @@ class SimplexPoint :public Parameters <size_p>
 public:
 	SimplexPoint() = default;
 	SimplexPoint(std::array<double, size_p> parameters)
-		:Paramters<size_p>(parameters) {};
+		:Parameters<size_p>(parameters) {};
 	double& operator[](int index)
 	{
 		if (index >= size_p) { return this->m_parameters[0]; }
@@ -58,7 +58,7 @@ public:
 			this->m_parameters[i] += other;
 		return *this;
 	}
-	template<typename T_o>
+	
 	Parameters<size_p>& operator -= (const Parameters<size_p>& other)
 	{
 		for (size_t i = 0; i < size_p; i++)
@@ -87,14 +87,12 @@ public:
 		return *this;
 	};
 
-	template<typename T_o>
 	Parameters<size_p> operator + (const Parameters<size_p>& other) const
 	{
 		auto result = *this;
 		result += other;
 		return result;
 	};
-	template<typename T_o>
 	Parameters<size_p> operator - (const Parameters<size_p>& other)const
 	{
 		auto result = *this;
