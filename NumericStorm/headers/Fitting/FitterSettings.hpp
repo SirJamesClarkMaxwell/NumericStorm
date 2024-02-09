@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Fitting.hpp"
+#include "Model.hpp"
+#include "ErrorModel.hpp"
 
 namespace NumericStorm 
 {
