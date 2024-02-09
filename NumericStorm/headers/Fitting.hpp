@@ -5,6 +5,7 @@
 #include <array>
 #include <memory>
 #include <functional>
+#include <algorithm>
 
 
 #include "./Fitting/Fitter.hpp"
