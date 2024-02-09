@@ -11,12 +11,12 @@ class Model
 {
 public:
 	Model() = default;
-	Model() {}
-	virtual Data& operator (const Parameters<size_p>& parameters,
-		const AdditionalParameters& additionalParameters) = 0;
+	Model() {};
+	virtual Data& operator() (const Parameters<size_p>& parameters,
+		const AdditionalParameters* additionalParameters) = 0;
 protected:
-	std::function< Data& (const Parameters<size_p>& parameters,
-		const AdditionalParameters& additionalParameters) m_model;
+	std::function< Data* (const Parameters<size_p>* parameters,
+		const AdditionalParameters* additionalParameters)> m_model;
 
 };
 }

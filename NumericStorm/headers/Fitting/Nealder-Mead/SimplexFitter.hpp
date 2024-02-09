@@ -11,8 +11,8 @@ class SimplexFitter :public Fitter<size_p>
 {
 
 public:
-	SimpelexFitter() = default;
-	~SimplexFitter() {};
+	SimpelexFitter<size_p>() = default;
+	~SimplexFitter<size_p>() {};
 protected:
 	SimplexFigure<size_p + 1> m_simplexFigure;
 
