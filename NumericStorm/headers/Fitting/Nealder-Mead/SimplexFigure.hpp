@@ -38,7 +38,7 @@ SimplexPoint<figure_size - 1> SimplexFigure<figure_size>::calculateCentroid()
 		auto& toReturn = sum / (figure_size - 1);
 		return toReturn;
 	#endif
-	return std::accumulate(m_points.begin(),m_points.end(),0) / (figure_size - 1)
+		return std::accumulate(m_points.begin(), m_points.end(), 0) / (figure_size - 1);
 }
 }
 }
