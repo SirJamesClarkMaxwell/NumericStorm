@@ -12,7 +12,7 @@ public:
 	SimplexFigure(std::array<SimplexPoint<figure_size - 1>,figure_size> points)
 	:m_points(points)
 	{m_centroid = calculateCentroid();};
-
+	std::array<SimplexPoint<figure_size - 1>, figure_size> getPoints() { return m_points; }
 	void sort(bool reverse = true);
 	SimplexPoint<figure_size - 1> getCentroid() { return m_centroid; }
 protected:
