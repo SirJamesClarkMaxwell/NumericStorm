@@ -32,6 +32,8 @@ namespace Fitting
 		bool operator==(const std::array<double, parameter_size>& other) const {
 			return m_parameters == other;
 		};
+		bool operator <=> (const Parameters<parameter_size>& other) const 
+			{return m_error <=> other.m_error;}
 		SimplexPoint<parameter_size>& operator=(const Parameters<parameter_size>& other) {
 			if (this != &other)
 				m_parameters = other.getParameters();
