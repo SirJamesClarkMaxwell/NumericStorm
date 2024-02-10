@@ -20,22 +20,21 @@ private:
 template<size_t figure_size>
 SimplexFigure<figure_size> Contraction<figure_size>::operation(SimplexOperationArguments argumetns)
 {
-	m_simplexFigure.sort();
 	SimplexFigure<figure_size> contractedFigure(m_simplexFigure);
 	SimplexPoint<figure_size - 1> pointToContraction = decidePointToContraction();
-	SimplexPoint<figure_size - 1> contractedPoint(m_simplexFigure.getCentroid());
+	SimplexPoint<figure_size - 1> pointToContractArround; (contractedFigure.getCentroid());
 	double factor = argumetns.getFactor();
 
 	#if DEBUG
-	auto difference = (pointToContraction - m_simplexFigure.getCentroid());
+	auto difference = (pointToContraction - contractedFigure.getCentroid());
 	auto multiplication = difference * factor;
-	contractedPoint += multiplication;
+	pointToContractArround += multiplication;
 	#endif
 	#if REALESE
-	contractedPoint += (pointToContraction - m_simplexFigure.getCentroid()) * factor;
+	pointToContractArround += (pointToContraction - m_simplexFigure.getCentroid()) * factor;
 	#endif
 	
-	contractedFigure[0] = contractedPoint;
+	contractedFigure[0] = pointToContractArround;
 
 	return contractedFigure;
 }
@@ -43,7 +42,7 @@ SimplexFigure<figure_size> Contraction<figure_size>::operation(SimplexOperationA
 template<size_t figure_size>
 SimplexPoint<figure_size - 1> Contraction<figure_size>::decidePointToContraction(SimplexPoint<figure_size-1> reflectedPoint)
 {
-	return reflectedPoint? reflectedPoint <= m_simplexFigure[0]: m_simplexFigure[0]
+	return reflectedPoint ? reflectedPoint <= m_simplexFigure[0] : m_simplexFigure[0];
 }
 
 }

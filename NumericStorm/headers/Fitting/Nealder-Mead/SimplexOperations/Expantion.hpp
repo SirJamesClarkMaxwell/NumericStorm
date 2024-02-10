@@ -20,20 +20,20 @@ template<size_t figure_size>
 SimplexFigure<figure_size> Expantion<figure_size>::operation(SimplexOperationArguments arguments)
 {
 	SimplexFigure<figure_size> expandedFigure(m_simplexFigure);
-	expandedFigure.sort();
+
 	SimplexPoint<figue_size - 1> reflectedPoint = arguments.reflectedPoint;
-	SimplexPoint<figure_size - 1> expandedPoint;
+	SimplexPoint<figure_size - 1> pointToExpandAround(expandedFigure.getCentroid());
 
 	#if DEBUG
-	auto centroid = m_simplexFigure.getCentroid();
+	auto centroid = expandedFigure.getCentroid();
 	auto difference = reflectedPoint - centroid;
 	auto multipled = difference * arguments.getFactor();
-	expandedPoint = centroid + multipled;
+	pointToExpandAround += multipled;
 
 	#else if REALESE
-	expandedPoint = centroid + (reflectedPoint - centroid) * arguments.getFactor();
+	pointToExpandAround += (reflectedPoint - centroid) * arguments.getFactor();
 	#endif
-	expandedFigure[0] = expandedPoint;
+	expandedFigure[0] = pointToExpandAround;
 	return expandedFigure;
 }
 
