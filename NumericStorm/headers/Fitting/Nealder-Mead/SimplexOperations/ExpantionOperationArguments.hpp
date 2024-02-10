@@ -1,6 +1,6 @@
 #pragma once
 #include "SimplexOperationArguments.hpp"
-#include "SimplexPoint.hpp"
+#include "../SimplexPoint.hpp"
 namespace NumericStorm {
 namespace Fitting {
 template<size_t point_dimention>
