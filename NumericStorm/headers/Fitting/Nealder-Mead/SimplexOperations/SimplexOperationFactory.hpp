@@ -2,7 +2,7 @@
 #include <unordered_map>
 #include <string>
 #include "ISimplexOperation.hpp"
-#include "SimplexOperationArgument.hpp"
+#include "SimplexOperationArguments.hpp"
 namespace NumericStorm
 {
 namespace Fitting
