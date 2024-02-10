@@ -1,5 +1,5 @@
 
-#include "SimplexFigure.hpp"
+#include "../SimplexFigure.hpp"
 #include "SimplexOperationArguments.hpp"
 namespace NumericStorm
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include "SimplexOperationArguments.hpp"
-#include "SimplexFigure.hpp"
+#include "../SimplexFigure.hpp"
 namespace NumericStorm 
 {
 namespace Fitting 

@@ -1,7 +1,7 @@
 #pragma once
 #include "ISimplexOperation.hpp"
 #include "SimplexOperationArguments.hpp"
-#include "SimplexFigure.hpp"
+#include "../SimplexFigure.hpp"
 namespace NumericStorm 
 {
 namespace Fitting 
@@ -19,19 +19,22 @@ public:
 template<size_t figure_size>
 SimplexFigure<figure_size> Expantion<figure_size>::operation(SimplexOperationArguments arguments)
 {
+	SimplexFigure<figure_size> expandedFigure(m_simplexFigure);
+	expandedFigure.sort();
 	SimplexPoint<figue_size - 1> reflectedPoint = arguments.reflectedPoint;
 	SimplexPoint<figure_size - 1> expandedPoint;
+
 	#if DEBUG
 	auto centroid = m_simplexFigure.getCentroid();
 	auto difference = reflectedPoint - centroid;
 	auto multipled = difference * arguments.getFactor();
 	expandedPoint = centroid + multipled;
-	#endif
-	#if REALESE
-	expandedPoint = centroid + (reflectedPoint - centroid) * arguments.getFactor()
-	#endif
 
-	return expandedPoint;
+	#else if REALESE
+	expandedPoint = centroid + (reflectedPoint - centroid) * arguments.getFactor();
+	#endif
+	expandedFigure[0] = expandedPoint;
+	return expandedFigure;
 }
 
 }
