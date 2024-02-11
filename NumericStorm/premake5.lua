@@ -10,7 +10,8 @@ project "NumericStorm"
         "headers/*.hpp",
         "headers/Fitting/*.hpp",
         "headers/Fitting/Exceptions/*.hpp",
-        "headers/Fitting/Nealder-Mead/*.hpp"
+        "headers/Fitting/Nealder-Mead/*.hpp",
+        "headers/Fitting/Nealer-Mead/SimplexOperations/*.hpp"
          }
 
     -- Header files
