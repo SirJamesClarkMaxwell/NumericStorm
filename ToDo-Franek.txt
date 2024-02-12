@@ -1,2 +1,6 @@
 
-1. change operation to () overloading in SimplexOperation
+-) write BasicSimplexFitter minimize implementation
+-) add basic ErrorModel functions
+-) add simulated annealing abstraction
+-) add concreate simulated annealing technique
+-) add SimulatedAnnealingSimplexFitter 
