@@ -13,11 +13,11 @@ class Expantion :public ISimplexOperation<figure_size>
 public:
 	Expantion(const std::string& name = "Expantion", SimplexFigure<figure_size> simplexFigure)
 		:m_operationName(name), m_simplexFigure(simplexFigure) {};
-	SimplexFigure<figure_size> operation(const SimplexOperationArguments& arguments)override;
+	SimplexFigure<figure_size> operator()(const SimplexOperationArguments& arguments)override;
 };
 
 template<size_t figure_size>
-SimplexFigure<figure_size> Expantion<figure_size>::operation(const SimplexOperationArguments& arguments)
+SimplexFigure<figure_size> Expantion<figure_size>::operator()(const SimplexOperationArguments& arguments)
 {
 	SimplexFigure<figure_size> expandedFigure(m_simplexFigure);
 
