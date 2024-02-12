@@ -12,13 +12,13 @@ class Contraction :public ISimplexOperation<figure_size>
 public:
 	Contraction(const std::string& name,const SimplexFigure<figure_size> simplexFigure)
 		:m_operationName(name),m_simplexFigure(simplexFigure){};
-	SimplexFigure<figure_size> operation(const SimplexOperationArguments& argumetns) override;
+	SimplexFigure<figure_size> operator ()(const SimplexOperationArguments& argumetns) override;
 private:
 	SimplexPoint<figure_size - 1> decidePointToContraction(SimplexPoint<figure_size-1> reflectedPoint);
 };
 
 template<size_t figure_size>
-SimplexFigure<figure_size> Contraction<figure_size>::operation(const SimplexOperationArguments& argumetns)
+SimplexFigure<figure_size> Contraction<figure_size>::operator()(const SimplexOperationArguments& argumetns)
 {
 	SimplexFigure<figure_size> contractedFigure(m_simplexFigure);
 	SimplexPoint<figure_size - 1> pointToContraction = decidePointToContraction();

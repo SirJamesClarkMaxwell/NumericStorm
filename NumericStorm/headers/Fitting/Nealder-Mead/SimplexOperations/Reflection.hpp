@@ -13,12 +13,12 @@ public:
 		const SimplexFigure<figure_size>& simplexFigure)
 		:ISimplexOperation<figure_size>(name, simplexFigure) {};
 
-	SimplexFigure<figure_size> operation  (const SimplexOperationArguments& arguments) override;
+	SimplexFigure<figure_size> operator()  (const SimplexOperationArguments& arguments) override;
 
 };
 
 template<size_t figure_size>
-SimplexFigure<figure_size> Reflection<figure_size>::operation (const SimplexOperationArguments& arguments)
+SimplexFigure<figure_size> Reflection<figure_size>::operator() (const SimplexOperationArguments& arguments)
 {
 	SimplexFigure<figure_size> reflectedFigure(m_simplexFigure);
 	
