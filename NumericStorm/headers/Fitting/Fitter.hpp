@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include "FitterSettings.hpp"
 #include "Parameters.hpp"
 namespace NumericStorm 
@@ -17,6 +17,8 @@ protected:
 	Parameters<parameter_size>* m_fittedParamters;
 	Parameters<parameter_size>* m_proposedParameters;
 	FitterSettings<parameter_size>* m_fitterSettings;
+	Model<parameters_size>* m_model;
+	ErrorModel* m_errorModel;
 
 };
 
