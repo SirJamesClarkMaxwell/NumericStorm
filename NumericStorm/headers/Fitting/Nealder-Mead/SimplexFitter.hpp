@@ -1,6 +1,10 @@
 #pragma once
 
-#include "Fitting.hpp"
+#include "SimplexFigure.hpp"
+#include "SimplexPoint.hpp"
+#include "../Model.hpp"
+#include "../ErrorModel.hpp"
+
 
 namespace NumericStorm 
 {
@@ -16,6 +20,7 @@ public:
 	~SimplexFitter() {};
 protected:
 	SimplexFigure<parameter_size + 1> m_simplexFigure;
+
 
 };
 }
