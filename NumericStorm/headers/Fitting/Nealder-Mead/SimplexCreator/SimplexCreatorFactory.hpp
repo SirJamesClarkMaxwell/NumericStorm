@@ -40,7 +40,7 @@ void SimplexCreatorFactory<figure_size>::unRegisterFactory(std::string name)
 	{m_avliableFactories.erase(name); };
 
 template<size_t figure_size>
-SimplexFigure<figure_size> SimplexCreatorFactory<figure_size>::createNewSimplex(std::string name, SimplexPoint<figure_size-1> basedPoint)
+SimplexFigure<figure_size>SimplexCreatorFactory<figure_size>::createNewSimplex(std::string name, SimplexPoint<figure_size-1> basedPoint)
 {
 	ISimplexFactory factory = m_avliableFactories[name];
 	return factory(basedPoint);
