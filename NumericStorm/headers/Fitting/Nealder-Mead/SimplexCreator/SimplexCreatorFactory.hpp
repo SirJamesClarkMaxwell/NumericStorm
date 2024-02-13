@@ -16,23 +16,23 @@ struct SimplexUpdateFactory
 
 };
 
-
 template<size_t figure_size>
 class SimplexCreatorFactory 
 {
+using ConstructorPointr = std::function<std::unique_ptr<ISimplexFactory<figure_size>>()>;
 public:
 	SimplexCreatorFactory() {};
-	void registerNewFactory(std::string name, ISimplexFactory<figure_size>* factory,SimplexCreatorSettigns settings); 
+	void registerNewFactory(std::string name, ConstructorPointr factory,SimplexCreatorSettigns settings); 
 	void unRegisterFactory(std::string name);
 	SimplexFigure<figure_size> createNewSimplex(std::string name,SimplexPoint<figure_size-1> basedPoint);
 	void updateFactoriesSettings(std::vector<SimplexUpdateFactory> newSetttings);
 private:
-	std::unordered_map<std::string,ISimplexFactory<figure_size>*> m_avliableFactories;
+	std::unordered_map<std::string,ConstructorPointr> m_avliableFactories;
 };
 
 
 template< size_t figure_size>
-void SimplexCreatorFactory<figure_size>::registerNewFactory(std::string name, ISimplexFactory<figure_size>* factory,SimplexCreatorSettigns settings)
+void SimplexCreatorFactory<figure_size>::registerNewFactory(std::string name, ConstructorPointr factory,SimplexCreatorSettigns settings)
 	{m_avliableFactories[name] = factory(settings);};
 
 template<size_t figure_size>
@@ -51,7 +51,7 @@ void SimplexCreatorFactory<figure_size>::updateFactoriesSettings(std::vector<Sim
 {
 	for (auto& item : newSettings)
 	{
-		ISimplexFactory<figure_size>* facotry = m_avliableFactories[item.name]; 
+		ConstructorPointr facotry = m_avliableFactories[item.name]; 
 		factory->updateSettigns(newSettings);
 	}
 };
