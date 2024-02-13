@@ -12,7 +12,7 @@ project "NumericStorm"
         "headers/Fitting/Exceptions/*.hpp",
         "headers/Fitting/Nealder-Mead/*.hpp",
         "headers/Fitting/Nealer-Mead/SimplexOperations/*.hpp"
-         }
+    }
 
     -- Header files
     includedirs { 
