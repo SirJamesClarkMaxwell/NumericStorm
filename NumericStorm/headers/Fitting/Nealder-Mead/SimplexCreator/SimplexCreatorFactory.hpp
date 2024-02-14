@@ -3,6 +3,7 @@
 #include "../SimplexPoint.hpp"
 
 #include "ISimplexFactory.hpp"
+#include "../../Exceptions/NoAvailableFactoryException.hpp"
 
 namespace NumericStorm 
 {
@@ -19,31 +20,36 @@ struct SimplexUpdateFactory
 template<size_t figure_size>
 class SimplexCreatorFactory 
 {
-using ConstructorPointr = std::function<std::unique_ptr<ISimplexFactory<figure_size>>()>;
+//using std::unique_ptr<ISimplexFactory<figure_size>> = std::function<std::unique_ptr<ISimplexFactory<figure_size>>()>;
 public:
 	SimplexCreatorFactory() {};
-	void registerNewFactory(std::string name, ConstructorPointr factory,SimplexCreatorSettigns settings); 
+	void registerNewFactory(std::string name, std::unique_ptr<ISimplexFactory<figure_size>> factory,SimplexCreatorSettigns settings); 
 	void unRegisterFactory(std::string name);
 	SimplexFigure<figure_size> createNewSimplex(std::string name,SimplexPoint<figure_size-1> basedPoint);
 	void updateFactoriesSettings(std::vector<SimplexUpdateFactory> newSetttings);
 private:
-	std::unordered_map<std::string,ConstructorPointr> m_avliableFactories;
+	std::unordered_map<std::string,std::unique_ptr<ISimplexFactory<figure_size>>> m_avliableFactories;
+	bool checkInAvliable(std::string name);
 };
 
 
 template< size_t figure_size>
-void SimplexCreatorFactory<figure_size>::registerNewFactory(std::string name, ConstructorPointr factory,SimplexCreatorSettigns settings)
+void SimplexCreatorFactory<figure_size>::registerNewFactory(std::string name, std::unique_ptr<ISimplexFactory<figure_size>> factory,SimplexCreatorSettigns settings)
 	{m_avliableFactories[name] = factory(settings);};
 
 template<size_t figure_size>
 void SimplexCreatorFactory<figure_size>::unRegisterFactory(std::string name)
-	{m_avliableFactories.erase(name); };
+{
+	if (checkInAvliable(name))
+		m_avliableFactories.erase(name);
+	else
+		continue;
+};
 
 template<size_t figure_size>
 SimplexFigure<figure_size>SimplexCreatorFactory<figure_size>::createNewSimplex(std::string name, SimplexPoint<figure_size-1> basedPoint)
 {
-	ISimplexFactory factory = m_avliableFactories[name];
-	return factory(basedPoint);
+	if ()
 };
 
 template<size_t figure_size>
@@ -51,10 +57,14 @@ void SimplexCreatorFactory<figure_size>::updateFactoriesSettings(std::vector<Sim
 {
 	for (auto& item : newSettings)
 	{
-		ConstructorPointr facotry = m_avliableFactories[item.name]; 
+		std::unique_ptr<ISimplexFactory<figure_size>> facotry = m_avliableFactories[item.name]; 
 		factory->updateSettigns(newSettings);
 	}
 };
-
+template<size_t figure_size>
+bool SimplexCreatorFactory<figure_size>::checkInAvliable(std::string name) 
+{
+	return m_avliableFactories.find(name) == m_avliableFactories.end();
+};
 }
 }
