@@ -11,7 +11,17 @@ project "NumericStorm"
         "headers/Fitting/*.hpp",
         "headers/Fitting/Exceptions/*.hpp",
         "headers/Fitting/Nealder-Mead/*.hpp",
-        "headers/Fitting/Nealer-Mead/SimplexOperations/*.hpp"
+        "headers/Fitting/Nealer-Mead/SimplexOperations/*.hpp",
+
+
+        "*.cpp",
+        "*.h",
+        "*.hpp",
+        "headers/Fitting",
+        "headers/*.hpp",
+        "headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
+        "headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp",
+        "headers/Fitting/Nealder-Mead/SimplexOperations/*.hpp"
     }
 
     -- Header files

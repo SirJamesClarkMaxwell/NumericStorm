@@ -9,8 +9,9 @@ cppdialect "C++20"
 files {
     "*.cpp",
     "*.h",
-    "*.hpp"
-    }
+    "*.hpp",
+    "../NumericStorm/headers/*.hpp",
+}
 
     libdirs{
         "../vendor/googletest-main/bin/Debug/"}
@@ -24,7 +25,6 @@ files {
         }
     includedirs { 
         "../NumericStorm/headers/",
-        "../NumericStorm/headers/Fitting",
         "../vendor/googletest-main/googletest/include/" ,
         "../vendor/googletest-main/googletest/include/gtest",
         "Fitting Tests"
