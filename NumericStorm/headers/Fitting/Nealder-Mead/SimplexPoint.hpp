@@ -2,6 +2,8 @@
 #include "../Parameters.hpp"
 #include "../Model.hpp"
 #include "../ErrorModel.hpp"
+#include "../Exceptions/NoSetErrorModelExeption.hpp"
+#include "../Exceptions/NoSetModelExeption.hpp"
 
 #include <concepts>
 #include <type_traits>
@@ -19,8 +21,8 @@ class SimplexPoint : {
 public:
 
 		SimplexPoint() = default;
-		SimplexPoint(std::array<double, parameter_size> parameters)
-			: m_parameters(parameters),m_error(-1),m_model(nullptr),m_errorModel(nullptr),m_modelSet(false),m_errorModelSet(false) {};
+		SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParameters additionalParameters)
+			: m_parameters(parameters),m_error(-1),m_model(nullptr),m_errorModel(nullptr),m_modelSet(false),m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
 		std::array<double, parameter_size> getParameters() 
 			{ return m_parameters.getParameters();}
 
@@ -91,19 +93,31 @@ public:
 			return result;
 		}
 
-		void setUp(std::shared_ptr<Model<parameter_size>> dataModel, std::shared_ptr<ErrorModel>errorModel) 
-		{
+		void setUp(std::shared_ptr<Model<parameter_size>> dataModel, std::shared_ptr<ErrorModel>errorModel){
 			setModel(dataModel);
 			setErrorModel(errorModel);
 		}
+
+		void calculateError(const Data& referenceData,const Data& calculatedData){
+			if (m_errorModelSet)
+				m_error = m_errorModel(referenceData, calculatedData);
+			else
+				throw NoSetErrorModelExeption();
+		}
+		Data calculateData() {
+			if (m_modelSet)
+				return m_model(m_parameters, m_additional);
+			else
+				throw NoSetModelExeption();
+		}
+		
 	private:
 		void setModel(std::shared_ptr<Model<parameter_size>> modelToSet) 
 			{m_model = modelToSet; m_modelSet = true;}
 		void setErrorModel(std::shared_ptr<Model<parameter_size>> modelToSet)
-		{
-			m_errorModel = modelToSet; m_errorModelSet = true;
-		}
+			{m_errorModel = modelToSet; m_errorModelSet = true;}
 		Parameters<parameters_size> m_parameters;
+		AdditionalParameters m_additionalParameters; 
 		double m_error;
 		bool m_modelSet;
 		bool m_errorModelSet;
@@ -111,7 +125,7 @@ public:
 		std::shared_ptr<ErrorModel> m_errorModel;
 
 		
-		//TODO add function to calculating data and error model
+		
 
 	};
 
