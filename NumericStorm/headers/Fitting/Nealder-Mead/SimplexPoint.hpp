@@ -20,7 +20,7 @@ public:
 
 		SimplexPoint() = default;
 		SimplexPoint(std::array<double, parameter_size> parameters)
-			: m_parameters(parameters),m_error(-1) {};
+			: m_parameters(parameters),m_error(-1),m_model(nullptr),m_errorModel(nullptr),m_modelSet(false),m_errorModelSet(false) {};
 		std::array<double, parameter_size> getParameters() 
 			{ return m_parameters.getParameters();}
 
@@ -90,17 +90,27 @@ public:
 			result /= other;
 			return result;
 		}
+
+		void setUp(std::shared_ptr<Model<parameter_size>> dataModel, std::shared_ptr<ErrorModel>errorModel) 
+		{
+			setModel(dataModel);
+			setErrorModel(errorModel);
+		}
 	private:
+		void setModel(std::shared_ptr<Model<parameter_size>> modelToSet) 
+			{m_model = modelToSet; m_modelSet = true;}
+		void setErrorModel(std::shared_ptr<Model<parameter_size>> modelToSet)
+		{
+			m_errorModel = modelToSet; m_errorModelSet = true;
+		}
 		Parameters<parameters_size> m_parameters;
 		double m_error;
 		bool m_modelSet;
 		bool m_errorModelSet;
-		std::unique_ptr<Model> m_model;
-		std::unique_ptr<ErrorModel> m_errorModel;
-		//TODO add functions to setting model
-		//TODO add functions to setting error model
-		//TODO initialize bools as false
-		//TODO add setUp function
+		std::shared_ptr<Model<parameter_size>> m_model;
+		std::shared_ptr<ErrorModel> m_errorModel;
+
+		
 		//TODO add function to calculating data and error model
 
 	};
