@@ -24,8 +24,10 @@ files {
         }
     includedirs { 
         "../NumericStorm/headers/",
+        "../NumericStorm/headers/Fitting",
         "../vendor/googletest-main/googletest/include/" ,
-        "../vendor/googletest-main/googletest/include/gtest" 
+        "../vendor/googletest-main/googletest/include/gtest",
+        "Fitting Tests"
         }
     targetdir ("bin/%{cfg.buildcfg}") 
 
