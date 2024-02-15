@@ -17,8 +17,8 @@ protected:
 	Parameters<parameter_size>* m_fittedParamters;
 	Parameters<parameter_size>* m_proposedParameters;
 	FitterSettings<parameter_size>* m_fitterSettings;
-	Model<parameters_size>* m_model;
-	ErrorModel* m_errorModel;
+	std::shared_ptr<Model<parameters_size>> m_model;
+	std::shared_ptr<ErrorModel> m_errorModel;
 
 };
 

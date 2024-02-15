@@ -124,13 +124,6 @@ public:
 		std::shared_ptr<Model<parameter_size>> m_model;
 		std::shared_ptr<ErrorModel> m_errorModel;
 
-		
-		
-
-	};
-
-
-
+};
 }
-
 }
