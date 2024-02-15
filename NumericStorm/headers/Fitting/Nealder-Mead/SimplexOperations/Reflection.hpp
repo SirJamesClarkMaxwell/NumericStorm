@@ -1,6 +1,6 @@
 #pragma once
 #include "ISimplexOperation.hpp"
-#include "SimplexOperationArguments.hpp"
+#include "ReflectionOperationArguments.hpp"
 #include "../SimplexFigure.hpp"
 namespace NumericStorm {
 namespace Fitting 
@@ -13,12 +13,12 @@ public:
 		const SimplexFigure<figure_size>& simplexFigure)
 		:ISimplexOperation<figure_size>(name, simplexFigure) {};
 
-	SimplexFigure<figure_size> operator()  (const SimplexOperationArguments& arguments) override;
+	SimplexFigure<figure_size> operator()  (const ReflectionOperationArguments<figure_size-1>& arguments) override;
 
 };
 
 template<size_t figure_size>
-SimplexFigure<figure_size> Reflection<figure_size>::operator() (const SimplexOperationArguments& arguments)
+SimplexFigure<figure_size> Reflection<figure_size>::operator() (const ReflectionOperationArguments<figure_size-1>& arguments)
 {
 	SimplexFigure<figure_size> reflectedFigure(m_simplexFigure);
 	
