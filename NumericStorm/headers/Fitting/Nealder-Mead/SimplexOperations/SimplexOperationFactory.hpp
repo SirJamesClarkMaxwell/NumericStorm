@@ -35,7 +35,7 @@ ISimplexOperation<figure_size> SimplexOperationFactory<figure_size>::createOpera
 	#if DEBUG
 		ISimplexOperation<figure_size> operationObject();
 		auto& toReturn = operationObject.operation(additionalArguments);
-		return toReturn
+		return toReturn;
 	#endif
 	return ISimplexOperation<figure_size>().operation(additionalArguments);
 }

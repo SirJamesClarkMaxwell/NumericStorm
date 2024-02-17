@@ -8,19 +8,21 @@ namespace Fitting
 template<size_t figure_size>
 class Reflection :public ISimplexOperation<figure_size> 
 {
+
 public:
-	Reflection(const std::string& name="reflection", 
+	Reflection(const std::string& name, 
 		const SimplexFigure<figure_size>& simplexFigure)
 		:ISimplexOperation<figure_size>(name, simplexFigure) {};
 
 	SimplexFigure<figure_size> operator()  (const ReflectionOperationArguments<figure_size-1>& arguments) override;
-
+protected:
+	std::string m_operationName = "reflection";
 };
 
 template<size_t figure_size>
 SimplexFigure<figure_size> Reflection<figure_size>::operator() (const ReflectionOperationArguments<figure_size-1>& arguments)
 {
-	SimplexFigure<figure_size> reflectedFigure(m_simplexFigure);
+	SimplexFigure<figure_size> reflectedFigure(this->m_simplexFigure);
 	
 	double alpha = arguments.getFactor();
 	SimplexPoint<figure_size - 1> centroid = reflectedFigure.getCentroid();
@@ -28,16 +30,13 @@ SimplexFigure<figure_size> Reflection<figure_size>::operator() (const Reflection
 	#if DEBUG
 		auto difference = centroid - reflectedFigure[0];
 		auto multiplicated = difference * alpha;
-		auto pointToReflectArround += multiplicated;
+		pointToReflectArround += multiplicated;
 	#else if REALASE
 	pointToReflectArround += (centroid - reflectedFigure[0]) * alpha;
 	#endif
 
 		reflectedFigure[0] = pointToReflectArround;
 		return reflectedFigure;
-			
-		
-
 }
 
 }

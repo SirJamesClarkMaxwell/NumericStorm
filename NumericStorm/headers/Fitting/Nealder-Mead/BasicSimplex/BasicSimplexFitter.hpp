@@ -24,7 +24,7 @@ public:
 		return m_fittedParameters;
 	};
 private:
-	SimplexOperationFactory m_simplexOperationFactory;
+	SimplexOperationFactory<parameter_size + 1> m_simplexOperationFactory;
 };
 
 
