@@ -4,6 +4,7 @@
 #include "../SimplexSettings.hpp"
 #include "../../Model.hpp"
 #include "../../ErrorModel.hpp"
+#include "../SimplexOperations/SimplexOperationsHeader.hpp"
 
 namespace NumericStorm 
 {

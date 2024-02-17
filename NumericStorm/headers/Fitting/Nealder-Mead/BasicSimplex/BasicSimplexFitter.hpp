@@ -18,6 +18,8 @@ public:
 		:SimplexFitter<figure_size>(simplexFigure){}
 
 	void setUp(BasicSimplexSettings<figure_size-1> settigngs) override;
+private:
+	SimplexOperationFactory m_simplexOperationFactory;
 };
 
 
