@@ -10,21 +10,22 @@ namespace NumericStorm
 {
 namespace Fitting 
 {
-template<size_t figure_size>
-class BasicSimplexFitter:public SimplexFitter<figure_size>
+template<size_t parameter_size>
+class BasicSimplexFitter:public SimplexFitter<parameter_size+1>
 {
 public:
-	BasicSimplexFitter(SimplexFigure<figure_size> simplexFigure) 
-		:SimplexFitter<figure_size>(simplexFigure){}
+	BasicSimplexFitter(SimplexFigure<parameter_size+1> simplexFigure) 
+		:SimplexFitter<parameter_size+1>(simplexFigure){}
 
-	void setUp(BasicSimplexSettings<figure_size-1> settigngs) override;
+	void setUp(FitterSettings<parameter_size> settigngs) override;
+	void minimize()override {};
 private:
 	SimplexOperationFactory m_simplexOperationFactory;
 };
 
 
-template<size_t figure_size>
-void BasicSimplexFitter<figure_size>::setUp(BasicSimplexSettings<figure_size - 1> settigngs)
+template<size_t parameter_size>
+void BasicSimplexFitter<parameter_size>::setUp(FitterSettings<parameter_size> settigngs) 
 {
 	
 };

@@ -116,7 +116,7 @@ public:
 			{m_model = modelToSet; m_modelSet = true;}
 		void setErrorModel(std::shared_ptr<Model<parameter_size>> modelToSet)
 			{m_errorModel = modelToSet; m_errorModelSet = true;}
-		Parameters<parameters_size> m_parameters;
+		Parameters<parameter_size> m_parameters;
 		AdditionalParameters m_additionalParameters; 
 		double m_error;
 		bool m_modelSet;

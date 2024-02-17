@@ -13,7 +13,14 @@ project "App"
 
     files { 
         "./src/*.cpp", 
-        "./headers/*.hpp"
+        "./headers/*.hpp",
+        "./NumericStorm/headers/*.hpp",
+        "./NumericStorm/headers/Fitting/*.hpp",
+        "./NumericStorm/headers/Fitting/Exceptions/*.hpp",
+        "./NumericStorm/headers/Fitting/Nealder-Mead/*.hpp",
+        "./NumericStorm/headers/Fitting/Nealer-Mead/SimplexOperations/*.hpp",
+        "./NumericStorm/headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
+        "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp"
     }
     links { 
         "NumericStorm",
@@ -21,9 +28,15 @@ project "App"
     }
     
     includedirs { 
-        "./NumericStorm/headers/",
         "include",
-        "headers "
+        "headers",
+        "./NumericStorm/headers/",
+        "./NumericStorm/headers/Fitting/",
+        "./NumericStorm/headers/Fitting/Exceptions/",
+        "./NumericStorm/headers/Fitting/Nealder-Mead/",
+        "./NumericStorm/headers/Fitting/Nealer-Mead/SimplexOperations/",
+        "./NumericStorm/headers/Fitting/Nealder-Mead/BasicSimplex/",
+        "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreatorp"
 
     }
     targetdir ("bin/%{cfg.buildcfg}") 

@@ -23,3 +23,24 @@
 #include "./Fitting/Nealder-Mead/SimplexFitter.hpp"
 #include "./Fitting/Nealder-Mead/SimplexFigure.hpp"
 #include "./Fitting/Nealder-Mead/SimplexPoint.hpp"
+
+
+#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitter.hpp"
+#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitterSettings.hpp"
+
+#include "./Fitting/Nealder-Mead/SimplexCreator/ISimplexFactory.hpp"
+#include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorFactory.hpp"
+#include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorSetting.hpp"
+
+#include "./Fitting/Nealder-Mead/SimplexOperations/Reflection.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOperations/Contraction.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOperations/Expantion.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOperations/Shrinking.hpp"
+
+#include "./Fitting/Nealder-Mead/SimplexOperations/ReflectionOperationArguments.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOperations/ContractionOperationArguments.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOperations/ExpantionOperationArguments.hpp"
+//#include "./Fitting/Nealder-Mead/SimplexOperations/ShrinkingOperationArguments.hpp"
+
+#include "./Fitting/Nealder-Mead/SimplexOperations/ISimplexOperation.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOperations/SimplexOperationFactory.hpp"

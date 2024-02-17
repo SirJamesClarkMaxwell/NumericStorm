@@ -12,7 +12,7 @@ public:
 	Fitter() {};// = default;
 	virtual Parameters<parameter_size>* getFittedParameters() = 0;
 	virtual void minimize() = 0;
-	virtual void setUp(FitterSettings<parameter_size>* fitterSettings) = 0;
+	virtual void setUp(FitterSettings<parameter_size> fitterSettings) = 0;
 protected:
 	Parameters<parameter_size>* m_fittedParamters;
 	Parameters<parameter_size>* m_proposedParameters;
