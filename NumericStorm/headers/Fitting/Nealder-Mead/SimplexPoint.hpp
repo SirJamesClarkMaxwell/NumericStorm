@@ -17,10 +17,10 @@ namespace Fitting
 
 
 template <std::size_t parameter_size>
-class SimplexPoint : {
+class SimplexPoint {
 public:
 
-		SimplexPoint() = default;
+		SimplexPoint() {};
 		SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParameters additionalParameters)
 			: m_parameters(parameters),m_error(-1),m_model(nullptr),m_errorModel(nullptr),m_modelSet(false),m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
 		std::array<double, parameter_size> getParameters() 
@@ -44,7 +44,7 @@ public:
 		SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
 			if (this != &other)
 			{
-				m_parameters = other.getParameters();
+				m_parameters = other.m_parameters;
 				m_error = other.m_error;
 			}
 				
@@ -100,13 +100,13 @@ public:
 
 		void calculateError(const Data& referenceData,const Data& calculatedData){
 			if (m_errorModelSet)
-				m_error = m_errorModel(referenceData, calculatedData);
+				m_error = (*m_errorModel)(referenceData, calculatedData);
 			else
 				throw NoSetErrorModelExeption();
 		}
 		Data calculateData() {
 			if (m_modelSet)
-				return m_model(m_parameters, m_additional);
+				return (*m_model)(m_parameters, m_additionalParameters);
 			else
 				throw NoSetModelExeption();
 		}

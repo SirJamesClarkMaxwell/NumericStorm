@@ -6,7 +6,7 @@ namespace NumericStorm
 namespace Fitting 
 {
 template <size_t figure_size>
-class ContractionOperationArguments :public SimplexOperationArguments<figure_size> 
+class ContractionOperationArguments : public SimplexOperationArguments
 {
 public:
 	ContractionOperationArguments(double factor,
