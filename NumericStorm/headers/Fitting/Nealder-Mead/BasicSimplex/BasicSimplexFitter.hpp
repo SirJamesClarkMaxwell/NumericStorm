@@ -32,7 +32,7 @@ private:
 
 
 template<size_t parameter_size>
-inline void BasicSimplexFitter<parameter_size>::setUp(FitterSettings<parameter_size>* fitterSettings)
+void BasicSimplexFitter<parameter_size>::setUp(FitterSettings<parameter_size>* fitterSettings)
 {
 }
 
