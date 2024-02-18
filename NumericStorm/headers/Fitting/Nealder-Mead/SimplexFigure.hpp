@@ -34,7 +34,7 @@ template<size_t figure_size>
 SimplexPoint<figure_size - 1> SimplexFigure<figure_size>::calculateCentroid() 
 {
 	#if DEBUG
-		auto& sum = std::accumulate(m_points);
+		auto& sum = std::accumulate(m_points.begin(), m_points.end(),0);
 		auto& toReturn = sum / (figure_size - 1);
 		return toReturn;
 	#endif

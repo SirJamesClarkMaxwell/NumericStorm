@@ -18,7 +18,7 @@ int main()
         m_figure[i] = m_point;
     }
     SimplexFigure<3> simplexFigure(m_figure);
-    BasicSimplexFitter<2> fitter(simplexFigure);
+    //BasicSimplexFitter<2> fitter(simplexFigure);
 
     //fixed all bugs in git history
 }
