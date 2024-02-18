@@ -23,6 +23,7 @@ private:
 std::string NoAvailableFactoryException::createMessage()
 {
     std::string message = "This " + m_factoryType + " isn't available. You could forget to register concrate facotry. To see how to do it, plase check our documentation.";
+    return message;
 };
 
 }

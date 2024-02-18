@@ -20,7 +20,7 @@ public:
 	void setUp(FitterSettings<parameter_size> settigngs) override;
 	void minimize()override {};
 private:
-	SimplexOperationFactory m_simplexOperationFactory;
+	SimplexOperationFactory<parameter_size + 1> m_simplexOperationFactory;
 };
 
 

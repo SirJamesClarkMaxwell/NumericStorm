@@ -9,7 +9,7 @@ class ExpantionOperationArguments :public SimplexOperationArguments
 public:
 	ExpantionOperationArguments(const double& factor, const SimplexPoint<point_dimention> reflectedPoint ) 
 		: SimplexOperationArguments(factor), m_reflectedPoint(reflectedPoint){}
-	SimplexPoint<point_dimention> reflectedPoint;
+	SimplexPoint<point_dimention> m_reflectedPoint;
 
 
 };
