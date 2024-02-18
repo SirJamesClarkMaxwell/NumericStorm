@@ -14,8 +14,8 @@ public:
 	virtual void minimize() = 0;
 	virtual void setUp(FitterSettings<parameter_size>* fitterSettings) = 0;
 protected:
-	Parameters<parameter_size>* m_fittedParamters;
-	Parameters<parameter_size>* m_proposedParameters;
+	Parameters<parameter_size> m_fittedParamters;
+	Parameters<parameter_size> m_proposedParameters;
 	FitterSettings<parameter_size>* m_fitterSettings;
 	std::shared_ptr<Model<parameter_size>> m_model;
 	std::shared_ptr<ErrorModel> m_errorModel;

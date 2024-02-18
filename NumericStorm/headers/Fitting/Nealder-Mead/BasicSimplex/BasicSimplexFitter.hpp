@@ -19,7 +19,8 @@ public:
 
 	void setUp(FitterSettings<parameter_size>* fitterSettings) override;
 	void minimize()override {};
-	Parameters<parameter_size>* getFittedParameters() 
+	//TODO add function pointer into function that will define the actual logic of the algorithm
+	Parameters<parameter_size> getFittedParameters() 
 	{
 		return this->m_fittedParameters;
 	};

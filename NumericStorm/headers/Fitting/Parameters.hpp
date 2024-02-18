@@ -9,10 +9,10 @@
 #include "AdditionalParameters.hpp"
 
 namespace NumericStorm {
-    namespace Fitting {
+namespace Fitting {
 
-        template <size_t parameter_size>
-        class Model;
+        //template <size_t parameter_size>
+        //class Model;
 
         template <size_t parameter_size>
         class Parameters {
@@ -25,10 +25,10 @@ namespace NumericStorm {
 
             std::array<double, parameter_size> getParameters();
 
-            double getError();
-            double& operator[](int index)
-            {
-                return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
+    double getError();
+    double& operator[](int index)
+    {
+    return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
             }
             const double& operator[](int index) const
             {
@@ -38,10 +38,10 @@ namespace NumericStorm {
             std::array<double, parameter_size> m_parameters;
             double m_error;
             AdditionalParameters m_additionalParameters;
-            std::shared_ptr<Model<parameter_size>> m_model;
-            std::shared_ptr<ErrorModel> m_errorModel;
-            bool m_ModelSet;
-            bool m_ErrorModelSet;
+            //std::shared_ptr<Model<parameter_size>> m_model;
+            //std::shared_ptr<ErrorModel> m_errorModel;
+            //bool m_ModelSet;
+            //bool m_ErrorModelSet;
 
         };
 }
