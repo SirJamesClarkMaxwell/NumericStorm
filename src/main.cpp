@@ -9,6 +9,7 @@ int main()
     if (c == 3.3)
         std::cout << "It Worked, My static Numeric Library is working correctly" << std::endl;
     using namespace NumericStorm::Fitting;
+    //some changes
     std::array<SimplexPoint<2>, 3> m_figure = { SimplexPoint<2>(), SimplexPoint<2>(), SimplexPoint<2>()};
     AdditionalParameters add_params{};
     for (int i = 0; i < 3; i++)
