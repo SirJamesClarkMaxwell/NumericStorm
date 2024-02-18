@@ -18,13 +18,12 @@ public:
 private:
     std::string m_message;
     std::string m_factoryType;
-    std::string createMessage ();
-};
-std::string NoAvailableFactoryException::createMessage()
-{
+    std::string createMessage (){
     std::string message = "This " + m_factoryType + " isn't available. You could forget to register concrate facotry. To see how to do it, plase check our documentation.";
     return message;
+    }
 };
+//std::string NoAvailableFactoryException::createMessage()
 
 }
 }
