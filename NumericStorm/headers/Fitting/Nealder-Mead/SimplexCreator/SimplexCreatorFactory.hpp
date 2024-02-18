@@ -49,7 +49,7 @@ void SimplexCreatorFactory<figure_size>::unRegisterFactory(std::string name)
 template<size_t figure_size>
 SimplexFigure<figure_size>SimplexCreatorFactory<figure_size>::createNewSimplex(std::string name, SimplexPoint<figure_size-1> basedPoint)
 {
-	
+	if ()
 };
 
 template<size_t figure_size>
@@ -57,8 +57,8 @@ void SimplexCreatorFactory<figure_size>::updateFactoriesSettings(std::vector<Sim
 {
 	for (auto& item : newSettings)
 	{
-		ISimplexFactory<figure_size>& factory = *m_avliableFactories[item.name]; 
-		factory.updateSettigns(item.settings);
+		std::unique_ptr<ISimplexFactory<figure_size>> facotry = m_avliableFactories[item.name]; 
+		factory->updateSettigns(newSettings);
 	}
 };
 template<size_t figure_size>

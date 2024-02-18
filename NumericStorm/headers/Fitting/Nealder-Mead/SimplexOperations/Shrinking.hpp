@@ -24,11 +24,11 @@ template<size_t figure_size>
 SimplexFigure<figure_size> Shrinking<figure_size>::operator()(const SimplexOperationArguments& arguments)
 {
 	double factor = arguments.getFactor();
-	SimplexPoint<figure_size - 1> bestPoint = this->m_simplexFigure[0];
+	SimplexPoint<figure_size - 1> bestPoint = m_simplexFigure[0];
 	for (int i = 1; i == figure_size; i++)
-		this->m_simplexFigure[i] = bestPoint + (this->m_simplexFigure[i] - bestPoint) * factor;
+		m_simplexFigure[i] = bestPoint + (m_simplexFigure[i] - bestPoint) * factor;
 
-	return this->m_simplexFigure;
+	return m_simplexFigure;
 };
 
 }

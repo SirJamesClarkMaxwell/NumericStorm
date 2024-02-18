@@ -16,7 +16,7 @@ class BasicSimplexSettings :SimplexSettings<parameter_size>
 public:
 	BasicSimplexSettings(std::unique_ptr<Model<parameter_size>> model, std::unique_ptr<ErrorModel> errorModel, long int maxIteration, double minError,double alpha,double beta,double gamma,double delta)
 		:SimplexSettings<parameter_size> (model,errorModel,maxIteration,minError),
-		m_alpha(alpha),m_beta(beta),m_gamma(gamma),m_delta(delta){};
+		m_alpha(alpha),m_betam(beta),m_gamma(gamma),m_delta(delta){};
 private:
 	double m_alpha;
 	double m_beta;
