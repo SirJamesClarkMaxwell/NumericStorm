@@ -21,7 +21,7 @@ public:
 	void minimize()override {};
 	Parameters<parameter_size>* getFittedParameters() 
 	{
-		return m_fittedParameters;
+		return this->m_fittedParameters;
 	};
 private:
 	SimplexOperationFactory<parameter_size + 1> m_simplexOperationFactory;

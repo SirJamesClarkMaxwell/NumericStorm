@@ -9,16 +9,16 @@ namespace Fitting {
 template<size_t parameter_size>
 class SimplexFigure {
 public:
-	SimplexFigure() = default;
-	SimplexFigure(std::array<SimplexPoint<parameter_size>,parameter_size+1> points)
+	SimplexFigure() {};
+	SimplexFigure( std::array<SimplexPoint<parameter_size>,parameter_size+1> points)
 	:m_points(points)
 	{m_centroid = calculateCentroid();};
-
+	
 	std::array<SimplexPoint<parameter_size >, parameter_size> getPoints() { return m_points; }
 	void sort(bool reverse = true);
 	SimplexPoint<parameter_size > getCentroid() { return m_centroid; }
 protected:
-	std::array<SimplexPoint<parameter_size >, parameter_size> m_points;
+	std::array<SimplexPoint<parameter_size>, parameter_size+1> m_points;
 	SimplexPoint<parameter_size> m_centroid;
 private:
 	SimplexPoint<parameter_size> calculateCentroid();
@@ -36,11 +36,11 @@ template<size_t parameter_size>
 SimplexPoint<parameter_size> SimplexFigure<parameter_size>::calculateCentroid() 
 {
 	#if DEBUG
-		SimplexPoint<figure_size-1> sum = std::accumulate(m_points.begin(), m_points.end(),0);
-		SimplexPoint<figure_size -1> toReturn = sum / (figure_size - 1);
+		SimplexPoint<parameter_size> sum = std::accumulate(m_points.begin(), m_points.end(), SimplexPoint<parameter_size>());
+		SimplexPoint<parameter_size > toReturn = sum / (parameter_size);
 		return toReturn;
 	#endif
-		return std::accumulate(m_points.begin(), m_points.end(), 0) / (parameter_size);
+		return std::accumulate(m_points.begin(), m_points.end(), SimplexPoint<parameter_size>()) / (parameter_size);
 }
 }
 }

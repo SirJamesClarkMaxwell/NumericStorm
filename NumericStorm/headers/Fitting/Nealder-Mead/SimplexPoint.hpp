@@ -22,7 +22,18 @@ public:
 
 		SimplexPoint() {};
 		SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParameters additionalParameters)
-			: m_parameters(parameters),m_error(-1),m_model(nullptr),m_errorModel(nullptr),m_modelSet(false),m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
+			: m_parameters(parameters),m_error(-1),m_modelSet(false),m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
+		
+		SimplexPoint(const SimplexPoint<parameter_size>& other) = default;
+		//{
+		//	this->m_additionalParameter = other.m_additionalParameters;
+		//	m_error = other.m_error;
+		//	m_model = other.m_model;
+		//	m_errorModel = other.m_errorModel;
+		//	m_modelSet = other.m_modelSet;
+		//	m_errorModelSet = other.m_errorModelSet;
+		//	m_parameters = other.m_parameters;
+		//}
 		std::array<double, parameter_size> getParameters() 
 			{ return m_parameters.getParameters();}
 
