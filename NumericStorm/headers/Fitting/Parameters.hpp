@@ -23,7 +23,7 @@ namespace Fitting {
                 /*, m_ModelSet(false), m_ErrorModelSet(false), m_errorModel(nullptr), m_model(nullptr)*/ {};
 
 
-            std::array<double, parameter_size> getParameters();
+            std::array<double, parameter_size> getParameters() { return m_parameters; };
 
     double getError();
     double& operator[](int index)
@@ -46,5 +46,6 @@ namespace Fitting {
         };
 }
 }
+
 
 
