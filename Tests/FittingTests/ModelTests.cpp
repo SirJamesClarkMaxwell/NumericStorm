@@ -6,6 +6,7 @@ using namespace NumericStorm::Fitting;
 
 namespace TestingModel 
 {
+	
 class GaussianData :public Data
 {
 public:
