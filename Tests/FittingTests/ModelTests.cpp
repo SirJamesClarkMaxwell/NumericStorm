@@ -39,8 +39,8 @@ std::unique_ptr<Data> gaussian(const std::vector<double>& arguments, const Param
 	calculateData.resize(arguments.size());
 	double A = parameters[0];
 	double mu = parameters[1];
-	double sigma = parameters[3];
-	double c = parameters[4];
+	double sigma = parameters[2];
+	double c = parameters[3];
 
 	for (int i = 0; i < arguments.size(); i++)
 	{
@@ -73,6 +73,6 @@ TEST_F(TestingGaussianModel, TestingSimpleGaussianModel)
 	testedData = (*testedModel)(arguments, initialParameters, additionalParameters);
 	auto testedValues = (*testedData).getValues();
 	for (int i = 0; i < arguments.size(); i++)
-		EXPECT_DOUBLE_EQ(testedValues[i],trueValues[i],0.01);
+		EXPECT_NEAR(testedValues[i],trueValues[i],0.001);
 };
 }
