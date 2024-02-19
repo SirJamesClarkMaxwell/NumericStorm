@@ -10,7 +10,7 @@ class GaussianData :public Data
 {
 public:
 	GaussianData(const std::vector<double>& arguments, const std::vector<double>& values)
-		:m_argumets(arguments),m_values(values){}
+		:Data(arguments,values){}
 	virtual ~GaussianData() {};
 	std::vector<double> getArguments() override { return this->m_argumets; };
 	std::vector<double> getValues() override { return this->m_values; };

@@ -14,7 +14,7 @@ public:
     Model(std::function<std::unique_ptr<Data>(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
         const AdditionalParameters& additionalParameters)> model)
         :m_model(model) {};
-    virtual ~Model()=0;
+    virtual ~Model();
     virtual std::unique_ptr<Data> operator()(const std::vector<double>& arguments,const Parameters<parameter_size>& parameters,
         const AdditionalParameters& additionalParameters) = 0;
 
