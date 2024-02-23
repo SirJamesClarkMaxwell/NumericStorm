@@ -1,0 +1,4 @@
+Done:
+Commented out implementations of "virtual double& operator [](int index) = 0;" in Parameters.hpp as it's pure virtual
+
+Wrote simple test for Parameters.hpp, I don't know how to run it, I just mimicked the structure of ModelTests.cppgit
