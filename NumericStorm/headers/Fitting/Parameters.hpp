@@ -21,16 +21,16 @@ public:
 
     virtual double& operator [](int index) = 0;
     virtual std::array<double, parameter_size> getParameters() = 0;
-
     virtual double getError() = 0;
-    double& operator[](int index) 
+
+    /*double& operator[](int index) 
     {
         return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
     }
     const double& operator[](int index) const 
     {
         return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
-    }
+    }*/
 protected:
     std::array<double, parameter_size> m_parameters;
     double m_error;
