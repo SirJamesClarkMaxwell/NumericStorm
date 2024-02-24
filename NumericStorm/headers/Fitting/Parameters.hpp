@@ -25,24 +25,22 @@ namespace Fitting {
 
             std::array<double, parameter_size> getParameters() { return m_parameters; };
 
-    double getError();
-    double& operator[](int index)
-    {
-    return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
-            }
-            const double& operator[](int index) const
-            {
-                return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
-            }
+        double getError();
+        double& operator[](int index) noexcept
+        {
+            if (index >= 0 && static_cast<std::size_t>(index) < parameter_size)
+                return m_parameters[index];
+            return m_parameters[0];
+        }
+        const double& operator[](int index) const noexcept
+        {
+            if (index >= 0 && static_cast<std::size_t>(index) < parameter_size)
+                return m_parameters[index];
+            return m_parameters[0];
+        }
         protected:
             std::array<double, parameter_size> m_parameters;
             double m_error;
-            AdditionalParameters m_additionalParameters;
-            //std::shared_ptr<Model<parameter_size>> m_model;
-            //std::shared_ptr<ErrorModel> m_errorModel;
-            //bool m_ModelSet;
-            //bool m_ErrorModelSet;
-
         };
 }
 }
