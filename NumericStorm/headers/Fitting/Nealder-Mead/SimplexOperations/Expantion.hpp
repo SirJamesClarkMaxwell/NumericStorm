@@ -1,47 +1,47 @@
 #pragma once
 #include "ISimplexOperation.hpp"
 #include "SimplexOperationArguments.hpp"
-#include "ExpantionOperationArguments.hpp"
 #include "../SimplexFigure.hpp"
 
 // TODO: redefine interface of Expansion
 namespace NumericStorm
 {
-	namespace Fitting
-	{
+namespace Fitting
+{
 
-		template <size_t figure_size>
-		class Expantion : public ISimplexOperation<figure_size>
-		{
-		public:
-			Expantion(const std::string &name, SimplexFigure<figure_size> simplexFigure)
-				: ISimplexOperation(name, simplexFigure){};
-			SimplexFigure<figure_size> operator()(const ExpantionOperationArguments<figure_size - 1> &arguments);
+template <size_t parameter_size>
+class Expantion : public ISimplexOperation<parameter_size>
+{
+public:
+	Expantion(SimplexOperationArguments<parameter_size> arguments)
+		: ISimplexOperation<parameter_size>("expantion", arguments) {};
 
-		protected:
-			std::string m_operationName = "expantion";
-		};
+	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size> &reflectedSimplexFigure) override;
 
-		template <size_t figure_size>
-		SimplexFigure<figure_size> Expantion<figure_size>::operator()(const ExpantionOperationArguments<figure_size - 1> &arguments)
-		{
-			SimplexFigure<figure_size> expandedFigure(this->m_simplexFigure);
+private:
+	std::string m_operationName = "expantion";
+};
 
-			SimplexPoint<figure_size - 1> reflectedPoint = arguments.reflectedPoint;
-			SimplexPoint<figure_size - 1> pointToExpandAround(expandedFigure.getCentroid());
+template <size_t parameter_size>
+SimplexFigure<parameter_size> Expantion<parameter_size>::operator()(const SimplexFigure<parameter_size> &reflectedSimplexFigure)
+{
+	SimplexFigure<figure_size> expandedFigure(reflectedSimplexFigure);
+	SimplexPoint<figure_size - 1> reflectedPoint = reflectedSimplexFigure[0];
+	SimplexPoint<figure_size - 1> pointToExpandAround(expandedFigure.getCentroid());
 
-#if DEBUG
-			auto centroid = expandedFigure.getCentroid();
-			auto difference = reflectedPoint - centroid;
-			auto multipled = difference * arguments.getFactor();
-			pointToExpandAround += multipled;
+	#if DEBUG
+		auto centroid = expandedFigure.getCentroid();
+		auto difference = reflectedPoint - centroid;
+		auto multipled = difference * arguments.getFactor();
+		pointToExpandAround += multipled;
 
-#else if REALESE
-			pointToExpandAround += (reflectedPoint - centroid) * arguments.getFactor();
-#endif
-			expandedFigure[0] = pointToExpandAround;
-			return expandedFigure;
-		}
+	#else if REALESE
+		pointToExpandAround += (reflectedPoint - centroid) * arguments.getFactor();
+	#endif
+		expandedFigure[0] = pointToExpandAround;
+		return expandedFigure;
+}
 
-	}
+
+}
 }

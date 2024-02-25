@@ -1,6 +1,6 @@
 
--) write BasicSimplexFitter minimize implementation
--) add basic ErrorModel functions
--) add simulated annealing abstraction
--) add concreate simulated annealing technique
--) add SimulatedAnnealingSimplexFitter 
+
+TODO: add basic ErrorModel functions
+TODO: add simulated annealing abstraction
+TODO: add concrete simulated annealing technique
+TODO: add SimulatedAnnealingSimplexFitter 
