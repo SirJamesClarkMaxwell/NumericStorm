@@ -13,7 +13,7 @@ template <size_t parameter_size>
 class Expantion : public ISimplexOperation<parameter_size>
 {
 public:
-	Expantion(SimplexOperationArguments<parameter_size> arguments)
+	Expantion(SimplexOperationArguments arguments)
 		: ISimplexOperation<parameter_size>("expantion", arguments) {};
 
 	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size> &reflectedSimplexFigure) override;
@@ -25,18 +25,19 @@ private:
 template <size_t parameter_size>
 SimplexFigure<parameter_size> Expantion<parameter_size>::operator()(const SimplexFigure<parameter_size> &reflectedSimplexFigure)
 {
-	SimplexFigure<figure_size> expandedFigure(reflectedSimplexFigure);
-	SimplexPoint<figure_size - 1> reflectedPoint = reflectedSimplexFigure[0];
-	SimplexPoint<figure_size - 1> pointToExpandAround(expandedFigure.getCentroid());
+	SimplexFigure<parameter_size> expandedFigure(reflectedSimplexFigure);
+	SimplexPoint<parameter_size> reflectedPoint = reflectedSimplexFigure[0];
+	SimplexPoint<parameter_size> pointToExpandAround(expandedFigure.getCentroid());
+	double gamma = this->m_arguments.getFactor();
 
 	#if DEBUG
 		auto centroid = expandedFigure.getCentroid();
 		auto difference = reflectedPoint - centroid;
-		auto multipled = difference * arguments.getFactor();
+		auto multipled = difference * gamma;
 		pointToExpandAround += multipled;
 
 	#else if REALESE
-		pointToExpandAround += (reflectedPoint - centroid) * arguments.getFactor();
+		pointToExpandAround += (reflectedPoint - centroid) * gamma;
 	#endif
 		expandedFigure[0] = pointToExpandAround;
 		return expandedFigure;
