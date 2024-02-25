@@ -12,17 +12,19 @@ template <size_t parameter_size>
 class Reflection : public ISimplexOperation<parameter_size>
 {
 public:
-	Reflection(const std::string& name = "reflection", const SimplexOperationArguments& arguments)
-		:ISimplexOperation(name, arguments) {};
+	Reflection(const SimplexOperationArguments& argumnents)
+		:ISimplexOperation<parameter_size>("reflection", argumnents) {};
 
 	virtual SimplexFigure<parameter_size> operator ()(const SimplexFigure<parameter_size>& simplexFigure) override;
+
+
 };
 
 template <size_t parameter_size>
 SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(const SimplexFigure<parameter_size>& simplexFigure)
 {
 
-	double alpha = m_arguments.getFactor();
+	double alpha = this->m_arguments.getFactor();
 	SimplexPoint<parameter_size> centroid = simplexFigure.getCentroid();
 	SimplexPoint<parameter_size> pointToReflectArround(centroid);
 
