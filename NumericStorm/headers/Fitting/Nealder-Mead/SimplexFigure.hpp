@@ -11,15 +11,16 @@ class SimplexFigure {
 public:
 	SimplexFigure() {};
 	SimplexFigure( std::array<SimplexPoint<parameter_size>,parameter_size+1> points)
-	:m_points(points)
-	{m_centroid = calculateCentroid();};
+		:m_points(points),m_centroid(calculateCentroid()){};
 	
 	std::array<SimplexPoint<parameter_size >, parameter_size> getPoints() { return m_points; }
 	void sort(bool reverse = true);
 	SimplexPoint<parameter_size > getCentroid() { return m_centroid; }
+
 protected:
 	std::array<SimplexPoint<parameter_size>, parameter_size+1> m_points;
 	SimplexPoint<parameter_size> m_centroid;
+
 private:
 	SimplexPoint<parameter_size> calculateCentroid();
 
