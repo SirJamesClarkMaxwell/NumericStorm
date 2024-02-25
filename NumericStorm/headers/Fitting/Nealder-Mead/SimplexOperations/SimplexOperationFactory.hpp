@@ -5,8 +5,8 @@
 #include "SimplexOperationArguments.hpp"
 #include "NoAvailableFactoryException.hpp"
 
-// TODO: we need to redefine this methods, operator should receive the SimplexFigure argument and as a member variable should hold the SimplexOperationArgument, and this should be a probably a sharedPointer
-// TODO: redefine interface of SimplexOperation
+// TODO: change to ISimplexOperation to sharedPointer into concreate object and this should be a probably a sharedPointer
+
 
 namespace NumericStorm
 {
