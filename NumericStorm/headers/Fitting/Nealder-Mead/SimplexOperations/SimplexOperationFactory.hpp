@@ -5,7 +5,8 @@
 #include "SimplexOperationArguments.hpp"
 #include "NoAvailableFactoryException.hpp"
 
-// TODO: change to ISimplexOperation to sharedPointer into concreate object and this should be a probably a sharedPointer
+// TODO: change to ISimplexOperation to sharedPointer into concreate object and this should 
+// be a probably a sharedPointer
 
 
 namespace NumericStorm
