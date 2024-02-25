@@ -3,7 +3,7 @@
 #include "SimplexOperationArguments.hpp"
 #include "../SimplexFigure.hpp"
 
-// TODO: redefine interface of Reflection
+
 namespace NumericStorm
 {
 namespace Fitting
