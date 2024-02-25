@@ -23,11 +23,11 @@ private:
 template <size_t parameter_size>
 SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(const SimplexFigure<parameter_size> & reflectedSimplexFigure)
 {
-	SimplexFigure<parameter_size> contractedFigure(reflectedSimplexFigure);
-	SimplexPoint<parameter_size> reflectedPoint(reflectedSimplexFigure[0]);
+	SimplexFigure<parameter_size>& contractedFigure(reflectedSimplexFigure);
+	SimplexPoint<parameter_size>& reflectedPoint(reflectedSimplexFigure[0]);
 
-	SimplexPoint<parameter_size> pointToContraction = decidePointToContraction(reflectedSimplexFigure);
-	SimplexPoint<parameter_size> pointToContractArround(contractedFigure.getCentroid());
+	SimplexPoint<parameter_size>& pointToContraction = decidePointToContraction(reflectedSimplexFigure);
+	SimplexPoint<parameter_size>& pointToContractArround(contractedFigure.getCentroid());
 
 	double beta = this->m_arguments.getFactor();
 

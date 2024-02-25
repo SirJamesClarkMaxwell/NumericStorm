@@ -25,8 +25,8 @@ SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(const Simpl
 {
 
 	double alpha = this->m_arguments.getFactor();
-	SimplexPoint<parameter_size> centroid = simplexFigure.getCentroid();
-	SimplexPoint<parameter_size> pointToReflectArround(centroid);
+	SimplexPoint<parameter_size>& centroid = simplexFigure.getCentroid();
+	SimplexPoint<parameter_size>& pointToReflectArround(centroid);
 
 	#if DEBUG
 		auto difference = centroid - simplexFigure[0];
