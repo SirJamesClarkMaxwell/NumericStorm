@@ -1,47 +1,43 @@
 #pragma once
 #include "ISimplexOperation.hpp"
-#include "ReflectionOperationArguments.hpp"
+#include "SimplexOperationArguments.hpp"
 #include "../SimplexFigure.hpp"
 
 // TODO: redefine interface of Reflection
 namespace NumericStorm
 {
-	namespace Fitting
-	{
-		template <size_t parameter_size>
-		class Reflection : public ISimplexOperation<parameter_size>
-		{
+namespace Fitting
+{
+template <size_t parameter_size>
+class Reflection : public ISimplexOperation<parameter_size>
+{
+public:
+	Reflection(const std::string& name = "reflection", const SimplexOperationArguments& arguments)
+		:ISimplexOperation(name, arguments) {};
 
-		public:
-			Reflection(const std::string &name,
-					   const SimplexFigure<parameter_size> &simplexFigure)
-				: ISimplexOperation<parameter_size>(name, simplexFigure){};
+	virtual SimplexFigure<parameter_size> operator ()(const SimplexFigure<parameter_size>& simplexFigure) override;
+};
 
-			SimplexFigure<parameter_size> operator()(const ReflectionOperationArguments<parameter_size> &arguments) override;
+template <size_t parameter_size>
+SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(const SimplexFigure<parameter_size>& simplexFigure)
+{
 
-		protected:
-			std::string m_operationName = "reflection";
-		};
+	double alpha = m_arguments.getFactor();
+	SimplexPoint<parameter_size> centroid = simplexFigure.getCentroid();
+	SimplexPoint<parameter_size> pointToReflectArround(centroid);
 
-		template <size_t parameter_size>
-		SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(const ReflectionOperationArguments<parameter_size> &arguments)
-		{
-			SimplexFigure<parameter_size> reflectedFigure(this->m_simplexFigure);
+	#if DEBUG
+		auto difference = centroid - simplexFigure[0];
+		auto multiplicated = difference * alpha;
+		pointToReflectArround += multiplicated;
+	#else if REALASE
+		pointToReflectArround += (centroid - simplexFigure[0]) * alpha;
+	#endif
 
-			double alpha = arguments.getFactor();
-			SimplexPoint<parameter_size> centroid = reflectedFigure.getCentroid();
-			SimplexPoint<parameter_size> pointToReflectArround(centroid);
-#if DEBUG
-			auto difference = centroid - reflectedFigure[0];
-			auto multiplicated = difference * alpha;
-			pointToReflectArround += multiplicated;
-#else if REALASE
-			pointToReflectArround += (centroid - reflectedFigure[0]) * alpha;
-#endif
+		simplexFigure[0] = pointToReflectArround;
+		return simplexFigure;
+};
 
-			reflectedFigure[0] = pointToReflectArround;
-			return reflectedFigure;
-		}
 
-	}
+}
 }
