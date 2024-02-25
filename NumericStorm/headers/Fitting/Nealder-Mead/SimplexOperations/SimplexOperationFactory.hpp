@@ -19,8 +19,8 @@ class SimplexOperationFactory
 public:
 	SimplexOperationFactory(){};
 	void registerOperation(std::string operationName, ISimplexOperation<parameter_size> operation);
-	void unRegisterOperation(std::string operatioName); //throw NoAvailableFactoryException;
-	ISimplexOperation<parameter_size> createOperation(std::string name, SimplexOperationArguments additionalArguments); //throw NoAvailableFactoryException;
+	void unRegisterOperation(std::string operatioName) throw (NoAvailableFactoryException);
+	ISimplexOperation<parameter_size> createOperation(std::string name, SimplexOperationArguments additionalArguments) throw (NoAvailableFactoryException);
 
 private:
 	std::unordered_map<std::string, ISimplexOperation<parameter_size>> m_listOperation;
@@ -51,7 +51,7 @@ ISimplexOperation<parameter_size> SimplexOperationFactory<parameter_size>::creat
 		return toReturn;
 	}
 	else
-		throw NoAvailableFactoryException(operationName)
+		throw NoAvailableFactoryException(operationName);
 #endif
 		auto& toReturn = m_listOperation[operationName];// (additionalArguments);
 	return toReturn;
