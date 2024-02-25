@@ -1,56 +1,60 @@
 #pragma once
 #include "ISimplexOperation.hpp"
 #include "../SimplexFigure.hpp"
-#include "ContractionOperationArguments.hpp"
 #include "SimplexOperationArguments.hpp"
 // TODO: redefine interface of Contraction
 
 namespace NumericStorm
 {
-	namespace Fitting
-	{
-		template <size_t figure_size>
-		class Contraction : public ISimplexOperation<figure_size>
-		{
-		public:
-			Contraction(const std::string &name, const SimplexFigure<figure_size> simplexFigure)
-				: ISimplexOperation(name, simplexFigure){};
-			SimplexFigure<figure_size> operator()(const ContractionOperationArguments<figure_size - 1> &argumetns);
+namespace Fitting
+{
 
-		private:
-			SimplexPoint<figure_size - 1> decidePointToContraction(SimplexPoint<figure_size - 1> reflectedPoint);
+template <size_t parameter_size>
+class Contraction : public ISimplexOperation<parameter_size>
+{
+public:
+	Contraction(const SimplexOperationArguments& arguments)
+		:ISimplexOperation("contraction", arguments) {};
+	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size>& reflectedSimplexFigure);
 
-			std::string m_operationName = "contraction";
-		};
+private:
+	SimplexPoint<parameter_size> decidePointToContraction(SimplexFigure<parameter_size> reflectedFigure);
+	std::string m_operationName;
+};
+template <size_t parameter_size>
+SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(const SimplexFigure<parameter_size> & reflectedSimplexFigure)
+{
+	SimplexFigure<parameter_size> contractedFigure(reflectedSimplexFigure);
+	SimplexPoint<parameter_size> reflectedPoint(reflectedSimplexFigure[0]);
 
-		template <size_t figure_size>
-		SimplexFigure<figure_size> Contraction<figure_size>::operator()(const ContractionOperationArguments<figure_size - 1> &argumetns)
-		{
-			SimplexFigure<figure_size> contractedFigure(this->m_simplexFigure);
-			SimplexPoint<figure_size - 1> pointToContraction = decidePointToContraction();
-			SimplexPoint<figure_size - 1> pointToContractArround;
-			(contractedFigure.getCentroid());
-			double factor = argumetns.getFactor();
+	SimplexPoint<parameter_size> pointToContraction = decidePointToContraction(reflectedSimplexFigure);
+	SimplexPoint<parameter_size> pointToContractArround(contractedFigure.getCentroid());
 
-#if DEBUG
-			auto difference = (pointToContraction - contractedFigure.getCentroid());
-			auto multiplication = difference * factor;
-			pointToContractArround += multiplication;
-#endif
-#if REALESE
-			pointToContractArround += (pointToContraction - m_simplexFigure.getCentroid()) * factor;
-#endif
+	double beta = this->m_arguments.getFactor();
 
-			contractedFigure[0] = pointToContractArround;
+	#if DEBUG
+		auto difference = (pointToContraction - pointToContractArround);
+		auto multiplication = difference * beta;
+		pointToContractArround += multiplication;
+	#endif
 
-			return contractedFigure;
-		}
+	#if REALESE
+		pointToContractArround += (pointToContraction - pointToContractArround) * beta;
+	#endif
 
-		template <size_t figure_size>
-		SimplexPoint<figure_size - 1> Contraction<figure_size>::decidePointToContraction(SimplexPoint<figure_size - 1> reflectedPoint)
-		{
-			return reflectedPoint ? reflectedPoint <= this->m_simplexFigure[0] : this->m_simplexFigure[0];
-		}
+	contractedFigure[0] = pointToContractArround;
+	return contractedFigure;
+}
 
-	}
+
+template <size_t parameter_size>
+SimplexPoint<parameter_size> Contraction<parameter_size>::decidePointToContraction(SimplexFigure<parameter_size> reflectedFigure)
+{
+	SimplexPoint<parameter_size>& reflectedPoint = reflectedFigure[0];
+	SimplexPoint<parameter_size>& secondBestPoint = reflectedFigure[1];
+	return  (reflectedPoint <= secondBestPoint) ? reflectedPoint: secondBestPoint;
+}
+
+
+}
 }
