@@ -2,7 +2,6 @@
 #include "ISimplexOperation.hpp"
 #include "../SimplexFigure.hpp"
 #include "SimplexOperationArguments.hpp"
-// TODO: redefine interface of Contraction
 
 namespace NumericStorm
 {
