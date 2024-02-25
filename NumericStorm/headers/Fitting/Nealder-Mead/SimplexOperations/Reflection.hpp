@@ -5,31 +5,31 @@
 namespace NumericStorm {
 namespace Fitting 
 {
-template<size_t figure_size>
-class Reflection :public ISimplexOperation<figure_size> 
+template<size_t parameter_size>
+class Reflection :public ISimplexOperation<parameter_size> 
 {
 
 public:
 	Reflection(const std::string& name, 
-		const SimplexFigure<figure_size>& simplexFigure)
-		:ISimplexOperation<figure_size>(name, simplexFigure) {};
+		const SimplexFigure<parameter_size>& simplexFigure)
+		:ISimplexOperation<parameter_size>(name, simplexFigure) {};
 
-	SimplexFigure<figure_size> operator()  (const ReflectionOperationArguments<figure_size-1>& arguments) override;
+	SimplexFigure<parameter_size> operator()  (const ReflectionOperationArguments<parameter_size>& arguments) override;
 protected:
 	std::string m_operationName = "reflection";
 };
 
-template<size_t figure_size>
-SimplexFigure<figure_size> Reflection<figure_size>::operator() (const ReflectionOperationArguments<figure_size-1>& arguments)
+template<size_t parameter_size>
+SimplexFigure<parameter_size> Reflection<parameter_size>::operator() (const ReflectionOperationArguments<parameter_size>& arguments)
 {
-	SimplexFigure<figure_size> reflectedFigure(this->m_simplexFigure);
+	SimplexFigure<parameter_size> reflectedFigure(this->m_simplexFigure);
 	
 	double alpha = arguments.getFactor();
-	SimplexPoint<figure_size - 1> centroid = reflectedFigure.getCentroid();
-	SimplexPoint<figure_size - 1> pointToReflectArround(centroid);
+	SimplexPoint<parameter_size > centroid = reflectedFigure.getCentroid();
+	SimplexPoint<parameter_size > pointToReflectArround(centroid);
 	#if DEBUG
 		auto difference = centroid - reflectedFigure[0];
-		auto multiplicated = difference * alpha;
+		auto multiplicated = difference * alpha;	
 		pointToReflectArround += multiplicated;
 	#else if REALASE
 	pointToReflectArround += (centroid - reflectedFigure[0]) * alpha;

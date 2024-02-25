@@ -22,6 +22,11 @@ project "NumericStorm"
     -- Header files
     includedirs { 
         "./headers",
+        "headers/Fitting/Exceptions/",
+        "headers/Fitting/Nealder-Mead/",
+        "headers/Fitting/Nealder-Mead/SimplexOperations/",
+        "headers/Fitting/Nealder-Mead/BasicSimplex/",
+        "headers/Fitting/Nealder-Mead/SimplexCreator/",
         "./src" }
 
     -- Output directory for the generated library
