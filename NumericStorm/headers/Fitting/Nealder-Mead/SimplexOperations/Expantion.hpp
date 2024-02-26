@@ -1,6 +1,6 @@
 #pragma once
 #include "ISimplexOperation.hpp"
-#include "SimplexOperationArguments.hpp"
+#include "SimplexOperationSettigns.hpp"
 #include "../SimplexFigure.hpp"
 
 // TODO: redefine interface of Expansion
@@ -13,7 +13,7 @@ template <size_t parameter_size>
 class Expantion : public ISimplexOperation<parameter_size>
 {
 public:
-	Expantion(SimplexOperationArguments arguments)
+	Expantion(SimplexOperationSettings arguments)
 		: ISimplexOperation<parameter_size>("expantion", arguments) {};
 
 	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size> &reflectedSimplexFigure) override;

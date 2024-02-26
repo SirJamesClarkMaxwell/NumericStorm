@@ -37,10 +37,5 @@
 #include "./Fitting/Nealder-Mead/SimplexOperations/Expantion.hpp"
 #include "./Fitting/Nealder-Mead/SimplexOperations/Shrinking.hpp"
 
-#include "./Fitting/Nealder-Mead/SimplexOperations/ReflectionOperationArguments.hpp"
-#include "./Fitting/Nealder-Mead/SimplexOperations/ContractionOperationArguments.hpp"
-#include "./Fitting/Nealder-Mead/SimplexOperations/ExpantionOperationArguments.hpp"
-//#include "./Fitting/Nealder-Mead/SimplexOperations/ShrinkingOperationArguments.hpp"
-
 #include "./Fitting/Nealder-Mead/SimplexOperations/ISimplexOperation.hpp"
 #include "./Fitting/Nealder-Mead/SimplexOperations/SimplexOperationFactory.hpp"

@@ -1,7 +1,7 @@
 #pragma once
 #include "ISimplexOperation.hpp"
 #include "../SimplexFigure.hpp"
-#include "SimplexOperationArguments.hpp"
+#include "SimplexOperationSettigns.hpp"
 
 namespace NumericStorm
 {
@@ -12,7 +12,7 @@ template <size_t parameter_size>
 class Contraction : public ISimplexOperation<parameter_size>
 {
 public:
-	Contraction(const SimplexOperationArguments& arguments)
+	Contraction(const SimplexOperationSettings& arguments)
 		:ISimplexOperation("contraction", arguments) {};
 	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size>& reflectedSimplexFigure);
 
