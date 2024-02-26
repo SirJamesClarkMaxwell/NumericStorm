@@ -41,12 +41,12 @@ void SimplexOperationFactory<parameter_size>::unRegisterOperation(std::string op
 template <size_t parameter_size>
 SimplexFigure<parameter_size> SimplexOperationFactory<parameter_size>::createOperation(std::string name, const SimplexFigure<parameter_size> simplexFigure)
 {
-	auto SimplexOperation = m_listOperation.find(operationName);
+	ISimplexOperation_ptr simplexOperation = m_listOperation.find(name);
 
-	if (SimplexOperation != m_listOperation.end())
-		return  operationObject = SimplexOperation->second(simplexFigure);
+	if (simplexOperation != m_listOperation.end())
+		return  simplexOperation->second(simplexFigure);
 	else
-		throw NoAvailableFactoryException(operationName);
+		throw NoAvailableFactoryException(name);
 };
 }
 }

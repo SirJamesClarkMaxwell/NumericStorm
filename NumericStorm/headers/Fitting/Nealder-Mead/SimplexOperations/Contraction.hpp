@@ -12,7 +12,7 @@ template <size_t parameter_size>
 class Contraction : public ISimplexOperation<parameter_size>
 {
 public:
-	Contraction(const SimplexOperationSettings& arguments)
+	Contraction(const SimplexOperationSettigns& arguments)
 		:ISimplexOperation("contraction", arguments) {};
 	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size>& reflectedSimplexFigure);
 
@@ -29,7 +29,7 @@ SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(const Simp
 	SimplexPoint<parameter_size>& pointToContraction = decidePointToContraction(reflectedSimplexFigure);
 	SimplexPoint<parameter_size>& pointToContractArround(contractedFigure.getCentroid());
 
-	double beta = this->m_arguments.getFactor();
+	double beta = this->m_settings.getFactor();
 
 	#if DEBUG
 		auto difference = (pointToContraction - pointToContractArround);

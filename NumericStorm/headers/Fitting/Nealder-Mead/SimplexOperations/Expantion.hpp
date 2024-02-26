@@ -13,13 +13,13 @@ template <size_t parameter_size>
 class Expantion : public ISimplexOperation<parameter_size>
 {
 public:
-	Expantion(SimplexOperationSettings arguments)
-		: ISimplexOperation<parameter_size>("expantion", arguments) {};
+	Expantion(const SimplexOperationSettigns& settigns)
+		: ISimplexOperation<parameter_size>("expantion", settigns) {};
 
 	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size> &reflectedSimplexFigure) override;
 
 private:
-	std::string m_operationName = "expantion";
+	std::string m_operationName;
 };
 
 template <size_t parameter_size>
@@ -28,7 +28,7 @@ SimplexFigure<parameter_size> Expantion<parameter_size>::operator()(const Simple
 	SimplexFigure<parameter_size>& expandedFigure(reflectedSimplexFigure);
 	SimplexPoint<parameter_size>& reflectedPoint = reflectedSimplexFigure[0];
 	SimplexPoint<parameter_size>& pointToExpandAround(expandedFigure.getCentroid());
-	double gamma = this->m_arguments.getFactor();
+	double gamma = this->m_settings.getFactor();
 
 	#if DEBUG
 		auto centroid = expandedFigure.getCentroid();
