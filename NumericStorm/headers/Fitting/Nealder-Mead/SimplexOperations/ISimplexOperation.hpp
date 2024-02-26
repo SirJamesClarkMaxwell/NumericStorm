@@ -1,6 +1,6 @@
 #pragma once
 #include "../SimplexFigure.hpp"
-#include "SimplexOperationArguments.hpp"
+#include "SimplexOperationSettigns.hpp"
 namespace NumericStorm
 {
 namespace Fitting
@@ -10,13 +10,14 @@ template<size_t parameter_size>
 class ISimplexOperation
 {
 private:
-    ISimplexOperation(const std::string& name, const SimplexOperationArguments& arguments)
+    ISimplexOperation(const std::string& name, const SimplexOperationSettigns& arguments)
         :m_operationName(name), m_arguments(arguments){};
 
 public:
     virtual SimplexFigure<parameter_size>operator ()(const SimplexFigure<parameter_size>&simplexFigure) = 0;
+    void updateSettigns(const SimplexOperationSettigns& newArguments)
 protected:
-    SimplexOperationArguments m_arguments;
+    SimplexOperationSettigns m_arguments;
     std::string m_operationName;
     
 };

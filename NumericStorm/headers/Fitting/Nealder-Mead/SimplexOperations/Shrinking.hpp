@@ -2,8 +2,8 @@
 #include "ISimplexOperation.hpp"
 #include "../SimplexFigure.hpp"
 #include "../SimplexPoint.hpp"
-#include "SimplexOperationArguments.hpp"
-// TODO: redefine interface of Shrinking
+#include "SimplexOperationSettings.hpp"
+
 namespace NumericStorm
 {
 namespace Fitting
@@ -12,7 +12,7 @@ template <size_t parameter_size>
 class Shrinking : public ISimplexOperation<parameter_size>
 {
 public:
-	Shrinking(const SimplexOperationArguments& arguments)
+	Shrinking(const SimplexOperationSettings& arguments)
 		: ISimplexOperation<parameter_size>("shrinking", arguments) {};
 	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size>& simplexFigure) override;
 };

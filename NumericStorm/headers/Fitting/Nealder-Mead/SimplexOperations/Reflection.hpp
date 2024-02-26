@@ -1,6 +1,6 @@
 #pragma once
 #include "ISimplexOperation.hpp"
-#include "SimplexOperationArguments.hpp"
+#include "SimplexOperationSettigns.hpp"
 #include "../SimplexFigure.hpp"
 
 
@@ -12,7 +12,7 @@ template <size_t parameter_size>
 class Reflection : public ISimplexOperation<parameter_size>
 {
 public:
-	Reflection(const SimplexOperationArguments& argumnents)
+	Reflection(const SimplexOperationSettings& argumnents)
 		:ISimplexOperation<parameter_size>("reflection", argumnents) {};
 
 	virtual SimplexFigure<parameter_size> operator ()(const SimplexFigure<parameter_size>& simplexFigure) override;
