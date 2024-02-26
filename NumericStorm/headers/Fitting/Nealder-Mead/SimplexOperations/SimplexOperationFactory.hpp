@@ -63,6 +63,9 @@ void SimplexOperationFactory<parameter_size>::updateOperationSettings(std::strin
 template <size_t parameter_size>
 void SimplexOperationFactory<parameter_size>::updateOperationsSettings(std::vector<std::string> operationNames, std::vector<SimplexOperationSettigns> newSettings) 
 {
+	if (operationNames.size() != newSettings.size()) 
+		throw std::invalid_argument("Sizes of operationNames and newSettings vectors are not equal.");
+
 	for (int i = 0; i < operationNames.size(); i++)
 	{
 		ISimplexOperation_ptr& simplexOperation = m_listOperation.find(operationNames[i]);
