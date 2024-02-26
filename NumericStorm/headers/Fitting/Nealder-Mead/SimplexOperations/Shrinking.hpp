@@ -6,27 +6,30 @@
 // TODO: redefine interface of Shrinking
 namespace NumericStorm
 {
-	namespace Fitting
-	{
-		template <size_t figure_size>
-		class Shrinking : public ISimplexOperation<figure_size>
-		{
-		public:
-			Shrinking(const std::string &name, const SimplexFigure<figure_size> &simplexFigure)
-				: ISimplexOperation<figure_size>(name, simplexFigure){};
-			SimplexFigure<figure_size> operator()(const SimplexOperationArguments &arguments) override;
-		};
+namespace Fitting
+{
+template <size_t parameter_size>
+class Shrinking : public ISimplexOperation<parameter_size>
+{
+public:
+	Shrinking(const SimplexOperationArguments& arguments)
+		: ISimplexOperation<parameter_size>("shrinking", arguments) {};
+	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size>& simplexFigure) override;
+};
 
-		template <size_t figure_size>
-		SimplexFigure<figure_size> Shrinking<figure_size>::operator()(const SimplexOperationArguments &arguments)
-		{
-			double factor = arguments.getFactor();
-			SimplexPoint<figure_size - 1> bestPoint = this->m_simplexFigure[0];
-			for (int i = 1; i == figure_size; i++)
-				this->m_simplexFigure[i] = bestPoint + (this->m_simplexFigure[i] - bestPoint) * factor;
+template <size_t parameter_size>
+SimplexFigure<parameter_size> Shrinking<parameter_size>::operator()(const SimplexFigure<parameter_size> &simplexFigure)
+{
+    double delta = this->m_arguments.getFactor();
+    
+    SimplexFigure<parameter_size> result = simplexFigure;
+    const SimplexPoint<parameter_size>& bestPoint = simplexFigure[0];
 
-			return this->m_simplexFigure;
-		};
+   for (size_t i = 1; i < parameter_size + 1; ++i) 
+        result[i] = bestPoint + (simplexFigure[i] - bestPoint) * delta;
+ 
+    return result;
+}
 
-	}
+}
 }
