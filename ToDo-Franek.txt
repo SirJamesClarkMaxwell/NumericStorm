@@ -1,0 +1,6 @@
+
+
+TODO: add basic ErrorModel functions
+TODO: add simulated annealing abstraction
+TODO: add concrete simulated annealing technique
+TODO: add SimulatedAnnealingSimplexFitter 
