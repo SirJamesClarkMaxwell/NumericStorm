@@ -8,8 +8,8 @@ namespace Fitting
 class SimplexCreatorSettigns 
 {
 public:
-	SimplexCreatorSettigns(std::string name)
-		:m_name(name){};
+	SimplexCreatorSettigns(std::string operationName)
+		:m_name(operationName){};
 private:
 	std::string m_name;
 };
