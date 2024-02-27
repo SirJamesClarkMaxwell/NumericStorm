@@ -10,23 +10,23 @@ project "NumericStorm"
 		"*.hpp",
 		"src/*.cpp",
 		"src/Fitting/*.cpp",
-		"headers/*.hpp",
-		"headers/Fitting/*.hpp",
-		"headers/Fitting/Exceptions/*.hpp",
-		"headers/Fitting/Nealder-Mead/*.hpp",
-		"headers/Fitting/Nealder-Mead/SimplexOperations/*.hpp",
-		"headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
-		"headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp"
+		"./headers/*.hpp",
+		"./headers/Fitting/*.hpp",
+		"./headers/Fitting/Exceptions/*.hpp",
+		"./headers/Fitting/Nealder-Mead/*.hpp",
+		"./headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
+		"./headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp",
+		"./headers/Fitting/Nealder-Mead/SimplexOperations/*.hpp"
 	}
 
 	-- Header files
 	includedirs { 
 		"./headers",
-		"headers/Fitting/Exceptions/",
-		"headers/Fitting/Nealder-Mead/",
-		"headers/Fitting/Nealder-Mead/SimplexOperations/",
-		"headers/Fitting/Nealder-Mead/BasicSimplex/",
-		"headers/Fitting/Nealder-Mead/SimplexCreator/",
+		"./headers/Fitting/Exceptions/",
+		"./headers/Fitting/Nealder-Mead/",
+		"./headers/Fitting/Nealder-Mead/SimplexOperations/",
+		"./headers/Fitting/Nealder-Mead/BasicSimplex/",
+		"./headers/Fitting/Nealder-Mead/SimplexCreator/",
 		"./src" }
 
 	-- Output directory for the generated library
