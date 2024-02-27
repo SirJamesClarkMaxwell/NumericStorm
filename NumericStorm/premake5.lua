@@ -16,7 +16,10 @@ project "NumericStorm"
 		"headers/Fitting/Nealder-Mead/*.hpp",
 		"headers/Fitting/Nealder-Mead/SimplexOperations/*.hpp",
 		"headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
-		"headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp"
+		"headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp",
+
+		"documentation/Fitting/.*md"
+
 	}
 
 	-- Header files
@@ -27,7 +30,11 @@ project "NumericStorm"
 		"headers/Fitting/Nealder-Mead/SimplexOperations/",
 		"headers/Fitting/Nealder-Mead/BasicSimplex/",
 		"headers/Fitting/Nealder-Mead/SimplexCreator/",
-		"./src" }
+		"./src",
+	
+		"documentation/",
+		"documentation/Fitting/"
+	}
 
 	-- Output directory for the generated library
 	targetdir ("bin/%{cfg.buildcfg}")
