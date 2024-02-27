@@ -3,7 +3,7 @@
 #include <string>
 #include "ISimplexOperation.hpp"
 #include "SimplexOperationSettigns.hpp"
-#include "NoAvailableFactoryException.hpp"
+#include "../../Exceptions/NoAvailableFactoryException.hpp"
 
 
 
