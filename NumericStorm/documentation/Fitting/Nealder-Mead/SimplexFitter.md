@@ -1,4 +1,4 @@
-# The general description of the abstract SimplexFitter class
+# Brief Explanation of the Abstract SimplexFitter Class
 
 ## The class diagram
 ```mermaid
@@ -21,7 +21,8 @@ Fitter <|.. SimplexFitter
 
 ## Simple explanation of the abstract SimplexFitter class
 [About the General Simplex Algorithm](https://nils-olovsson.se/articles/downhill_simplex/#citation-crane)  
-This class is the abstract class for future implementations of the Simplex optimization solvers. It was designed in such a way that the user could define his own implementation of the Simplex optimization technique. 
+This abstract class serves as a blueprint for future implementations of Simplex optimization solvers. It is designed to allow users to define their own implementations of the Simplex optimization technique.
 
 ### The main idea
-Because we want to make this class really general, we decided to use factory design pattern almost in every place. This technique allows us to extract the some functionality 
+To ensure maximum flexibility, we have incorporated the factory design pattern extensively throughout this class. This approach enables us to extract functionality and facilitate easy customization.
+
