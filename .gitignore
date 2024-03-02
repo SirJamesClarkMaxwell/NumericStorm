@@ -1,8 +1,9 @@
 **.vs**
-bin
-obj
+**bin**
+**obj**
 **.vcxproj**
 **.sln**
 **.filters**
 ci
 *.hint
+**build**
