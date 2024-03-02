@@ -32,7 +32,7 @@
 
 #include "./Fitting/Nealder-Mead/SimplexOperations/Reflection.hpp"
 #include "./Fitting/Nealder-Mead/SimplexOperations/Contraction.hpp"
-#include "./Fitting/Nealder-Mead/SimplexOperations/Expantion.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOperations/Expansion.hpp"
 #include "./Fitting/Nealder-Mead/SimplexOperations/Shrinking.hpp"
 
 #include "./Fitting/Nealder-Mead/SimplexOperations/ISimplexOperation.hpp"

@@ -12,7 +12,7 @@ template <size_t parameter_size>
 class Contraction : public ISimplexOperation<parameter_size>
 {
 public:
-	Contraction(const SimplexOperationSettigns& arguments)
+	Contraction(const SimplexOperationSettings& arguments)
 		:ISimplexOperation("contraction", arguments) {};
 	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size>& reflectedSimplexFigure);
 
