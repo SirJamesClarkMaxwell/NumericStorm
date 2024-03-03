@@ -16,7 +16,7 @@ project "NumericStorm"
 		"./headers/Fitting/Nealder-Mead/*.hpp",
 		"./headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
 		"./headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp",
-		"./headers/Fitting/Nealder-Mead/SimplexOperations/*.hpp"
+		"./headers/Fitting/Nealder-Mead/SimplexOperations/*.hpp",
 		"./headers/Fitting/Nealder-Mead/SimplexDecision/*.hpp"
 	}
 
