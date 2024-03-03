@@ -20,7 +20,7 @@ namespace NumericStorm
         public:
             BasicSimplexDecision();
             virtual ~BasicSimplexDecision();
-            virtual SimplexFigure<parameter_size>(const std::vector<SimplexFigure<parameter_size>> &simplexFigures) override;
+            virtual SimplexFigure<parameter_size> makeDecision(const std::vector<SimplexFigure<parameter_size>> &simplexFigures) override;
             void checkDimensionsOfVector(const std::vector<SimplexFigure<parameter_size>> &simplexFigures) const throw(std::out_of_range);
         };
         template <size_t parameter_size>
