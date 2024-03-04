@@ -1,23 +1,23 @@
 #pragma once
-#include "Fitting.hpp"
 
+#include "Data.hpp"
+#include <functional>
+#include <memory>
 
-namespace NumericStorm 
-{
-namespace Fitting 
-{
+namespace NumericStorm {
+namespace Fitting {
 
-class ErrorModel 
-{
+class ErrorModel {
 
 public:
-	ErrorModel() = default;
-	ErrorModel(std::function<double(const Data&, const Data&)> errorModel)
-		:m_errorModel(errorModel){};
-	~ErrorModel() {};
-	virtual double operator()(const Data& referencedData, const Data& comparedData) = 0;
+    ErrorModel(std::function<double(const std::shared_ptr<Data>&, const std::shared_ptr<Data>&)> errorModel)
+        : m_errorModel(errorModel) {}
+    double operator()(const std::shared_ptr<Data>& referencedData, const std::shared_ptr<Data>& comparedData) const {
+        return m_errorModel(referencedData, comparedData);
+    };
+
 protected:
-	std::function<double(const Data& referenceData, const Data& comparedData)> m_errorModel;
+    std::function<double(const std::shared_ptr<Data>& referencedData, const std::shared_ptr<Data>& comparedData)> m_errorModel;
 };
 
 

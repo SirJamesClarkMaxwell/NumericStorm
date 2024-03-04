@@ -22,7 +22,8 @@ workspace "NumericStorm-App"
             "./NumericStorm/headers/Fitting/Nealder-Mead/*.hpp",
             "./NumericStorm/headers/Fitting/Nealer-Mead/SimplexOperations/*.hpp",
             "./NumericStorm/headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp"
+            "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp",
+            "./headers/Fitting/Nealder-Mead/SimplexDecision/*.hpp"
         }
         links { 
             "NumericStorm",
@@ -38,8 +39,9 @@ workspace "NumericStorm-App"
             "./NumericStorm/headers/Fitting/Nealder-Mead/",
             "./NumericStorm/headers/Fitting/Nealer-Mead/SimplexOperations/",
             "./NumericStorm/headers/Fitting/Nealder-Mead/BasicSimplex/",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreatorp"
-    
+            "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreatorp",
+            "./headers/Fitting/Nealder-Mead/SimplexDecision/"
+            
         }
         targetdir ("bin/%{cfg.buildcfg}") 
         
