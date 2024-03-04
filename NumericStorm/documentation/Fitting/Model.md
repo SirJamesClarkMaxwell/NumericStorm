@@ -1,6 +1,8 @@
 ## General Description of the Abstract Model Class
 This abstract class is responsible for holding information about the function that will calculate the data needed to evaluate the goal function in the fitting procedure. This is achieved using <span style = "color:green">std::function<> </span>.
 
+This class is the abstract responsible for holding the information about the function that will be responsible for calculating the data needed to evaluating the goal function in fitting procedure. This is done by <span style=" color: green"> std::function<>. </span>
+
 ### Constructor:
 ```cpp
 Model(std::function<std::unique_ptr<Data>(

@@ -11,6 +11,7 @@ The template parameter `parameter_size` determines the number of parameters that
 - `reference`: a reference to a double in the parameter set
 - `const_reference`: a const reference to a double in the parameter set
 
+
 ## Constructors
 ```cpp
 Parameters()
@@ -26,6 +27,7 @@ std::array<double, parameter_size> m_parameters;
 double m_error;
 ```
 
+
 ## Public methods
 ```cpp
 std::array<double, parameter_size> getParameters() const;
@@ -33,6 +35,10 @@ double getError() const;
 double& operator[](int index) noexcept;
 const double& operator[](int index) const noexcept;
 ```
+Returns the parameters of the object. \
+Returns the error associated with the parameters.\
+Returns a reference to the parameter at the specified index.\
+Returns a const reference to the parameter at the specified index.
 
 - Returns the parameters of the object.
 - Returns the error associated with the parameters.
