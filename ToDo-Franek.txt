@@ -1,4 +1,11 @@
+TODO: change the signature of makeDecision() in StrategyManager file
+    it should contain the vector of the simplex Figures with different sizes
 
+TODO: add the new template parameter for the makeDecision in IDecision and StrategyManager
+TODO: add the implementation of unregisterStrategy() in StrategyManager 
+TODO: add the implementation of makeDecision() in StrategyManager 
+
+TODO: implement BasicSimplexFitter
 
 TODO: add basic ErrorModel functions
 TODO: add simulated annealing abstraction
