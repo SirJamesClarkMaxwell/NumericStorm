@@ -10,5 +10,5 @@ This class enables users to dynamically modify the Simplex algorithm's behavior,
 
 void registerStrategy(std::string name, std::unique_ptr<IDecision<parameter_size>> strategy);
 void unregisterStrategy(std::string name);
-SimplexFigure<paramater_size> makeDecision(std::string name) throw(NoAvailableStrategyException);
+SimplexFigure<paramater_size> makeDecision(std::string name,std::vector<SimplexFigure<parameter_size>>) throw(NoAvailableStrategyException);
 ```
