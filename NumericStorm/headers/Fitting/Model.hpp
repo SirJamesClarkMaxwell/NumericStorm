@@ -5,25 +5,32 @@
 #include "Data.hpp"
 #include "Parameters.hpp"
 
-namespace NumericStorm {
-namespace Fitting {
+namespace NumericStorm
+{
+    namespace Fitting
+    {
 
-template <size_t parameter_size>
-class Model {
-public:
-    Model(std::function<std::unique_ptr<Data>(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
-        const AdditionalParameters& additionalParameters())> model)
-        :m_model(model) {};
-    std::unique_ptr<Data> operator()(const std::vector<double>& arguments,const Parameters<parameter_size>& parameters,
-        const AdditionalParameters& additionalParameters()) ;
+        template <size_t parameter_size>
+        class Model
+        {
+        public:
+            Model(std::function<std::unique_ptr<Data>(const std::vector<double> &arguments, const Parameters<parameter_size> &parameters,
+                                                      const AdditionalParameters &additionalParameters)>
+                      model)
+                : m_model(model){};
+            std::unique_ptr<Data> operator()(const std::vector<double> &arguments, const Parameters<parameter_size> &parameters,
+                                             const AdditionalParameters &additionalParameters);
 
-protected:
-    std::function<std::unique_ptr<Data> (const std::vector<double>& arguments,const Parameters<parameter_size>& parameters,
-        const AdditionalParameters& additionalParameters())> m_model;
-};
+        protected:
+            std::function<std::unique_ptr<Data>(const std::vector<double> &arguments, const Parameters<parameter_size> &parameters,
+                                                const AdditionalParameters &additionalParameters)>
+                m_model;
+        };
 
-template<size_t parameter_size>
-std::unique_ptr<Data> Model<parameter_size>::operator()(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters, const AdditionalParameters& additionalParameters())
-    {return m_model(arguments,parameters,additionalParameters);}
-}
+        template <size_t parameter_size>
+        std::unique_ptr<Data> Model<parameter_size>::operator()(const std::vector<double> &arguments, const Parameters<parameter_size> &parameters, const AdditionalParameters &additionalParameters)
+        {
+            return m_model(arguments, parameters, additionalParameters);
+        }
+    }
 }

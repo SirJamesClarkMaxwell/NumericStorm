@@ -27,7 +27,7 @@ public:
 	:Model(model){};
 	virtual ~GaussianModel() {};
 	virtual std::unique_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<4>& parameters,
-		const AdditionalParameters& additionalParameters) override
+		const AdditionalParameters& additionalParameters) 
 	{
 		return m_model(arguments,parameters,additionalParameters);
 	}
