@@ -26,6 +26,7 @@ namespace NumericStorm
         template <size_t parameter_size>
         SimplexFigure<parameter_size> BasicSimplexDecision<parameter_size>::makeDecision(const std::vector<SimplexFigure<parameter_size>> &simplexFigures)
         {
+            this->checkDimensionsOfVector(simplexFigures.size());
             SimplexFigure<parameter_size> toReturn;
             SimplexPoint<parameter_size> bestPointOldSimplex = simplexFigures[OldSimplex][0];
             SimplexPoint<parameter_size> reflectedPoint = simplexFigures[Reflection][0];
@@ -43,9 +44,9 @@ namespace NumericStorm
             return toReturn;
         }
         template <size_t parameter_size>
-        void BasicSimplexDecision<parameter_size>::checkDimensionsOfVector(const std::vector<SimplexFigure<parameter_size>> &simplexFigures) const throw(std::out_of_range)
+        void BasicSimplexDecision<parameter_size>::checkDimensionsOfVector(const int sizeOfVector) const throw(std::out_of_range)
         {
-            if (simplexFigures.size() != Shrinking + 1)
+            if (!(simplexFigures.size() == Shrinking + 1))
             {
                 throw std::out_of_range("The number of simplex figures must be" + std::to_string(Shrinking + 1) + "!");
             }
