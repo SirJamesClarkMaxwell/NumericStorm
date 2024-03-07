@@ -27,6 +27,17 @@ namespace NumericStorm
 
 			m_strategyList[name] = std::move(strategy);
 		}
-
+		template <size_t paramater_size>
+		void StrategyManager<paramater_size>::unregisterStrategy(std::string name)
+		{
+			try
+			{
+				m_strategyList.erase(name);
+			}
+			catch (std::out_of_range &e)
+			{
+				continue;
+			}
+		}
 	}
 }
