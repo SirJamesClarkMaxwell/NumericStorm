@@ -13,7 +13,8 @@ project "NumericStorm-Tests"
         "*.h",
         "*.hpp",
         "../NumericStorm/headers/*.hpp",
-        "./FittingTests/*.*"
+        "./FittingTests/*.*",
+        "./FittingTests/Nealder-Mead-Tests/*.*"
     }
     
         libdirs{
@@ -30,7 +31,8 @@ project "NumericStorm-Tests"
             "../NumericStorm/headers/",
             "../vendor/googletest-main/googletest/include/" ,
             "../vendor/googletest-main/googletest/include/gtest",
-            "%{prj.location}/FittingTests"
+            "%{prj.location}/FittingTests",
+            "%{prj.location}/FittingTests/Nealder-Mead-Tests",
             }
         targetdir ("bin/%{cfg.buildcfg}") 
     
