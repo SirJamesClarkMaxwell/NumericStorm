@@ -21,7 +21,7 @@ class SimplexPoint {
 public:
 
 	SimplexPoint() {};
-	SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParameters additionalParameters())
+	SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParameters additionalParameters)
 		: m_parameters(parameters), m_error(-1), m_modelSet(false), m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
 
 	SimplexPoint(const SimplexPoint<parameter_size>& other) = default;
@@ -126,7 +126,7 @@ private:
 	{
 		m_model = modelToSet; m_modelSet = true;
 	}
-	void setErrorModel(std::shared_ptr<Model<parameter_size>> modelToSet)
+	void setErrorModel(std::shared_ptr<ErrorModel> modelToSet)
 	{
 		m_errorModel = modelToSet; m_errorModelSet = true;
 	}
@@ -138,31 +138,24 @@ private:
 	std::shared_ptr<Model<parameter_size>> m_model;
 	std::shared_ptr<ErrorModel> m_errorModel;
 #if DEBUG
-	template<std::size_t parameter_size>
+	public:
 	bool  modelIsSet() const
 	{
 		return m_modelSet;
 	}
-
-	template<std::size_t parameter_size>
 	bool  errorModelIsSet() const
 	{
 		return m_errorModelSet;
 	}
-
-	template<std::size_t parameter_size>
 	std::shared_ptr<Model<parameter_size>>  getModel() const
 	{
 		return m_model;
 	}
-
-	template<std::size_t parameter_size>
 	std::shared_ptr<ErrorModel> getErrorModel() const
 	{
 		return m_errorModel;
 	}
 #endif
-
 };
 }
 }
