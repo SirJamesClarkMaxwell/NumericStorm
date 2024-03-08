@@ -1,5 +1,8 @@
 
 
+TODO: add the throw exception if the size of passed vector in makeDecision() isn't exactly the same as enum size
+
+
 
 TODO: implement BasicSimplexFitter
 
