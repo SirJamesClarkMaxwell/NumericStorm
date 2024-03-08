@@ -7,6 +7,7 @@
 #include "Model.hpp"
 #include "ErrorModel.hpp"
 #include "AdditionalParameters.hpp"
+//TODO: add unpack method that will return a tuple of parameters -> this will provide us to use structure binding
 
 namespace NumericStorm {
 namespace Fitting {
@@ -18,7 +19,7 @@ class Parameters {
 public:
     Parameters() {};
     Parameters(std::array<double, parameter_size> parameters)
-        : m_parameters(parameters), m_error(-1){}
+        : m_parameters(parameters), m_error(-1) {}
     std::array<double, parameter_size> getParameters() { return m_parameters; }
     double getError();
     double& operator[](int index) noexcept
@@ -33,9 +34,9 @@ public:
             return m_parameters[index];
         return m_parameters[0];
     }
-    protected:
-        std::array<double, parameter_size> m_parameters;
-        double m_error;
+protected:
+    std::array<double, parameter_size> m_parameters;
+    double m_error;
 };
 }
 }
