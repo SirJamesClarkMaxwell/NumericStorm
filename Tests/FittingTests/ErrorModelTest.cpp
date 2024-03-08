@@ -82,4 +82,21 @@ namespace TestingErrorModel
 		EXPECT_NEAR(testedError, trueError, 0.01);
 	};
 
+	class Chi2ErrorModel : public ErrorModel
+	{
+	public:
+		Chi2ErrorModel(std::function<double(const std::shared_ptr<Data> &, const std::shared_ptr<Data> &)> chi2Model)
+			: ErrorModel(chi2Model) {}
+		double operator()(const std::shared_ptr<Data> &referenceData, const std::shared_ptr<Data> &evaluatedData)
+		{
+			return this->m_errorModel(referenceData, evaluatedData);
+		};
+	};
+
+	TEST_F(TestingErrorModel, TestingErrorModelInChi2ErrorModelByDerivedClass)
+	{
+		Chi2ErrorModel errorModel(chi2Model);
+		double testedError = errorModel(referencedData, evaluatedData);
+		EXPECT_NEAR(testedError, trueError, 0.01);
+	}
 }
