@@ -139,25 +139,25 @@ private:
 	std::shared_ptr<ErrorModel> m_errorModel;
 #if DEBUG
 	template<std::size_t parameter_size>
-	bool SimplexPoint<parameter_size>::modelIsSet() const
+	bool  modelIsSet() const
 	{
 		return m_modelSet;
 	}
 
 	template<std::size_t parameter_size>
-	bool SimplexPoint<parameter_size>::errorModelIsSet() const
+	bool  errorModelIsSet() const
 	{
 		return m_errorModelSet;
 	}
 
 	template<std::size_t parameter_size>
-	std::shared_ptr<Model<parameter_size>> SimplexPoint<parameter_size>::getModel() const
+	std::shared_ptr<Model<parameter_size>>  getModel() const
 	{
 		return m_model;
 	}
 
 	template<std::size_t parameter_size>
-	std::shared_ptr<ErrorModel> SimplexPoint<parameter_size>::getErrorModel() const
+	std::shared_ptr<ErrorModel> getErrorModel() const
 	{
 		return m_errorModel;
 	}
