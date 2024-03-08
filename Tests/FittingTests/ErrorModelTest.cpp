@@ -31,6 +31,32 @@ namespace TestingErrorModel
 		}
 		return std::make_unique<GaussianData>(arguments, calculateData);
 	}
+	double chi2ErrorModelFunction(const std::shared_ptr<Data> &referenceData, const std::shared_ptr<Data> &evaluatedData)
+	{
+		std::vector<double> referenceValues = referenceData->getValues();
+		std::vector<double> evaluatedValues = evaluatedData->getValues();
+		double chi2 = 0;
+
+#if DEBUG
+		std::vector<double> differences;
+		differences.resize(referenceValues.size());
+		std::vector<double> squaredDifferences;
+		squaredDifferences.resize(referenceValues.size());
+#endif
+
+		for (size_t i = 0; i < referenceValues.size(); i++)
+		{
+#if DEBUG
+			differences[i] = referenceValues[i] - evaluatedValues[i];
+			squaredDifferences[i] = pow(differences[i], 2);
+			chi2 += squaredDifferences[i]; // Calculate chi2 in debug mode as well
+#else
+			chi2 += pow((referenceValues[i] - evaluatedValues[i]), 2);
+#endif
+		}
+
+		return chi2;
+	}
 
 	struct TestingErrorModel : public testing::Test
 	{
@@ -42,17 +68,18 @@ namespace TestingErrorModel
 
 		std::vector<double> arguments{-2, -1, 0, 1, 2};
 		AdditionalParameters additionalParameters{};
-		std::unique_ptr<Data> referencedData = gaussian(arguments, referencedParameters, additionalParameters);
-		std::unique_ptr<Data> evaluatedData = gaussian(arguments, evaluatedParameters, additionalParameters);
+		std::shared_ptr<Data> referencedData = gaussian(arguments, referencedParameters, additionalParameters);
+		std::shared_ptr<Data> evaluatedData = gaussian(arguments, evaluatedParameters, additionalParameters);
 
-		std::function<double(const std::shared_ptr<Data> &referenceData, const std::shared_ptr<Data> &evaluatedData)> chi2Model;
-
-		double trueError = 5354.041935;
+		std::function<double(const std::shared_ptr<Data> &referenceData, const std::shared_ptr<Data> &evaluatedData)> chi2Model = chi2ErrorModelFunction;
+		double trueError = chi2ErrorModelFunction(referencedData, evaluatedData);
 	};
 
 	TEST_F(TestingErrorModel, TestingErrorModelInChi2ErrorModel)
 	{
-		EXPECT_EQ(2, 2);
+		ErrorModel errorModel(chi2Model);
+		double testedError = errorModel(referencedData, evaluatedData);
+		EXPECT_NEAR(testedError, trueError, 0.01);
 	};
 
 }
