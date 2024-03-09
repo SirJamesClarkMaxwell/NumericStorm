@@ -34,7 +34,27 @@ double chi2ErrorModelFunction(const std::shared_ptr<Data>& referenceData, const 
         chi2 += pow((referenceValues[i] - evaluatedValues[i]), 2);
     return chi2;
 }
+class Chi2ErrorModel : public ErrorModel
+{
+public:
+    Chi2ErrorModel(std::function<double(const std::shared_ptr<Data>&, const std::shared_ptr<Data>&)> chi2Model)
+        : ErrorModel(chi2Model) {}
+    double operator()(const std::shared_ptr<Data>& referenceData, const std::shared_ptr<Data>& evaluatedData)
+    {
+        return this->m_errorModel(referenceData, evaluatedData);
+    };
+};
 
+class GaussianModel : public Model<4>
+{
+public:
+    GaussianModel(std::function<std::unique_ptr<Data>(const std::vector<double>&, const Parameters<4>&, const AdditionalParameters&)> gaussian)
+        :Model<4>(gaussian) {};
+    std::unique_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<4>& parameters,
+        const AdditionalParameters& additionalParameters) {
+        return this->m_model(arguments, parameters, additionalParameters);
+    };
+};
 class UsefullyObjects
 {
 public:
@@ -51,12 +71,13 @@ public:
 
         referencedData = gaussian(arguments, referencedParameters, additionalParameters);
         evaluatedData = gaussian(arguments, evaluatedParameters, additionalParameters);
-        //gaussianModel = gaussianModel;
-        //chi2ErrorModel = chi2Model;
         sharedPtrModel = std::make_shared<Model<4>>(Model<4>(gaussian));
         sharedPtrErrorModel = std::make_shared<ErrorModel>(ErrorModel(chi2ErrorModelFunction));
 
         trueError = chi2ErrorModelFunction(referencedData, evaluatedData);
+
+        gaussianModel = std::make_shared<GaussianModel>(GaussianModel(gaussianFunction));
+        chi2ErrorModel = std::make_shared<Chi2ErrorModel>(Chi2ErrorModel(chi2Model));
     };
     std::array<double, 4> referencedArray{ 2, 1, 2, -1 };
     std::array<double, 4> evaluatedArray{ 1, 1, 1, -1 };
@@ -70,8 +91,9 @@ public:
     std::shared_ptr<Data> evaluatedData;
 
     double trueError;
-    //Model<4> gaussianModel;
-    //ErrorModel chi2ErrorModel;
     std::shared_ptr<Model<4>> sharedPtrModel;
     std::shared_ptr<ErrorModel> sharedPtrErrorModel;
+
+    std::shared_ptr<Chi2ErrorModel>  chi2ErrorModel;
+    std::shared_ptr<GaussianModel>  gaussianModel;
 };
