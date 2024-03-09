@@ -109,9 +109,14 @@ public:
 		setErrorModel(errorModel);
 	}
 
-	void calculateError(const std::shared_ptr<Data>& referenceData, const std::shared_ptr<Data>& calculatedData) {
+	void calculateError(const std::shared_ptr<Data>& referenceData) {
 		if (m_errorModelSet)
+		{
+			if (!m_modelSet)
+				throw NoSetModelExeption();
+			std::shared_ptr<Data> calculatedData = std::move(calculateData());
 			m_error = (*m_errorModel)(referenceData, calculatedData);
+		}
 		else
 			throw NoSetErrorModelExeption();
 	}
@@ -124,7 +129,7 @@ public:
 		else
 			throw NoSetModelExeption();
 	}
-
+	double getError()const { return m_error; }
 private:
 	void setModel(std::shared_ptr<Model<parameter_size>> modelToSet)
 	{
