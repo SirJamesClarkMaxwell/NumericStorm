@@ -94,6 +94,19 @@ TEST_F(TestSetUpFunction, calculateDataMethodByRollClasses)
         EXPECT_NEAR(testedData[i], trueData[i], 0.001);
     }
 };
+ //TODO:add test for calculateData method by derived class as Model -> GaussianModel
+TEST_F(TestSetUpFunction, calculateDataMethodByRollClasses)
+{
+    SimplexPoint<4> testingSimplexPoint(arguments, referencedArray, additionalParameters);
+     testingSimplexPoint.setUp(gaussianModel, chi2ErrorModel);
+     std::unique_ptr<Data> calculatedData = testingSimplexPoint.calculateData();
+     auto testedData = (*calculatedData).getValues();
+     auto trueData = (*referencedData).getValues();
+     for (int i = 0; i < arguments.size(); i++)
+     {
+         EXPECT_NEAR(testedData[i], trueData[i], 0.001);
+     }
+};
 
 }
 //* Testowanie funkcji calculateError

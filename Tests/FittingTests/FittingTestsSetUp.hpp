@@ -78,8 +78,8 @@ public:
 
         trueError = chi2ErrorModelFunction(referencedData, evaluatedData);
 
-        gaussianModel = std::make_shared<GaussianModel>(GaussianModel(gaussianFunction));
-        chi2ErrorModel = std::make_shared<Chi2ErrorModel>(Chi2ErrorModel(chi2Model));
+        gaussianModel = std::make_shared<GaussianModel>(gaussianFunction);
+        chi2ErrorModel = std::make_shared<Chi2ErrorModel>(chi2Model);
     };
     std::array<double, 4> referencedArray{ 2, 1, 2, -1 };
     std::array<double, 4> evaluatedArray{ 1, 1, 1, -1 };
@@ -96,6 +96,6 @@ public:
     std::shared_ptr<Model<4>> sharedPtrModel;
     std::shared_ptr<ErrorModel> sharedPtrErrorModel;
 
-    std::shared_ptr<Chi2ErrorModel>  chi2ErrorModel;
-    std::shared_ptr<GaussianModel>  gaussianModel;
+    std::shared_ptr<Model<4>>  gaussianModel;
+    std::shared_ptr<ErrorModel>  chi2ErrorModel;
 };

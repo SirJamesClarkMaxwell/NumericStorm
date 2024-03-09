@@ -18,6 +18,8 @@ public:
         const AdditionalParameters& additionalParameters)>
         model)
         : m_model(model) {};
+	Model(const Model<parameter_size>& other) = default;
+    virtual ~Model() {};
     std::unique_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
         const AdditionalParameters& additionalParameters);
 
