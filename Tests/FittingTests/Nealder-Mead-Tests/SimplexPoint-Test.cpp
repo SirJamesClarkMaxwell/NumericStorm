@@ -52,7 +52,7 @@ TEST_F(TestSetUpFunction, settingModelsByDerivedClass)
     EXPECT_TRUE(errorModel == sharedPtrErrorModel);
 }
 
-//* testowanie rzucania błędów o nieustawieniu modelu i błedu modelu
+//* testing throwing exception if model and error is not set
 TEST_F(TestSetUpFunction, throwingExceptionIfModelIsNotSet)
 {
     SimplexPoint<4> testingSimplexPoint(arguments, referencedArray, additionalParameters);
@@ -80,8 +80,22 @@ TEST_F(TestSetUpFunction, throwingExceptionIfErrorModelIsNotSet)
     }
 
 };
+
+//* testing calculateData method
+TEST_F(TestSetUpFunction, calculateDataMethodByRollClasses)
+{
+    SimplexPoint<4> testingSimplexPoint(arguments, referencedArray, additionalParameters);
+    testingSimplexPoint.setUp(sharedPtrModel, sharedPtrErrorModel);
+    std::unique_ptr<Data> calculatedData = testingSimplexPoint.calculateData();
+    auto testedData = (*calculatedData).getValues();
+    auto trueData = (*referencedData).getValues();
+    for (int i = 0; i < arguments.size(); i++)
+    {
+        EXPECT_NEAR(testedData[i], trueData[i], 0.001);
+    }
+};
+
 }
-//* Testowanie funkcji calculateData
 //* Testowanie funkcji calculateError
 
 //! inny plik
