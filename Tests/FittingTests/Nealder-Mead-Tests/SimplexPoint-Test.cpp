@@ -33,6 +33,7 @@ TEST_F(TestSetUpFunction, checkingSetFalseMember)
     EXPECT_TRUE(isSetModel == expectedFalse);
     EXPECT_TRUE(isSetErrorModel == expectedFalse);
 }
+
 // * testing Model and ErrorModel as a derived class
 TEST_F(TestSetUpFunction, settingModelsByDerivedClass)
 {
@@ -58,15 +59,28 @@ TEST_F(TestSetUpFunction, throwingExceptionIfModelIsNotSet)
     const char* expectedMessage = "Model to calculating the data is not setted. \n Please set model as a Model object. \n To get more information check out our documetation.";
     try
     {
-        //testingSimplexPoint.calculateData();
+        testingSimplexPoint.calculateData();
     }
     catch (const NoSetModelExeption& e)
     {
         EXPECT_STREQ(e.what(), expectedMessage);
     }
 }
+TEST_F(TestSetUpFunction, throwingExceptionIfErrorModelIsNotSet)
+{
+    SimplexPoint<4> testingSimplexPoint(arguments, referencedArray, additionalParameters);
+    const char* expectedMessage = "Function to calculating the error is not setted. \n Please set this error model as an object of ErrorModel. You could use one of our predefided error model. \n To get more information check out our documentation!";
+    try
+    {
+        testingSimplexPoint.calculateError(referencedData, evaluatedData);
+    }
+    catch (const NoSetErrorModelExeption& e)
+    {
+        EXPECT_STREQ(e.what(), expectedMessage);
+    }
 
 };
+}
 //* Testowanie funkcji calculateData
 //* Testowanie funkcji calculateError
 

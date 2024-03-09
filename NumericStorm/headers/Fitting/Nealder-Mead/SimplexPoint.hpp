@@ -109,7 +109,7 @@ public:
 		setErrorModel(errorModel);
 	}
 
-	void calculateError(const Data& referenceData, const Data& calculatedData) {
+	void calculateError(const std::shared_ptr<Data>& referenceData, const std::shared_ptr<Data>& calculatedData) {
 		if (m_errorModelSet)
 			m_error = (*m_errorModel)(referenceData, calculatedData);
 		else
