@@ -36,6 +36,7 @@ double chi2ErrorModelFunction(const std::shared_ptr<Data>& referenceData, const 
 }
 class Chi2ErrorModel : public ErrorModel
 {
+    //TODO: make function the actual function static and remove parameter form constructor
 public:
     Chi2ErrorModel(std::function<double(const std::shared_ptr<Data>&, const std::shared_ptr<Data>&)> chi2Model)
         : ErrorModel(chi2Model) {}
@@ -47,6 +48,7 @@ public:
 
 class GaussianModel : public Model<4>
 {
+    //TODO: make function the actual function static and remove parameter form constructor
 public:
     GaussianModel(std::function<std::unique_ptr<Data>(const std::vector<double>&, const Parameters<4>&, const AdditionalParameters&)> gaussian)
         :Model<4>(gaussian) {};

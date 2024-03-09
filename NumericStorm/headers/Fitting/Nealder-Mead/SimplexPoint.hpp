@@ -11,6 +11,7 @@
 
 
 namespace NumericStorm
+
 {
 namespace Fitting
 {
@@ -21,8 +22,8 @@ class SimplexPoint {
 public:
 
 	SimplexPoint() {};
-	SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParameters additionalParameters)
-		: m_parameters(parameters), m_error(-1), m_modelSet(false), m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
+	SimplexPoint(const std::vector<double> arguments, Parameters<parameter_size > parameters, AdditionalParameters additionalParameters)
+		: m_arguments(arguments), m_parameters(parameters), m_error(-1), m_modelSet(false), m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
 
 	SimplexPoint(const SimplexPoint<parameter_size>& other) = default;
 	std::array<double, parameter_size> getParameters()
@@ -116,7 +117,10 @@ public:
 	}
 	std::unique_ptr<Data> calculateData() {
 		if (m_modelSet)
-			return (*m_model)(m_parameters, m_additionalParameters);
+		{
+
+			return (*m_model)(m_arguments, m_parameters, m_additionalParameters);
+		}
 		else
 			throw NoSetModelExeption();
 	}
@@ -130,6 +134,7 @@ private:
 	{
 		m_errorModel = modelToSet; m_errorModelSet = true;
 	}
+	std::vector<double> m_arguments;
 	Parameters<parameter_size> m_parameters;
 	AdditionalParameters m_additionalParameters;
 	double m_error;
@@ -137,8 +142,9 @@ private:
 	bool m_errorModelSet;
 	std::shared_ptr<Model<parameter_size>> m_model;
 	std::shared_ptr<ErrorModel> m_errorModel;
+
 #if DEBUG
-	public:
+public:
 	bool  modelIsSet() const
 	{
 		return m_modelSet;
