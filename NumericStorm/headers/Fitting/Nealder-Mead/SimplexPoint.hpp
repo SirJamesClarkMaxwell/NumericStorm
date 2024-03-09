@@ -52,15 +52,15 @@ public:
 	{
 		return m_error <=> other.m_error;
 	}
-	SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
-		if (this != &other)
-		{
-			m_parameters = other.m_parameters;
-			m_error = other.m_error;
-		}
+	// SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
+	// 	if (this != &other)
+	// 	{
+	// 		m_parameters = other.m_parameters;
+	// 		m_error = other.m_error;
+	// 	}
 
-		return *this;
-	}
+	// 	return *this;
+	// }
 
 	SimplexPoint<parameter_size>& operator+=(const SimplexPoint<parameter_size>& other) {
 		for (int i = 0; i < parameter_size; ++i)
@@ -150,6 +150,10 @@ private:
 
 #if DEBUG
 public:
+	std::vector<double> getArguments() const
+	{
+		return m_arguments;
+	}
 	bool  modelIsSet() const
 	{
 		return m_modelSet;

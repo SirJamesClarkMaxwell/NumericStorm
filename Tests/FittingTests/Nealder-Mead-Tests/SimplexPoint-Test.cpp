@@ -1,3 +1,4 @@
+#pragma once
 #include "pch.h"
 #include "../FittingTestsSetUp.hpp"
 using namespace NumericStorm::Fitting;
