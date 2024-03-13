@@ -10,20 +10,24 @@ class Data
 {
 public:
 	Data() = default;
-	Data(const std::vector<double>& arguments,const std::vector<double>& values)
-		:m_argumets(arguments),m_values(values) {}
-	virtual ~Data() {};
-	virtual std::vector<double> getArguments() = 0;
-	virtual std::vector<double> getValues() = 0;
-#if REALESE	
+	Data(const Data& d) = default;
+	Data(Data&& d) = default;
+	Data& operator=(const Data& d) = default;
+	Data& operator=(Data&& d) = default;
+
+	Data(const std::vector<double>& arguments = {}, const std::vector<double>& values = {})
+		:m_argumets{ arguments }, m_values{ values } {}
+
+	virtual ~Data() = default;
+	virtual const std::vector<double>& getArguments() const = 0;
+	virtual const std::vector<double>& getValues() const = 0;
+	virtual void setArguments(const std::vector<double>& args) = 0;
+	virtual void setValues(const std::vector<double>& vals) = 0;
+
 protected:
-#endif
-	std::vector<double> m_argumets;
-	std::vector<double> m_values;
+	std::vector<double> m_argumets{};
+	std::vector<double> m_values{};
 
 };
-
-
-
 }
 }

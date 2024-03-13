@@ -1,12 +1,9 @@
 #pragma once
 #include "../Parameters.hpp"
-#include "../Model.hpp"
-#include "../ErrorModel.hpp"
-#include "../Exceptions/NoSetErrorModelExeption.hpp"
-#include "../Exceptions/NoSetModelExeption.hpp"
+#include "../Data.hpp"
 
-#include <concepts>
-#include <type_traits>
+#include <vector>
+#include <array>
 #include <memory>
 
 
@@ -18,159 +15,126 @@ namespace Fitting
 
 
 template <std::size_t parameter_size>
-class SimplexPoint {
+class SimplexPoint : public Parameters<parameter_size> {
 public:
 
-	SimplexPoint() {};
-	SimplexPoint(const std::vector<double> arguments, Parameters<parameter_size > parameters, AdditionalParameters additionalParameters)
-		: m_arguments(arguments), m_parameters(parameters), m_error(-1), m_modelSet(false), m_errorModelSet(false), m_additionalParameters(additionalParameters) {};
+	SimplexPoint() = default;
+	SimplexPoint(const SimplexPoint<parameter_size>&) = default;
+	SimplexPoint(SimplexPoint<parameter_size>&&) = default;
+	SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>&) = default;
+	SimplexPoint<parameter_size>& operator=(SimplexPoint<parameter_size>&&) = default;
 
-	SimplexPoint(const SimplexPoint<parameter_size>& other) = default;
-	std::array<double, parameter_size> getParameters()
-	{
-		return m_parameters.getParameters();
+	virtual ~SimplexPoint() = default;
+
+	SimplexPoint(const Parameters<parameter_size>& params) : Parameters<parameter_size>(params), m_data{std::make_unique<Data>() } {}
+	SimplexPoint(Parameters<parameter_size>&& params) : Parameters<parameter_size>(params), m_data{ std::make_unique<Data>() } {}
+
+
+	SimplexPoint(const std::vector<double> arguments, const std::array<double, parameter_size>& parameters)
+		: Parameters<parameter_size>{ parameters }, m_data{ std::make_unique<Data>(arguments) } {};
+
+	void updateData(const Data& data) {
+		*(m_data) = data;
+		m_data_valid = true;
 	}
 
-	// Operator overloads
-	double& operator[](int index) {
-		return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
-	}
+	const Data& getData() const { return *(m_data); }
 
-	const double& operator[](int index) const {
-		return (index >= 0 && static_cast<std::size_t>(index) < parameter_size) ? m_parameters[index] : m_parameters[0];
-	}
+
+	bool isDataValid() const { return m_data_valid; }
+
 
 	bool operator ==(const SimplexPoint<parameter_size>& other) const
 	{
-		return m_parameters.getParameters() == other.getParameters();
+		return this->m_parameters.getParameters() == other.getParameters();
 	}
 	bool operator == (const std::array<double, parameter_size>& other) const
 	{
-		return m_parameters.getParameters() == other;
+		return this->m_parameters.getParameters() == other;
 	};
 	bool operator <=> (const SimplexPoint<parameter_size>& other) const
 	{
-		return m_error <=> other.m_error;
+		return this->m_error <=> other.m_error;
 	}
-	// SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
-	// 	if (this != &other)
-	// 	{
-	// 		m_parameters = other.m_parameters;
-	// 		m_error = other.m_error;
-	// 	}
 
-	// 	return *this;
-	// }
+	virtual double& operator[](int index) noexcept override
+	{
+		//overloading to add data invalidation
+		m_data_valid = false;
+		//instead of rewriting the entire operator we add functionality and call operator of the base class
+		return Parameters<parameter_size>::operator[](index);
+	}
 
 	SimplexPoint<parameter_size>& operator+=(const SimplexPoint<parameter_size>& other) {
-		for (int i = 0; i < parameter_size; ++i)
-			m_parameters[i] += other[i];
+		for (std::size_t i = 0; i < parameter_size; ++i)
+			this->operator[](i) += other[i];
 		return *this;
 	}
 	SimplexPoint<parameter_size>& operator-=(const SimplexPoint<parameter_size>& other) {
-		for (int i = 0; i < parameter_size; ++i)
-			m_parameters[i] -= other[i];
+		for (std::size_t i = 0; i < parameter_size; ++i)
+			this->operator[](i) -= other[i];
 		return *this;
 	}
-	SimplexPoint<parameter_size>& operator*=(const auto& other) {
+	SimplexPoint<parameter_size>& operator*=(const  SimplexPoint<parameter_size>& other) {
 		for (std::size_t i = 0; i < parameter_size; ++i)
-			m_parameters[i] *= other;
+			this->operator[](i) *= other[i];
 		return *this;
 	}
-	SimplexPoint<parameter_size>& operator/=(const auto& other) {
+	SimplexPoint<parameter_size>& operator/=(const  SimplexPoint<parameter_size>& other) {
 		for (std::size_t i = 0; i < parameter_size; ++i)
-			m_parameters[i] /= other;
+			this->operator[](i) /= other[i];
 		return *this;
 	}
 
-	SimplexPoint<parameter_size> operator+(const SimplexPoint<parameter_size>& other) const {
-		SimplexPoint result = *this;
+	SimplexPoint<parameter_size>& operator*=(double scalar) {
+		for (auto& param : this->m_parameters) {
+			param *= scalar;
+		}
+		return *this;
+	}
+	SimplexPoint<parameter_size>& operator/=(double scalar) {
+		for (auto& param : this->m_parameters) {
+			param /= scalar;
+		}
+		return *this;
+	}
+
+	SimplexPoint<parameter_size> operator+(const  SimplexPoint<parameter_size>& other) const {
+		SimplexPoint<parameter_size> result = *this;
 		result += other;
 		return result;
 	}
-	SimplexPoint<parameter_size> operator-(const SimplexPoint<parameter_size>& other) const {
-		SimplexPoint result = *this;
+	SimplexPoint<parameter_size> operator-(const  SimplexPoint<parameter_size>& other) const {
+		SimplexPoint<parameter_size> result = *this;
 		result -= other;
 		return result;
 	}
-	SimplexPoint<parameter_size> operator*(const auto& other) const {
-		SimplexPoint result = *this;
+	SimplexPoint<parameter_size> operator*(const  SimplexPoint<parameter_size>& other) const {
+		SimplexPoint<parameter_size> result = *this;
 		result *= other;
 		return result;
 	}
-	SimplexPoint<parameter_size> operator/(const auto& other) const {
-		SimplexPoint result = *this;
+	SimplexPoint<parameter_size> operator/(const  SimplexPoint<parameter_size>& other) const {
+		SimplexPoint<parameter_size> result = *this;
 		result /= other;
 		return result;
 	}
 
-	void setUp(std::shared_ptr<Model<parameter_size>> dataModel, std::shared_ptr<ErrorModel>errorModel) {
-		setModel(dataModel);
-		setErrorModel(errorModel);
+	SimplexPoint<parameter_size> operator*(double scalar) const {
+		SimplexPoint<parameter_size> result = *this;
+		result *= scalar;
+		return result;
+	}
+	SimplexPoint<parameter_size> operator/(double scalar) const {
+		SimplexPoint<parameter_size> result = *this;
+		result /= scalar;
+		return result;
 	}
 
-	void calculateError(const std::shared_ptr<Data>& referenceData) {
-		if (m_errorModelSet)
-		{
-			if (!m_modelSet)
-				throw NoSetModelExeption();
-			std::shared_ptr<Data> calculatedData = std::move(calculateData());
-			m_error = (*m_errorModel)(referenceData, calculatedData);
-		}
-		else
-			throw NoSetErrorModelExeption();
-	}
-	std::unique_ptr<Data> calculateData() {
-		if (m_modelSet)
-		{
-
-			return (*m_model)(m_arguments, m_parameters, m_additionalParameters);
-		}
-		else
-			throw NoSetModelExeption();
-	}
-	double getError()const { return m_error; }
 private:
-	void setModel(std::shared_ptr<Model<parameter_size>> modelToSet)
-	{
-		m_model = modelToSet; m_modelSet = true;
-	}
-	void setErrorModel(std::shared_ptr<ErrorModel> modelToSet)
-	{
-		m_errorModel = modelToSet; m_errorModelSet = true;
-	}
-	std::vector<double> m_arguments;
-	Parameters<parameter_size> m_parameters;
-	AdditionalParameters m_additionalParameters;
-	double m_error;
-	bool m_modelSet;
-	bool m_errorModelSet;
-	std::shared_ptr<Model<parameter_size>> m_model;
-	std::shared_ptr<ErrorModel> m_errorModel;
-
-#if DEBUG
-public:
-	std::vector<double> getArguments() const
-	{
-		return m_arguments;
-	}
-	bool  modelIsSet() const
-	{
-		return m_modelSet;
-	}
-	bool  errorModelIsSet() const
-	{
-		return m_errorModelSet;
-	}
-	std::shared_ptr<Model<parameter_size>>  getModel() const
-	{
-		return m_model;
-	}
-	std::shared_ptr<ErrorModel> getErrorModel() const
-	{
-		return m_errorModel;
-	}
-#endif
+	bool m_data_valid{ false };
+	//I am not sure that storing a copy of input arguments in each simplex point is the best approach, might change later
+	std::unique_ptr<Data> m_data{ nullptr };
 };
 }
 }

@@ -10,29 +10,31 @@ namespace NumericStorm
 {
 	namespace Fitting
 	{
-		template <size_t parameter_size>
-		class BasicSimplexFitter : public SimplexFitter<parameter_size>
+		template <size_t parameter_size, class DerivedSettings = BasicSimplexFitterSettings<parameter_size>>
+		class BasicSimplexFitter : public SimplexFitter<parameter_size, DerivedSettings>
 		{
 		public:
-			BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
-				: SimplexFitter<parameter_size>(simplexFigure) {}
+			BasicSimplexFitter() = delete;
+			BasicSimplexFitter(const BasicSimplexFitter<parameter_size, DerivedSettings>&) = default;
+			BasicSimplexFitter(BasicSimplexFitter<parameter_size, DerivedSettings>&&) = default;
+			BasicSimplexFitter<parameter_size, DerivedSettings>& operator=(const BasicSimplexFitter<parameter_size, DerivedSettings>&) = default;
+			BasicSimplexFitter<parameter_size, DerivedSettings>& operator=(BasicSimplexFitter<parameter_size, DerivedSettings>&&) = default;
 
-			void setUp(BasicSimplexFitterSettings<parameter_size> fitterSettings);
-			void minimize() override{};
-			// TODO add factory to Simplex decision
-			Parameters<parameter_size> getFittedParameters()
-			{
-				return this->m_fittedParameters;
-			};
+			virtual ~BasicSimplexFitter() = default;
+
+			BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
+				: SimplexFitter<parameter_size>{ simplexFigure } {}
+
+			void setUp(const DerivedSettings& fitterSettings) override { this->m_settings = std::make_unique<DerivedSettings>(fitterSettings); }
+			void fit() override {
+
+
+				
+			}
 
 		private:
-			SimplexOperationFactory<parameter_size + 1> m_simplexOperationFactory;
+			SimplexOperationFactory<parameter_size> m_simplexOperationFactory;
 		};
-
-		template <size_t parameter_size>
-		void BasicSimplexFitter<parameter_size>::setUp(BasicSimplexFitterSettings<parameter_size> fitterSettigns)
-		{
-		}
 
 	}
 }

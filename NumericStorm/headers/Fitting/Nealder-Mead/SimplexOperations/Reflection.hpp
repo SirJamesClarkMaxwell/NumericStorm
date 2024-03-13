@@ -14,27 +14,25 @@ namespace NumericStorm
 			Reflection(const SimplexOperationSettings &settings)
 				: ISimplexOperation<parameter_size>("reflection", settings){};
 
-			virtual SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size> &simplexFigure) override;
-		};
+			virtual SimplexFigure<parameter_size+1>& operator()(SimplexFigure<parameter_size+1>& simplexFigure) override {
+				double alpha = this->m_settings.getFactor();
 
-		template <size_t parameter_size>
-		SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(const SimplexFigure<parameter_size> &simplexFigure)
-		{
 
-			double alpha = this->m_settings.getFactor();
-			SimplexPoint<parameter_size> &centroid = simplexFigure.getCentroid();
-			SimplexPoint<parameter_size> &pointToReflectArround(centroid);
+				const SimplexPoint<parameter_size>& centroid = simplexFigure.getCentroid();
+				//worst point is the first one
+				SimplexPoint<parameter_size>& reflectedPoint = simplexFigure.getReflected();
+				const SimplexPoint<parameter_size>& worstPoint = simplexFigure[0];
 
-#if DEBUG
-			auto difference = centroid - simplexFigure[0];
-			auto multiplicated = difference * alpha;
-			pointToReflectArround += multiplicated;
-#else if REALASE
-			pointToReflectArround += (centroid - simplexFigure[0]) * alpha;
-#endif
+			#if DEBUG
+				auto difference = centroid - worstPoint;
+				auto scaled = difference * alpha;
+				reflectedPoint = centroid + scaled;
+			#elif RELEASE
+				reflectedPoint = centroid + (centroid - worstPoint) * alpha;
+			#endif
 
-			simplexFigure[0] = pointToReflectArround;
-			return simplexFigure;
+				return simplexFigure;
+			}
 		};
 
 	}

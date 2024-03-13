@@ -1,28 +1,43 @@
 #pragma once
 #include "../SimplexFigure.hpp"
 #include "SimplexOperationSettigns.hpp"
+#include "../../CreatorInterface.hpp"
+
 namespace NumericStorm
 {
     namespace Fitting
     {
 
+        
+
         template <size_t parameter_size>
-        class ISimplexOperation
+        class ISimplexOperation : public CreatorInterface<SimplexFigure<parameter_size+1>&, SimplexFigure<parameter_size+1>&, SimplexOperationSettings>
         {
-        private:
-            ISimplexOperation(const std::string &operationName, const SimplexOperationSettings &arguments)
-                : m_operationName(operationName), m_settings(arguments){};
-
         public:
-            virtual SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size> &simplexFigure) = 0;
-            void updateSettigns(const SimplexOperationSettings &newSettings)
-            {
-                m_settings = newSettings;
-            }
 
+            using InterfaceType = CreatorInterface<SimplexFigure<parameter_size + 1>&, SimplexFigure<parameter_size + 1>&, SimplexOperationSettings>;
+            using In = typename InterfaceType::In;
+            using Out = typename InterfaceType::Out;
+            using Settings = typename InterfaceType::Settings;
+            ISimplexOperation() = default;
+            ISimplexOperation(const ISimplexOperation<parameter_size>&) = default;
+            ISimplexOperation(ISimplexOperation<parameter_size>&&) = default;
+            ISimplexOperation<parameter_size>& operator=(const ISimplexOperation<parameter_size>&) = default;
+            ISimplexOperation<parameter_size>& operator=(ISimplexOperation<parameter_size>&&) = default;
+
+            virtual ~ISimplexOperation() = default;
+
+           
+
+            ISimplexOperation(const std::string& operationName, const SimplexOperationSettings& arguments)
+                : CreatorInterface<In, Out, Settings>{} {
+                m_operationName = operationName;
+                this->m_settings = arguments;
+            };
+
+            const std::string& getOpeartionName() const { return m_operationName; }
         protected:
-            SimplexOperationSettings m_settings;
-            std::string m_operationName;
+            std::string m_operationName{};
         };
 
     }

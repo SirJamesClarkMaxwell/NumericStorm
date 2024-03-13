@@ -10,7 +10,7 @@ class Bounds :public Parameters<bounds_size>
 {
 public:
 	Bounds(std::array<double, bounds_size> bounds)
-		:Parameters<bounds_size>(bounds);
+		: Parameters<bounds_size>(bounds) {};
 
 	virtual double& operator [](int index) = 0;
 	virtual std::array<double, size_p> getParameters() = 0;
