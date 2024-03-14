@@ -87,7 +87,7 @@ TEST_F(TestSetUpFunction, calculateDataMethodByRollClasses)
 {
     SimplexPoint<4> testingSimplexPoint(arguments, referencedArray, additionalParameters);
     testingSimplexPoint.setUp(sharedPtrModel, sharedPtrErrorModel);
-    std::unique_ptr<Data> calculatedData = testingSimplexPoint.calculateData();
+    std::shared_ptr<Data> calculatedData = testingSimplexPoint.calculateData();
     auto testedData = (*calculatedData).getValues();
     auto trueData = (*referencedData).getValues();
     for (int i = 0; i < arguments.size(); i++)
@@ -99,7 +99,7 @@ TEST_F(TestSetUpFunction, calculateDataMethodByDerivedClasses)
 {
     SimplexPoint<4> testingSimplexPoint(arguments, referencedArray, additionalParameters);
     testingSimplexPoint.setUp(gaussianModel, chi2ErrorModel);
-    std::unique_ptr<Data> calculatedData = testingSimplexPoint.calculateData();
+    std::shared_ptr<Data> calculatedData = testingSimplexPoint.calculateData();
     auto testedData = (*calculatedData).getValues();
     auto trueData = (*referencedData).getValues();
     for (int i = 0; i < arguments.size(); i++)
@@ -115,8 +115,8 @@ TEST_F(TestSetUpFunction, calculateErrorByDerivedClasses)
     SimplexPoint<4> evaluatedSimplexPoint(arguments, evaluatedParameters, additionalParameters);
     referencedSimplexPoint.setUp(gaussianModel, chi2ErrorModel);
     evaluatedSimplexPoint.setUp(gaussianModel, chi2ErrorModel);
-    std::unique_ptr<Data> referencedData_unique_ptr = referencedSimplexPoint.calculateData();
-    std::shared_ptr<Data> referencedData = std::move(referencedData_unique_ptr);
+    std::shared_ptr<Data> referencedData_unique_ptr = referencedSimplexPoint.calculateData();
+    //std::shared_ptr<Data> referencedData = std::move(referencedData_unique_ptr);
     auto referencedValues = (*referencedData).getValues();
     evaluatedSimplexPoint.calculateError(referencedData);
     double testedError = evaluatedSimplexPoint.getError();

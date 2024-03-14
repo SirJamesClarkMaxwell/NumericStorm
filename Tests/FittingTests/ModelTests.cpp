@@ -73,7 +73,7 @@ TEST_F(TestingGaussianModel, TestingSimpleGaussianModel)
 {
 	Model<4>* testedModel = new GaussianModel(gaussian);
 
-	std::unique_ptr<Data> testedData = (*testedModel)(arguments, initialParameters, additionalParameters);
+	std::shared_ptr<Data> testedData = (*testedModel)(arguments, initialParameters, additionalParameters);
 	auto testedValues = (*testedData).getValues();
 	for (int i = 0; i < arguments.size(); i++)
 		EXPECT_DOUBLE_EQ(testedValues[i],trueValues[i]);

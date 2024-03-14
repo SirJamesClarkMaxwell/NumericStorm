@@ -40,7 +40,7 @@ public:
     // No need for constructor parameters
     GaussianModel() : Model<4>(gaussianFunction) {};
 
-    static std::unique_ptr<Data> gaussianFunction(const std::vector<double>& arguments, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters) 
+    static std::unique_ptr<Data> gaussianFunction(const std::vector<double>& arguments, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters)
     {
         std::vector<double> calculateData;
         calculateData.resize(arguments.size());
@@ -53,7 +53,7 @@ public:
         }
         return std::make_unique<GaussianData>(arguments, calculateData);
     }
-    std::unique_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters) {
+    std::shared_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters) {
         return gaussianFunction(arguments, parameters, additionalParameters); // Call the static function
     };
 };

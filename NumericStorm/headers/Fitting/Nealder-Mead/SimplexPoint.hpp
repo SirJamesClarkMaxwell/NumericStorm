@@ -16,7 +16,6 @@ namespace NumericStorm
 namespace Fitting
 {
 
-
 template <std::size_t parameter_size>
 class SimplexPoint {
 public:
@@ -120,10 +119,9 @@ public:
 		else
 			throw NoSetErrorModelExeption();
 	}
-	std::unique_ptr<Data> calculateData() {
+	std::shared_ptr<Data> calculateData() {
 		if (m_modelSet)
 		{
-
 			return (*m_model)(m_arguments, m_parameters, m_additionalParameters);
 		}
 		else

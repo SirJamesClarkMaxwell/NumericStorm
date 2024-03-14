@@ -15,7 +15,7 @@ struct TestingCopyConstructor :public ::testing::Test, public UsefullyObjects
         baseSimplexPoint.setUp(sharedPtrModel, sharedPtrErrorModel);
         baseSimplexPoint.calculateError(referencedData);
         testingPoint = SimplexPoint<4>(baseSimplexPoint);
-        };
+    };
     SimplexPoint<4> baseSimplexPoint;
     SimplexPoint<4> testingPoint;
 };
@@ -50,7 +50,7 @@ TEST_F(TestingCopyConstructor, TestCopyConstructorError) {
 //* testing assignment operator
 }
 
-namespace TestingSimplexPointAsigmentOperator
+namespace TestingSimplexPointAssignmentOperator
 {
 //* testing copy constructor
 struct TestingAssignmentOperator :public ::testing::Test, public UsefullyObjects
@@ -66,31 +66,32 @@ struct TestingAssignmentOperator :public ::testing::Test, public UsefullyObjects
     SimplexPoint<4> testingPoint;
 };
 
-// TEST_FAsigmentOperatorCopyConstructor, arguments)
+// TEST_F(AssignmentOperatorCopyConstructor, arguments)
 // {
 
 //     std::vector<double> expectedArguments = baseSimplexPoint.getArguments();
 //     std::vector<double> actualArguments = testingPoint.getArguments();
 //     EXPECT_EQ(expectedArguments, actualArguments);
 // }
-TEST_F(TestingAssignmentOperator, TestAssigmentOperatorArguments) {
+TEST_F(TestingAssignmentOperator, TestAssignmentOperatorArguments) {
     EXPECT_EQ(baseSimplexPoint.getArguments(), testingPoint.getArguments()) << "Arguments were not copied correctly using getArguments().";
 }
-TEST_F(TestingAssignmentOperator, TestAssigmentOperatorModelSet) {
+TEST_F(TestingAssignmentOperator, TestAssignmentOperatorModelSet) {
     EXPECT_EQ(baseSimplexPoint.modelIsSet(), testingPoint.modelIsSet()) << "ModelSet flag was not copied correctly using modelIsSet().";
 }
-TEST_F(TestingAssignmentOperator, TestAssigmentOperatorErrorModelSet) {
+TEST_F(TestingAssignmentOperator, TestAssignmentOperatorErrorModelSet) {
     EXPECT_EQ(baseSimplexPoint.errorModelIsSet(), testingPoint.errorModelIsSet()) << "ErrorModelSet flag was not copied correctly using errorModelIsSet().";
 }
-TEST_F(TestingAssignmentOperator, TestAssigmentOperatorModel) {
+TEST_F(TestingAssignmentOperator, TestAssignmentOperatorModel) {
     // Note: Direct comparison of shared_ptrs. If you need to compare the underlying objects, you might need a custom method or logic.
     EXPECT_EQ(baseSimplexPoint.getModel(), testingPoint.getModel()) << "Model shared_ptr was not copied correctly using getModel().";
 }
-TEST_F(TestingAssignmentOperator, TestAssigmentOperatorErrorModel) {
+TEST_F(TestingAssignmentOperator, TestAssignmentOperatorErrorModel) {
     // Note: Direct comparison of shared_ptrs. If comparing the underlying objects is needed, consider adding a method for that purpose.
     EXPECT_EQ(baseSimplexPoint.getErrorModel(), testingPoint.getErrorModel()) << "ErrorModel shared_ptr was not copied correctly using getErrorModel().";
 }
-TEST_F(TestingAssignmentOperator, TestAssigmentOperatorError) {
+
+TEST_F(TestingAssignmentOperator, TestAssignmentOperatorError) {
     EXPECT_DOUBLE_EQ(baseSimplexPoint.getError(), testingPoint.getError()) << "Error value was not copied correctly using getError().";
 }
 }
