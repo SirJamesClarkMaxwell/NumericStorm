@@ -49,8 +49,10 @@ public:
 	};
 	bool operator <=> (const SimplexPoint<parameter_size>& other) const
 	{
-		return m_error <=> other.m_error;
+		return (m_error <=> other.m_error) == 0;
 	}
+	bool operator < (const SimplexPoint<parameter_size>& other) const 
+		{ return m_error < other.m_error; };
 	// SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
 	// 	if (this != &other)
 	// 	{

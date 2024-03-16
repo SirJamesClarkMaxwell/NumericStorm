@@ -29,7 +29,8 @@ protected:
 };
 
 template <size_t parameter_size>
-std::shared_ptr<Data> Model<parameter_size>::operator()(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters, const AdditionalParameters& additionalParameters)
+std::shared_ptr<Data> Model<parameter_size>::operator()(const std::vector<double>&arguments, const Parameters<parameter_size>&parameters,
+	const AdditionalParameters& additionalParameters)
 {
 	return std::move(m_model(arguments, parameters, additionalParameters));
 }

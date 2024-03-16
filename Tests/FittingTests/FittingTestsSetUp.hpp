@@ -27,7 +27,14 @@ public:
         std::vector<double> evaluatedValues = evaluatedData->getValues();
         double chi2 = 0;
         for (size_t i = 0; i < referenceValues.size(); i++)
+        {
+#if DEBUG
             chi2 += pow((referenceValues[i] - evaluatedValues[i]), 2);
+            // std::cout << chi2 << std::endl;
+#else
+            chi2 += pow((referenceValues[i] - evaluatedValues[i]), 2);
+#endif
+        }
         return chi2;
     }
 
@@ -54,7 +61,7 @@ public:
         return std::make_unique<GaussianData>(arguments, calculateData);
     }
     std::shared_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters) {
-        return gaussianFunction(arguments, parameters, additionalParameters); // Call the static function
+        return Model::operator()(arguments, parameters, additionalParameters); // Call the static function
     };
 };
 class UsefullyObjects
@@ -81,6 +88,7 @@ public:
         gaussianModel = std::make_shared<GaussianModel>();
         chi2ErrorModel = std::make_shared<Chi2ErrorModel>();
     };
+
     std::array<double, 4> referencedArray{ 2, 1, 2, -1 };
     std::array<double, 4> evaluatedArray{ 1, 1, 1, -1 };
 
