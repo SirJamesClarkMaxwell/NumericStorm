@@ -14,14 +14,14 @@ class Contraction : public ISimplexOperation<parameter_size>
 public:
 	Contraction(const SimplexOperationSettings& arguments)
 		: ISimplexOperation("contraction", arguments) {};
-	SimplexFigure<parameter_size> operator()(const SimplexFigure<parameter_size>& reflectedSimplexFigure);
+	SimplexFigure<parameter_size> operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure);
 
 private:
 	SimplexPoint<parameter_size> decidePointToContraction(SimplexFigure<parameter_size> reflectedFigure);
 	std::string m_operationName;
 };
 template <size_t parameter_size>
-SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(const SimplexFigure<parameter_size>& reflectedSimplexFigure)
+SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure)
 {
 	SimplexFigure<parameter_size>& contractedFigure(reflectedSimplexFigure);
 	SimplexPoint<parameter_size>& reflectedPoint(reflectedSimplexFigure[0]);
