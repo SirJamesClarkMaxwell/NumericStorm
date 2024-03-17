@@ -13,7 +13,7 @@ class Contraction : public ISimplexOperation<parameter_size>
 {
 public:
 	Contraction(const SimplexOperationSettings& arguments)
-		: ISimplexOperation("contraction", arguments) {};
+		: ISimplexOperation<parameter_size>("contraction", arguments) {};
 	SimplexFigure<parameter_size> operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure);
 
 private:
@@ -23,11 +23,11 @@ private:
 template <size_t parameter_size>
 SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure)
 {
-	SimplexFigure<parameter_size>& contractedFigure(reflectedSimplexFigure);
-	SimplexPoint<parameter_size>& reflectedPoint(reflectedSimplexFigure[0]);
+	SimplexFigure<parameter_size> contractedFigure(reflectedSimplexFigure);
+	SimplexPoint<parameter_size> reflectedPoint(reflectedSimplexFigure[0]);
 
-	SimplexPoint<parameter_size>& pointToContraction = decidePointToContraction(reflectedSimplexFigure);
-	SimplexPoint<parameter_size>& pointToContractArround(contractedFigure.getCentroid());
+	SimplexPoint<parameter_size> pointToContraction = decidePointToContraction(reflectedSimplexFigure);
+	SimplexPoint<parameter_size> pointToContractArround(reflectedSimplexFigure.getCentroid());
 
 	double beta = this->m_settings.getFactor();
 
@@ -48,9 +48,9 @@ SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(SimplexFig
 template <size_t parameter_size>
 SimplexPoint<parameter_size> Contraction<parameter_size>::decidePointToContraction(SimplexFigure<parameter_size> reflectedFigure)
 {
-	SimplexPoint<parameter_size>& reflectedPoint = reflectedFigure[0];
-	SimplexPoint<parameter_size>& secondBestPoint = reflectedFigure[1];
-	return (reflectedPoint <= secondBestPoint) ? reflectedPoint : secondBestPoint;
+	SimplexPoint<parameter_size> reflectedPoint = reflectedFigure[0];
+	SimplexPoint<parameter_size> bestPoint = reflectedFigure[parameter_size];
+	return (reflectedPoint < bestPoint) ? reflectedPoint : bestPoint;
 }
 
 }

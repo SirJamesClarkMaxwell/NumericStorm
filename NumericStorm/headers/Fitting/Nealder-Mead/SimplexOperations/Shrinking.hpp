@@ -22,11 +22,21 @@ SimplexFigure<parameter_size> Shrinking<parameter_size>::operator()(SimplexFigur
 {
     double delta = this->m_settings.getFactor();
 
-    SimplexFigure<parameter_size> result = simplexFigure;
-    const SimplexPoint<parameter_size>& bestPoint = simplexFigure[0];
+    SimplexFigure<parameter_size> result( simplexFigure);
+    const SimplexPoint<parameter_size> bestPoint = simplexFigure[parameter_size];
 
-    for (size_t i = 1; i < parameter_size + 1; ++i)
+#if DEBUG
+    for (int i = 0; i < parameter_size ; ++i)
+    {
+        auto diff = simplexFigure[i] - bestPoint;
+        auto multiplied = diff * delta;
+        auto added = bestPoint + multiplied;
+        result[i] = added;
+    }
+#elif REALASE
+    for (int i = 0; i < parameter_size -1; ++i)
         result[i] = bestPoint + (simplexFigure[i] - bestPoint) * delta;
+#endif
 
     return result;
 }

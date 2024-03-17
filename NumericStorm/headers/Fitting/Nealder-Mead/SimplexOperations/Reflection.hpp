@@ -32,7 +32,6 @@ SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(SimplexFigu
 #else if REALASE
 	pointToReflectAround += (centroid - simplexFigure[parameter_size]) * alpha;
 #endif
-
 	simplexFigure[0] = pointToReflectAround;
 	return simplexFigure;
 };

@@ -15,7 +15,7 @@ public:
 	
 	std::array<SimplexPoint<parameter_size >, parameter_size> getPoints() { return m_points; }
 	void sort(bool reverse = true);
-	SimplexPoint<parameter_size > getCentroid() { return m_centroid; }
+	SimplexPoint<parameter_size>& getCentroid() { return m_centroid; }
 	SimplexPoint<parameter_size>& operator[](size_t index);
 	const SimplexPoint<parameter_size>& operator[](size_t index) const ;
 
@@ -39,11 +39,11 @@ template<size_t parameter_size>
 SimplexPoint<parameter_size> SimplexFigure<parameter_size>::calculateCentroid()
 {
 #if DEBUG
-	SimplexPoint<parameter_size> sum = std::accumulate(m_points.begin(), m_points.end(), SimplexPoint<parameter_size>());
+	SimplexPoint<parameter_size> sum = std::accumulate(m_points.begin()+1, m_points.end(), m_points[0]);
 	SimplexPoint<parameter_size > toReturn = sum / (parameter_size);
 	return toReturn;
 #endif
-	return std::accumulate(m_points.begin(), m_points.end(), SimplexPoint<parameter_size>()) / (parameter_size);
+	return std::accumulate((m_points.begin() +1), m_points.end(), m_points[0]) / (parameter_size);
 };
 
 template<size_t parameter_size>

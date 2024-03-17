@@ -25,9 +25,9 @@ private:
 template <size_t parameter_size>
 SimplexFigure<parameter_size> Expansion<parameter_size>::operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure)
 {
-	SimplexFigure<parameter_size>& expandedFigure(reflectedSimplexFigure);
-	SimplexPoint<parameter_size>& reflectedPoint = reflectedSimplexFigure[0];
-	SimplexPoint<parameter_size>& pointToExpandAround(expandedFigure.getCentroid());
+	SimplexFigure<parameter_size> expandedFigure(reflectedSimplexFigure);
+	SimplexPoint<parameter_size> reflectedPoint = reflectedSimplexFigure[0];
+	SimplexPoint<parameter_size> pointToExpandAround(expandedFigure.getCentroid());
 	double gamma = this->m_settings.getFactor();
 
 #if DEBUG
