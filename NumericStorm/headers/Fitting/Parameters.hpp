@@ -33,22 +33,25 @@ public:
     virtual bool isErrorValid() const { return m_error_valid; }
     virtual void updateError(double error) { m_error = error; m_error_valid = true; }
 
-    virtual double& operator[](int index) noexcept
+    virtual double& operator[](int index)
     {
-        //error invalidation since parameters were modified
+        //error invalidation since parameters are assumed to be modified
         m_error_valid = false;
 
         //we dont expect someone to create parameters with 0 elements so if someone does - its their problem
         //for now - might change later
-        if (index >= 0 && static_cast<std::size_t>(index) < parameter_size)
-            return m_parameters[index];
-        return m_parameters[0];
+        //UPD: changed to proper bounds checking
+        if (index > parameter_size - 1 || index < 0) {
+            throw std::out_of_range("Index out of bounds");
+        }
+        return m_parameters[index];
     }
-    virtual const double& operator[](int index) const noexcept
+    virtual const double& operator[](int index) const
     {
-        if (index >= 0 && static_cast<std::size_t>(index) < parameter_size)
-            return m_parameters[index];
-        return m_parameters[0];
+        if (index > parameter_size - 1 || index < 0) {
+            throw std::out_of_range("Index out of bounds");
+        }
+        return m_parameters[index];
     }
 protected:
     //since error is calculated outside the Parameters it might be presented incorrectly at some point in time inside an instance

@@ -57,7 +57,7 @@ public:
 		return this->m_error <=> other.m_error;
 	}
 
-	virtual double& operator[](int index) noexcept override
+	virtual double& operator[](int index) override
 	{
 		//overloading to add data invalidation
 		m_data_valid = false;
