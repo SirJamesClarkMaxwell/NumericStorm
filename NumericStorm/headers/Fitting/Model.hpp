@@ -28,17 +28,14 @@ public:
     virtual ~Model() = default;
 
     virtual Data operator()(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
-        const AdditionalParameters& additionalParameters) const;
+        const AdditionalParameters& additionalParameters) const {
+        return m_model(arguments, parameters, additionalParameters);
+    }
 
 protected:
     std::function<Data(const std::vector<double>&, const Parameters<parameter_size>&,
         const AdditionalParameters&)> m_model;
 };
 
-template <size_t parameter_size>
-Data Model<parameter_size>::operator()(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters, const AdditionalParameters& additionalParameters) const
-{
-    return m_model(arguments, parameters, additionalParameters);
-}
 }
 }

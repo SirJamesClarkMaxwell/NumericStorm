@@ -25,7 +25,7 @@ public:
 	virtual ~SimplexFitter() = default;
 
 	SimplexFitter(const SimplexFigure<parameter_size>& simplexFigure)
-		: Fitter{}, m_simplexFigure{ simplexFigure } {};
+		: Fitter<parameter_size, DerivedSettings>{}, m_simplexFigure{ simplexFigure } {};
 protected:
 	SimplexFigure<parameter_size> m_simplexFigure{};
 };

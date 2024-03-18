@@ -25,8 +25,8 @@ namespace NumericStorm
 			BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
 				: SimplexFitter<parameter_size>{ simplexFigure } {}
 
-			void setUp(const DerivedSettings& fitterSettings) override { this->m_settings = std::make_unique<DerivedSettings>(fitterSettings); }
-			void fit() override {
+			virtual void setUp(const DerivedSettings& fitterSettings) override { this->m_settings = std::make_unique<DerivedSettings>(fitterSettings); }
+			virtual void fit() override {
 
 
 				

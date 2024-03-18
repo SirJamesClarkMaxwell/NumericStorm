@@ -20,6 +20,7 @@ namespace Fitting {
 
 		virtual Out operator()(In) = 0;
 		virtual void updateSettings(const Settings& settings) { m_settings = settings; }
+		virtual const Settings& getSettings() { return m_settings; }
 
 	protected:
 		Settings m_settings{};
