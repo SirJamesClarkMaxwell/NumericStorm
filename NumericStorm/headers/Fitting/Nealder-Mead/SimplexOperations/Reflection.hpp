@@ -14,7 +14,7 @@ namespace NumericStorm
 			Reflection(const SimplexOperationSettings &settings)
 				: ISimplexOperation<parameter_size>("reflection", settings){};
 
-			virtual SimplexFigure<parameter_size+1>& operator()(SimplexFigure<parameter_size+1>& simplexFigure) override {
+			virtual SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& simplexFigure) override {
 				double alpha = this->m_settings.getFactor();
 
 

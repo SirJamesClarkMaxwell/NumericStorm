@@ -16,7 +16,7 @@ namespace NumericStorm
 			Expansion(const SimplexOperationSettings &settings)
 				: ISimplexOperation<parameter_size>("expansion", settings){};
 
-			SimplexFigure<parameter_size+1>& operator()(SimplexFigure<parameter_size+1>& reflectedSimplexFigure) override {
+			SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure) override {
 
 				
 				const SimplexPoint<parameter_size>& centroid = reflectedSimplexFigure.getCentroid();

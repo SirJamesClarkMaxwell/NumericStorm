@@ -17,7 +17,7 @@ namespace NumericStorm
                 : ISimplexOperation<parameter_size>("shrinking", settings){}
 
 
-            SimplexFigure<parameter_size+1>& operator()(SimplexFigure<parameter_size+1>& simplexFigure) override {
+            SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& simplexFigure) override {
                 double delta = this->m_settings.getFactor();
 
                 //best point is the last one

@@ -16,7 +16,7 @@ namespace NumericStorm
 				: ISimplexOperation<parameter_size>("contraction", arguments) {}
 			
 			
-			SimplexFigure<parameter_size+1>& operator()(SimplexFigure<parameter_size+1>& reflectedSimplexFigure) override {
+			SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure) override {
 				const SimplexPoint<parameter_size>& centroid = reflectedSimplexFigure.getCentroid();
 				SimplexPoint<parameter_size>& contracted = reflectedSimplexFigure.getFinal();
 				const SimplexPoint<parameter_size>& pointToContractAround = decidePointToContractAround(reflectedSimplexFigure);
@@ -39,7 +39,7 @@ namespace NumericStorm
 
 
 		private:
-			const SimplexPoint<parameter_size>& decidePointToContractAround(const SimplexFigure<parameter_size+1>& reflectedSimplexFigure) {
+			const SimplexPoint<parameter_size>& decidePointToContractAround(const SimplexFigure<parameter_size>& reflectedSimplexFigure) {
 				const SimplexPoint<parameter_size>& reflectedPoint = reflectedSimplexFigure.getReflected();
 				const SimplexPoint<parameter_size>& worst = reflectedSimplexFigure[0];
 				return (reflectedPoint <= worst) ? reflectedPoint : worst;

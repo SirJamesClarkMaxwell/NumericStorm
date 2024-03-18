@@ -11,11 +11,11 @@ namespace NumericStorm
         
 
         template <size_t parameter_size>
-        class ISimplexOperation : public CreatorInterface<SimplexFigure<parameter_size+1>&, SimplexFigure<parameter_size+1>&, SimplexOperationSettings>
+        class ISimplexOperation : public CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>
         {
         public:
 
-            using InterfaceType = CreatorInterface<SimplexFigure<parameter_size + 1>&, SimplexFigure<parameter_size + 1>&, SimplexOperationSettings>;
+            using InterfaceType = CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>;
             using In = typename InterfaceType::In;
             using Out = typename InterfaceType::Out;
             using Settings = typename InterfaceType::Settings;

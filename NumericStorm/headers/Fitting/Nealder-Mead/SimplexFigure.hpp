@@ -10,10 +10,10 @@ template<size_t parameter_size>
 class SimplexFigure {
 public:
 	SimplexFigure() = default;
-	SimplexFigure(const SimplexFigure<parameter_size+1>&) = default;
-	SimplexFigure(SimplexFigure<parameter_size+1>&&) = default;
-	SimplexFigure<parameter_size+1>& operator=(const SimplexFigure<parameter_size+1>&) = default;
-	SimplexFigure<parameter_size+1>& operator=(SimplexFigure<parameter_size+1>&&) = default;
+	SimplexFigure(const SimplexFigure<parameter_size>&) = default;
+	SimplexFigure(SimplexFigure<parameter_size>&&) = default;
+	SimplexFigure<parameter_size>& operator=(const SimplexFigure<parameter_size>&) = default;
+	SimplexFigure<parameter_size>& operator=(SimplexFigure<parameter_size>&&) = default;
 
 	virtual ~SimplexFigure() = default;
 
@@ -29,15 +29,19 @@ public:
 	SimplexPoint<parameter_size>& operator[](int p_index) {
 		m_centroid_valid = false;
 		m_sorted = false;
-		if (p_index >= 0 && static_cast<std::size_t>(p_index) <= parameter_size)
-			return m_points[p_index];
-		return m_points[0];
+
+		if (p_index > parameter_size || p_index < 0) {
+			throw std::out_of_range("Index out of bounds");
+		}
+		return m_points[p_index];
 	}
 
 	const SimplexPoint<parameter_size>& operator[](int p_index) const {
-		if (p_index >= 0 && static_cast<std::size_t>(p_index) <= parameter_size)
-			return m_points[p_index];
-		return m_points[0];
+
+		if (p_index > parameter_size || p_index < 0) {
+			throw std::out_of_range("Index out of bounds");
+		}
+		return m_points[p_index];
 	}
 
 

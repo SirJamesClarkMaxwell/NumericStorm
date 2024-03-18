@@ -13,10 +13,10 @@ namespace NumericStorm
 namespace Fitting
 {
 template<size_t parameter_size>
-class ISimplexFactory : public CreatorInterface<SimplexPoint<parameter_size>, SimplexFigure<parameter_size+1>, SimplexCreatorSettigns>
+class ISimplexFactory : public CreatorInterface<SimplexPoint<parameter_size>, SimplexFigure<parameter_size>, SimplexCreatorSettigns>
 {
 public:
-	using InterfaceType = CreatorInterface<SimplexFigure<parameter_size+1>&, SimplexFigure<parameter_size+1>&, SimplexOperationSettings>;
+	using InterfaceType = CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>;
 	using In = typename InterfaceType::In;
 	using Out = typename InterfaceType::Out;
 	using Settings = typename InterfaceType::Settings;
