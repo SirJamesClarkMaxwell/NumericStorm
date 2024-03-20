@@ -22,7 +22,12 @@ public:
 	SimplexFigure<parameter_size> createOperation(std::string operationName, const SimplexFigure<parameter_size> simplexFigure) throw(NoAvailableFactoryException);
 	void updateOperationSettings(std::string operationName, SimplexOperationSettings newSettings) throw(NoAvailableFactoryException);
 	void updateOperationsSettings(std::vector<std::string> operationNames, std::vector<SimplexOperationSettings> newSettings) throw(NoAvailableFactoryException);
-
+#if DEBUG
+	std::unordered_map<std::string, ISimplexOperation_ptr> getOperationList()
+	{
+		return m_listOperation;
+	}
+#endif
 private:
 	std::unordered_map<std::string, ISimplexOperation_ptr> m_listOperation;
 };

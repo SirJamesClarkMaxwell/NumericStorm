@@ -33,6 +33,7 @@ private:
 	std::shared_ptr<Data> m_referencedData = nullptr;
 	bool m_setData = false;
 };
+
 template<size_t parameter_size>
 void SimplexFigure<parameter_size>::sort(bool reverse)
 {

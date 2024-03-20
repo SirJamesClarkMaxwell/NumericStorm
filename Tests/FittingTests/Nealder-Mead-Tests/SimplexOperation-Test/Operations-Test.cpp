@@ -31,7 +31,6 @@ TEST_F(TestingOperations, testingReflection)
 	for (int i = 0; i < 4;i++)
 		EXPECT_NEAR(trueReflectedPointParameters[i], testedReflectedPointParameters[i], 0.001);
 };
-
 TEST_F(TestingOperations, TestingExpansion)
 {
 	setUp();
