@@ -25,3 +25,12 @@ void OperationFactoryTest::SetUp()
     basicSimplexFigure.sort();
 
 }
+
+void OperationFactoryTest::registerAllOperations()
+{
+    testedSimplexOperationFactory.registerOperation("Reflection", reflectionMaker);
+    testedSimplexOperationFactory.registerOperation("Expansion", expansionMaker);
+    testedSimplexOperationFactory.registerOperation("Contraction", contractionMaker);
+    testedSimplexOperationFactory.registerOperation("Shrinking", shrinkingMaker);
+
+};

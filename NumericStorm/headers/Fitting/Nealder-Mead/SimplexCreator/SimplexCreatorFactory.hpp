@@ -5,9 +5,9 @@
 #include "ISimplexFactory.hpp"
 #include "../../Exceptions/NoAvailableFactoryException.hpp"
 
-namespace NumericStorm 
+namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
 
 struct SimplexUpdateFactory
@@ -18,24 +18,26 @@ struct SimplexUpdateFactory
 };
 
 template<size_t figure_size>
-class SimplexCreatorFactory 
+class SimplexCreatorFactory
 {
-//using std::unique_ptr<ISimplexFactory<figure_size>> = std::function<std::unique_ptr<ISimplexFactory<figure_size>>()>;
+	//using std::unique_ptr<ISimplexFactory<figure_size>> = std::function<std::unique_ptr<ISimplexFactory<figure_size>>()>;
 public:
 	SimplexCreatorFactory() {};
-	void registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<figure_size>> factory,SimplexCreatorSettigns settings); 
+	void registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<figure_size>> factory, SimplexCreatorSettigns settings);
 	void unRegisterFactory(std::string operationName);
-	SimplexFigure<figure_size> createNewSimplex(std::string operationName,SimplexPoint<figure_size-1> basedPoint);
+	SimplexFigure<figure_size> createNewSimplex(std::string operationName, SimplexPoint<figure_size - 1> basedPoint);
 	void updateFactoriesSettings(std::vector<SimplexUpdateFactory> newSetttings);
 private:
-	std::unordered_map<std::string,std::unique_ptr<ISimplexFactory<figure_size>>> m_avliableFactories;
+	std::unordered_map<std::string, std::unique_ptr<ISimplexFactory<figure_size>>> m_avliableFactories;
 	bool checkInAvliable(std::string operationName);
 };
 
 
 template< size_t figure_size>
-void SimplexCreatorFactory<figure_size>::registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<figure_size>> factory,SimplexCreatorSettigns settings)
-	{m_avliableFactories[operationName] = factory(settings);};
+void SimplexCreatorFactory<figure_size>::registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<figure_size>> factory, SimplexCreatorSettigns settings)
+{
+	m_avliableFactories[operationName] = factory(settings);
+};
 
 template<size_t figure_size>
 void SimplexCreatorFactory<figure_size>::unRegisterFactory(std::string operationName)
@@ -47,9 +49,9 @@ void SimplexCreatorFactory<figure_size>::unRegisterFactory(std::string operation
 };
 
 template<size_t figure_size>
-SimplexFigure<figure_size>SimplexCreatorFactory<figure_size>::createNewSimplex(std::string operationName, SimplexPoint<figure_size-1> basedPoint)
+SimplexFigure<figure_size>SimplexCreatorFactory<figure_size>::createNewSimplex(std::string operationName, SimplexPoint<figure_size - 1> basedPoint)
 {
-	
+
 };
 
 template<size_t figure_size>
@@ -57,12 +59,12 @@ void SimplexCreatorFactory<figure_size>::updateFactoriesSettings(std::vector<Sim
 {
 	for (auto& item : newSettings)
 	{
-		ISimplexFactory<figure_size>& factory = *m_avliableFactories[item.operationName]; 
-		factory.updateSettigns(item.settings);
+		ISimplexFactory<figure_size>& factory = *m_avliableFactories[item.operationName];
+		factory.updateSettings(item.settings);
 	}
 };
 template<size_t figure_size>
-bool SimplexCreatorFactory<figure_size>::checkInAvliable(std::string operationName) 
+bool SimplexCreatorFactory<figure_size>::checkInAvliable(std::string operationName)
 {
 	return m_avliableFactories.find(operationName) == m_avliableFactories.end();
 };

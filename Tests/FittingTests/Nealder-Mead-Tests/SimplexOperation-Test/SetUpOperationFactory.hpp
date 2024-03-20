@@ -89,4 +89,5 @@ struct OperationFactoryTest :public::testing::Test
     std::shared_ptr<Shrinking<4>> shrinkingMaker;
 
     void SetUp();
+    void registerAllOperations();
 };

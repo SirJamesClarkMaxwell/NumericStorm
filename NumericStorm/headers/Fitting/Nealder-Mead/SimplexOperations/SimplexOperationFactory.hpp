@@ -46,22 +46,23 @@ void SimplexOperationFactory<parameter_size>::unRegisterOperation(std::string op
 };
 
 template <size_t parameter_size>
-SimplexFigure<parameter_size> SimplexOperationFactory<parameter_size>::createOperation(std::string operationName, const SimplexFigure<parameter_size> simplexFigure)
+SimplexFigure<parameter_size> SimplexOperationFactory<parameter_size>::createOperation(std::string operationName, SimplexFigure<parameter_size> simplexFigure)
 {
-	ISimplexOperation_ptr simplexOperation = m_listOperation.find(operationName);
-
-	if (simplexOperation != m_listOperation.end())
-		return simplexOperation->second(simplexFigure);
-	else
+	typename std::unordered_map<std::string, ISimplexOperation_ptr>::iterator it = m_listOperation.find(operationName);
+	if (it != m_listOperation.end()) {
+		return it->second->operator()(simplexFigure);
+	}
+	else {
 		throw NoAvailableFactoryException(operationName);
+	}
 }
 template <size_t parameter_size>
 void SimplexOperationFactory<parameter_size>::updateOperationSettings(std::string operationName, SimplexOperationSettings newSettings)
 {
-	ISimplexOperation_ptr simplexOperation = m_listOperation.find(operationName);
+	typename std::unordered_map<std::string, ISimplexOperation_ptr>::iterator it = m_listOperation.find(operationName);
 
-	if (simplexOperation != m_listOperation.end())
-		return simplexOperation->second.updateSettings(newSettings);
+	if (it != m_listOperation.end())
+		return it->second->updateSettings(newSettings);
 	else
 		throw NoAvailableFactoryException(operationName);
 };
@@ -74,10 +75,10 @@ void SimplexOperationFactory<parameter_size>::updateOperationsSettings(std::vect
 
 	for (int i = 0; i < operationNames.size(); i++)
 	{
-		ISimplexOperation_ptr& simplexOperation = m_listOperation.find(operationNames[i]);
+		typename std::unordered_map<std::string, ISimplexOperation_ptr>::iterator it = m_listOperation.find(operationName);
 
-		if (simplexOperation != m_listOperation.end())
-			simplexOperation->second.updateSettings(newSettings[i]);
+		if (it != m_listOperation.end())
+			simplexOperation->second->updateSettings(newSettings[i]);
 		else
 			throw NoAvailableFactoryException(operationNames[i]);
 	}
