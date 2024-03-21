@@ -7,3 +7,5 @@
 ci
 *.hint
 **build**
+.editorconfig
+**.tours**

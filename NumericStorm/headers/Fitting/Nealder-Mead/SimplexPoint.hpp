@@ -16,7 +16,6 @@ namespace NumericStorm
 namespace Fitting
 {
 
-
 template <std::size_t parameter_size>
 class SimplexPoint {
 public:
@@ -50,17 +49,21 @@ public:
 	};
 	bool operator <=> (const SimplexPoint<parameter_size>& other) const
 	{
-		return m_error <=> other.m_error;
+		return (m_error <=> other.m_error) == 0;
 	}
-	SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
-		if (this != &other)
-		{
-			m_parameters = other.m_parameters;
-			m_error = other.m_error;
-		}
+	bool operator < (const SimplexPoint<parameter_size>& other) const
+	{
+		return m_error < other.m_error;
+	};
+	// SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
+	// 	if (this != &other)
+	// 	{
+	// 		m_parameters = other.m_parameters;
+	// 		m_error = other.m_error;
+	// 	}
 
-		return *this;
-	}
+	// 	return *this;
+	// }
 
 	SimplexPoint<parameter_size>& operator+=(const SimplexPoint<parameter_size>& other) {
 		for (int i = 0; i < parameter_size; ++i)
@@ -109,22 +112,26 @@ public:
 		setErrorModel(errorModel);
 	}
 
-	void calculateError(const Data& referenceData, const Data& calculatedData) {
+	void calculateError(const std::shared_ptr<Data>& referenceData) {
 		if (m_errorModelSet)
+		{
+			if (!m_modelSet)
+				throw NoSetModelExeption();
+			std::shared_ptr<Data> calculatedData = std::move(calculateData());
 			m_error = (*m_errorModel)(referenceData, calculatedData);
+		}
 		else
 			throw NoSetErrorModelExeption();
 	}
-	std::unique_ptr<Data> calculateData() {
+	std::shared_ptr<Data> calculateData() {
 		if (m_modelSet)
 		{
-
 			return (*m_model)(m_arguments, m_parameters, m_additionalParameters);
 		}
 		else
 			throw NoSetModelExeption();
 	}
-
+	double getError()const { return m_error; }
 private:
 	void setModel(std::shared_ptr<Model<parameter_size>> modelToSet)
 	{
@@ -137,14 +144,18 @@ private:
 	std::vector<double> m_arguments;
 	Parameters<parameter_size> m_parameters;
 	AdditionalParameters m_additionalParameters;
-	double m_error;
-	bool m_modelSet;
-	bool m_errorModelSet;
+	double m_error = -1;
+	bool m_modelSet = false;
+	bool m_errorModelSet = false;
 	std::shared_ptr<Model<parameter_size>> m_model;
 	std::shared_ptr<ErrorModel> m_errorModel;
 
 #if DEBUG
 public:
+	std::vector<double> getArguments() const
+	{
+		return m_arguments;
+	}
 	bool  modelIsSet() const
 	{
 		return m_modelSet;

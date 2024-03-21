@@ -27,7 +27,7 @@ public:
 	:Model(model){};
 	virtual ~GaussianModel() {};
 	virtual std::unique_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<4>& parameters,
-		const AdditionalParameters& additionalParameters) override
+		const AdditionalParameters& additionalParameters) 
 	{
 		return m_model(arguments,parameters,additionalParameters);
 	}
@@ -73,7 +73,7 @@ TEST_F(TestingGaussianModel, TestingSimpleGaussianModel)
 {
 	Model<4>* testedModel = new GaussianModel(gaussian);
 
-	std::unique_ptr<Data> testedData = (*testedModel)(arguments, initialParameters, additionalParameters);
+	std::shared_ptr<Data> testedData = (*testedModel)(arguments, initialParameters, additionalParameters);
 	auto testedValues = (*testedData).getValues();
 	for (int i = 0; i < arguments.size(); i++)
 		EXPECT_DOUBLE_EQ(testedValues[i],trueValues[i]);
