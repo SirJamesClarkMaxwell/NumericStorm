@@ -16,7 +16,6 @@ namespace NumericStorm
 namespace Fitting
 {
 
-
 template <std::size_t parameter_size>
 class SimplexPoint {
 public:
@@ -50,8 +49,12 @@ public:
 	};
 	bool operator <=> (const SimplexPoint<parameter_size>& other) const
 	{
-		return m_error <=> other.m_error;
+		return (m_error <=> other.m_error) == 0;
 	}
+	bool operator < (const SimplexPoint<parameter_size>& other) const
+	{
+		return m_error < other.m_error;
+	};
 	// SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>& other) {
 	// 	if (this != &other)
 	// 	{
@@ -120,10 +123,9 @@ public:
 		else
 			throw NoSetErrorModelExeption();
 	}
-	std::unique_ptr<Data> calculateData() {
+	std::shared_ptr<Data> calculateData() {
 		if (m_modelSet)
 		{
-
 			return (*m_model)(m_arguments, m_parameters, m_additionalParameters);
 		}
 		else
@@ -142,9 +144,9 @@ private:
 	std::vector<double> m_arguments;
 	Parameters<parameter_size> m_parameters;
 	AdditionalParameters m_additionalParameters;
-	double m_error;
-	bool m_modelSet;
-	bool m_errorModelSet;
+	double m_error = -1;
+	bool m_modelSet = false;
+	bool m_errorModelSet = false;
 	std::shared_ptr<Model<parameter_size>> m_model;
 	std::shared_ptr<ErrorModel> m_errorModel;
 

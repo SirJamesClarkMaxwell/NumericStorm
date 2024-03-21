@@ -8,17 +8,17 @@ int main()
     double c = NumericStorm::add(a,b);
     if (c == 3.3)
         std::cout << "It Worked, My static Numeric Library is working correctly" << std::endl;
-    using namespace NumericStorm::Fitting;
-    //some changes
-    std::array<SimplexPoint<2>, 3> m_figure = { SimplexPoint<2>(), SimplexPoint<2>(), SimplexPoint<2>() };
-    AdditionalParameters add_params{};
-    for (int i = 0; i < 3; i++)
-    {
-        std::array<double, 2> currentPoint{ i,i };
-        SimplexPoint<2> m_point(currentPoint, add_params);
-        m_figure[i] = m_point;
-    }
-    SimplexFigure<2> simplexFigure = SimplexFigure<2>(m_figure);
+    //using namespace NumericStorm::Fitting;
+    ////some changes
+    //std::array<SimplexPoint<2>, 3> m_figure = { SimplexPoint<2>(), SimplexPoint<2>(), SimplexPoint<2>() };
+    //AdditionalParameters add_params{};
+    //for (int i = 0; i < 3; i++)
+    //{
+    //    std::array<double, 2> currentPoint{ i,i };
+    //    SimplexPoint<2> m_point(currentPoint, add_params);
+    //    m_figure[i] = m_point;
+    //}
+    //SimplexFigure<2> simplexFigure = SimplexFigure<2>(m_figure);
     //BasicSimplexFitter<2> fitter(simplexFigure);
 
     //fixed all bugs in git history

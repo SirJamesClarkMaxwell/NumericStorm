@@ -2,18 +2,18 @@
 
 namespace NumericStorm
 {
-	namespace Fitting
-	{
+namespace Fitting
+{
 
-		class SimplexOperationSettings
-		{
-		public:
-			SimplexOperationSettings(double factor)
-				: m_factor(factor){};
-			double getFactor() { return m_factor; }
+class SimplexOperationSettings
+{
+public:
+	SimplexOperationSettings(double factor)
+		: m_factor(factor) {};
+	double getFactor() { return m_factor; }
 
-		protected:
-			double m_factor;
-		};
-	}
+protected:
+	double m_factor;
+};
+}
 }
