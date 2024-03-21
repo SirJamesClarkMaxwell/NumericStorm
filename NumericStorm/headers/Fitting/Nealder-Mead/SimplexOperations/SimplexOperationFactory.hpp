@@ -75,10 +75,11 @@ void SimplexOperationFactory<parameter_size>::updateOperationsSettings(std::vect
 
 	for (int i = 0; i < operationNames.size(); i++)
 	{
+		const std::string& operationName = operationNames[i];
 		typename std::unordered_map<std::string, ISimplexOperation_ptr>::iterator it = m_listOperation.find(operationName);
 
 		if (it != m_listOperation.end())
-			simplexOperation->second->updateSettings(newSettings[i]);
+			it->second->updateSettings(newSettings[i]);
 		else
 			throw NoAvailableFactoryException(operationNames[i]);
 	}
