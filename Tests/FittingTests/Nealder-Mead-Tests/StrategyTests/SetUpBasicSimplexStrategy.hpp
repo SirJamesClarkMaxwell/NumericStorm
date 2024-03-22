@@ -61,31 +61,17 @@ public:
 };
 struct BasicSimplexStrategyTest :public::testing::Test
 {
-    BasicSimplexStrategyTest()
-    {
-        expansionMaker = std::make_shared<Expansion<4>>(Expansion<4>{expansionOperationSettings});
-        reflectionMaker = std::make_shared<Reflection<4>>(Reflection<4>{simplexOperationSettings});
-        contractionMaker = std::make_shared<Contraction<4>>(Contraction<4>{simplexOperationSettings});
-        shrinkingMaker = std::make_shared<Shrinking<4>>(Shrinking<4>{simplexOperationSettings});
-    };
+    BasicSimplexStrategyTest() {};
     std::vector<double> arguments{ -2, -1, 0, 1, 2 };
-    std::array<double, 5> numbersToSimplexFigure{ 1.1, 1.3, 2, 2.1, 2.2 };
-    SimplexFigure<4> basicSimplexFigure;
     AdditionalParameters additionalParameters{};
+
     std::shared_ptr<Model<4>> gaussianModel;
     std::shared_ptr<ErrorModel> chi2ErrorModel;
     SimplexPoint<4> referencedPoint;
-
     std::shared_ptr<Data> referencedData;
 
-    SimplexOperationFactory<4> testedSimplexOperationFactory{};
-    SimplexOperationSettings simplexOperationSettings{ 0.5 };
-    SimplexOperationSettings expansionOperationSettings{ 2 };
-    std::shared_ptr<Reflection<4>> reflectionMaker;
-    std::shared_ptr<Expansion<4>> expansionMaker;
-    std::shared_ptr<Contraction<4>> contractionMaker;
-    std::shared_ptr<Shrinking<4>> shrinkingMaker;
+    std::array<double, 5> expectedValuesOfGaussian{ 7,6,5,4,3 };
+    std::vector<SimplexFigure<4>> figures;
 
     void SetUp();
-    void registerAllOperations();
 };
