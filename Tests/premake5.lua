@@ -15,26 +15,28 @@ project "NumericStorm-Tests"
         "../NumericStorm/headers/*.hpp",
         "./FittingTests/*.*",
         "./FittingTests/Nealder-Mead-Tests/*.*",
-        "./FittingTests/Nealder-Mead-Tests/SimplexOperation-Test/*.*"
+        "./FittingTests/Nealder-Mead-Tests/SimplexOperation-Test/*.*",
+        "./FittingTests/Nealder-Mead-Tests/StrategyTests/*.*"
     }
     
-        libdirs{
-            "../vendor/googletest-main/bin/Debug/"}
+    libdirs{
+        "../vendor/googletest-main/bin/Debug/"}
         
         targetdir ("bin/%{cfg.buildcfg}")
         objdir ("obj/%{cfg.buildcfg}")
-    
+        
         links { 
-        "NumericStorm",
-        "gtest"
-            }
+            "NumericStorm",
+            "gtest"
+        }
         includedirs { 
             "../NumericStorm/headers/",
             "../vendor/googletest-main/googletest/include/" ,
             "../vendor/googletest-main/googletest/include/gtest",
             "%{prj.location}/FittingTests",
             "%{prj.location}/FittingTests/Nealder-Mead-Tests",
-            "%{prj.location}/FittingTests/Nealder-Mead-Tests/SimplexOperation-Test"
+            "%{prj.location}/FittingTests/Nealder-Mead-Tests/SimplexOperation-Test",
+            -- "%{prj.location}/FittingTests/Nealder-Mead-Tests/StrategyTests"
             }
         targetdir ("bin/%{cfg.buildcfg}") 
     
