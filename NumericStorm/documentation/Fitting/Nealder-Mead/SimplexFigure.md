@@ -11,26 +11,29 @@ of the points, and can be used to determine the location of the figure in space.
 ```cpp
 using namespace NumericStorm::Fitting;
 template<size_t parameter_size>
-
 ```
-### Constructors
-```cpp
 
+### Constructors
+
+```cpp
 SimplexFigure() {};
 SimplexFigure( std::array<SimplexPoint<parameter_size>,parameter_size+1> points)
+SimplexFigure( std::array<SimplexPoint<parameter_size>,parameter_size+1> points, const std::shared_ptr<Data>& referencedData)
 ```
+
 ### Methods and member variables
+
 ```cpp
-public:	
-std::array<SimplexPoint<parameter_size >, parameter_size> getPoints() { return m_points; }
+public:
+std::array<SimplexPoint<parameter_size>, parameter_size> getPoints();
 void sort(bool reverse = true);
-SimplexPoint<parameter_size > getCentroid() { return m_centroid; }
+SimplexPoint<parameter_size > getCentroid();
 
 protected:
-std::array<SimplexPoint<parameter_size>, parameter_size+1> m_points;
-SimplexPoint<parameter_size> m_centroid;
-
+	std::array<SimplexPoint<parameter_size>, parameter_size+1> m_points;
+	SimplexPoint<parameter_size> m_centroid;
 private:
+	std::shared_ptr<Data> m_referencedData;
 	SimplexPoint<parameter_size> calculateCentroid();
 ```
 
@@ -48,11 +51,12 @@ The SimplexFigure class has one template parameter: `parameter_size`. This param
 
 ## Members
 
-The SimplexFigure class has three members: `m_points`, `m_centroid`, and `parameter_size`.
+The SimplexFigure class has three members: `m_points`, `m_centroid`, `parameter_size` and `referencedData`.
 
 - `m_points` is an array of SimplexPoint objects, which represents the points that make up the simplex figure.
 - `m_centroid` is a SimplexPoint object that stores the centroid of the simplex figure.
 - `parameter_size` is a constant expression of type std::size_t that represents the dimension of the space.
+- `m_referendedData` it is a shared pointer into the object which is storing the data, with respect to the poits will be evaluated.
 
 ## Methods
 
@@ -61,4 +65,5 @@ The SimplexFigure class has three methods: `getPoints()`, `sort()`, and `getCent
 - `getPoints()` returns the points of the simplex figure.
 - `sort()` sorts the points of the simplex figure in ascending order, and allows you to specify whether to sort in reverse order.
 - `getCentroid()` returns the centroid of the simplex figure.
-
+- `recalculateErrors()` method will recalculate the errors for all points inside the simplex figure
+- `recalculateError(unsigned int index)` it will recalculate error only of the point by given index

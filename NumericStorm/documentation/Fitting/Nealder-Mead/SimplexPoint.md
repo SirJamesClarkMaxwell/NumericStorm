@@ -13,18 +13,25 @@ calculating the error and model prediction for a point.
 using namespace NumericStorm ::Fitting ;
 template <std::size_t parameter_size>
 ```
+
 ### Constructors
+
 ```cpp
 SimplexPoint() = default;
 SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParametersadditionalParameters);
 SimplexPoint(const SimplexPoint<parameter_size>& other) = default;
 ```
+
 ### Methods and Operators
+
 #### Operator for numeric types
+
 - `*=`, `/=`
+
 #### Operator for SimplexPoint
-`==`, `== const`,`!=`,`<=`,`>=`,`<`,`>`,`=`,`+=`,`-=`,`+`,`-`
- 
+
+- `==`, `== const`,`!=`,`<=`,`>=`,`<`,`>`,`=`,`+=`,`-=`,`+`,`-`
+
 ```cpp
 double& operator[](int index);
 const double& operator[](int index) const;=
@@ -34,12 +41,14 @@ void setUp(std::shared_ptr<Model<parameter_size>> dataModel, std::shared_ptr<Err
 void calculateError(const Data& referenceData, const Data& calculatedData);
 Data calculateData() const;
 ```
-#### member variables 
+
+#### member variables
+
 ```cpp
 private:
 
 Parameters<parameter_size> m_parameters;
-AdditionalParameters m_additionalParameters; 
+AdditionalParameters m_additionalParameters;
 double m_error;
 bool m_modelSet;
 bool m_errorModelSet;
@@ -60,7 +69,6 @@ The SimplexPoint class uses the Parameters and AdditionalParameters classes to s
 
 The SimplexPoint class uses a private member variable to store the error value, a boolean flag to indicate whether the model has been set, and a pointer to the model and error model.
 
-
 ## Operators
 
 The SimplexPoint class provides overloaded operators for comparison, subscripting, and arithmetic operations.
@@ -69,7 +77,7 @@ The comparison operators == and != compare two SimplexPoints for equality or ine
 
 The subscript operator [] allows you to access the parameters of the SimplexPoint by index. If the index is out of range, the operator returns the first/last parameter.
 
-The arithmetic operators +, -, *, and / allow you to perform addition, subtraction, multiplication, and division operations on SimplexPoints and scalar values.
+The arithmetic operators +, -, \*, and / allow you to perform addition, subtraction, multiplication, and division operations on SimplexPoints and scalar values.
 
 ## Methods
 
@@ -77,10 +85,27 @@ The SimplexPoint class provides several methods for setting up, calculating the 
 
 The `setUp` method takes two arguments: a pointer to a `Model` object for calculating the data and a pointer to an `ErrorModel` object for calculating the error. The method sets the model and error model for the simplex point.
 
-The `calculateError` method takes two arguments: a reference to a Data object for the reference data and a reference to a Data object for the calculated data. The method calculates the error for the simplex point using the reference data and calculated data.
+The `calculateError` method takes two arguments: a reference to a Data object for the reference data. The method calculates the error for the simplex point using the reference data and calculated data.
 
 The `calculateData` method calculates the data for the simplex point using the currently set model.
 
 ## Exceptions
 
 The SimplexPoint class throws two exceptions: `NoSetErrorModelExeption` and `NoSetModelExeption`. These exceptions are thrown when the error model or model has not been set, respectively.
+
+# Example of usage
+
+```cpp
+std::vector<double> arguments{ -2, -1, 0, 1, 2 };
+std::array<double, 4> referencedArray{ 2, 1, 2, -1 };
+AdditionalParameters additionalParameters{};
+std::shared_ptr<Model<4>> gaussianModel = std::make_shared<GaussianModel>();
+std::shared_ptr<ErrorModel> chi2ErrorModel= std::make_shared<Chi2ErrorModel>();
+
+SimplexPoint<4> referencedSimplexPoint(arguments, referencedArray, additionalParameters);
+referencedSimplexPoint.setUp(gaussianModel, chi2ErrorModel);
+std::shared_ptr<Data> referencedData_unique_ptr = referencedSimplexPoint.calculateData();
+auto referencedValues = (*referencedData).getValues();
+evaluatedSimplexPoint.calculateError(referencedData);
+double error = evaluatedSimplexPoint.getError();
+```
