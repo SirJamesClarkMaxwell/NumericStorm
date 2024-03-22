@@ -24,7 +24,7 @@ struct TestingOperations : public testing::Test, public SetUpForOperations
 
 TEST_F(TestingOperations, testingReflection)
 {
-	double number = 2.71235;
+	double number =2.16224;
 	std::array<double, 4> trueReflectedPointParameters{ number, number, number, number };
 	SimplexFigure<4> testedReflectedFigure = reflectionMaker(basicSimplexFigure);
 	std::array<double, 4> testedReflectedPointParameters = testedReflectedFigure[0].getParameters();
@@ -34,7 +34,7 @@ TEST_F(TestingOperations, testingReflection)
 TEST_F(TestingOperations, TestingExpansion)
 {
 	setUp();
-	double number = 3.25;
+	double number =2.1499;
 	std::array<double, 4> trueExpandedParameters; trueExpandedParameters.fill(number);
 	Expansion<4> expansionMaker(expansionSimplexOperationSettings);
 	SimplexFigure<4> expandedSimplexFigure = expansionMaker(reflectedFigure);
@@ -61,7 +61,7 @@ TEST_F(TestingOperations, TestingContraction)
 TEST_F(TestingOperations, TestingShrinking)
 {
 	setUp();
-	std::array<double, 4> initialValues = { 1.9062,1.6000,1.5500,1.2000 };
+	std::array<double, 4> initialValues = { 1.632245 ,1.6,1.55,1.2 };
 	std::array<std::array<double, 4>, 4> trueShrinkedParameters;
 	for (int i = 0; i < initialValues.size(); ++i)
 		trueShrinkedParameters[i].fill(initialValues[i]);

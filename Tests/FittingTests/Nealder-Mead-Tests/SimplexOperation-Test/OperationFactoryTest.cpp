@@ -70,8 +70,9 @@ TEST_F(OperationFactoryTest, creatingOperation)
 {
     SetUp();
     registerAllOperations();
+    SimplexFigure<4> copyBasicSimplexFigure(basicSimplexFigure);
     SimplexFigure<4> trueReflectedSimplexFigure = Reflection<4>(simplexOperationSettings)(basicSimplexFigure);
-    SimplexFigure<4> testedReflectedSimplexFigure = testedSimplexOperationFactory.createOperation("Reflection", basicSimplexFigure);
+    SimplexFigure<4> testedReflectedSimplexFigure = testedSimplexOperationFactory.createOperation("Reflection", copyBasicSimplexFigure);
     for (int i = 0;i < 5;i++)
     {
         SimplexPoint<4> testedPoint = testedReflectedSimplexFigure[i];
@@ -86,9 +87,10 @@ TEST_F(OperationFactoryTest, updatingSettingsForReflection)
 {
     SetUp();
     registerAllOperations();
+    SimplexFigure<4> copyBasicSimplexFigure(basicSimplexFigure);
     SimplexFigure<4> trueReflectedSimplexFigure = Reflection<4>(SimplexOperationSettings(2))(basicSimplexFigure);
     testedSimplexOperationFactory.updateOperationSettings("Reflection", SimplexOperationSettings(2));
-    SimplexFigure<4> testedReflectedSimplexFigure = testedSimplexOperationFactory.createOperation("Reflection", basicSimplexFigure);
+    SimplexFigure<4> testedReflectedSimplexFigure = testedSimplexOperationFactory.createOperation("Reflection", copyBasicSimplexFigure);
     for (int i = 0;i < 5;i++)
     {
         SimplexPoint<4> testedPoint = testedReflectedSimplexFigure[i];

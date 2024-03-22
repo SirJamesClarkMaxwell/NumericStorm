@@ -26,7 +26,7 @@ SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(SimplexFigu
 	SimplexPoint<parameter_size> pointToReflectAround(centroid);
 
 #if DEBUG
-	auto difference = centroid - simplexFigure[parameter_size];
+	auto difference = centroid - simplexFigure[0];
 	auto multiplied = difference * alpha;
 	pointToReflectAround += multiplied;
 #else if REALASE
