@@ -13,60 +13,61 @@ namespace Fitting
 struct SimplexUpdateFactory
 {
 	std::string operationName;
-	SimplexCreatorSettigns settings;
+	SimplexCreatorSettings settings;
 
 };
 
-template<size_t figure_size>
+template<size_t parameter_size>
 class SimplexCreatorFactory
 {
-	//using std::unique_ptr<ISimplexFactory<figure_size>> = std::function<std::unique_ptr<ISimplexFactory<figure_size>>()>;
+	//using std::unique_ptr<ISimplexFactory<parameter_size>> = std::function<std::unique_ptr<ISimplexFactory<parameter_size>>()>;
 public:
 	SimplexCreatorFactory() {};
-	void registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<figure_size>> factory, SimplexCreatorSettigns settings);
+	void registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<parameter_size>> factory);
 	void unRegisterFactory(std::string operationName);
-	SimplexFigure<figure_size> createNewSimplex(std::string operationName, SimplexPoint<figure_size - 1> basedPoint);
-	void updateFactoriesSettings(std::vector<SimplexUpdateFactory> newSetttings);
+	SimplexFigure<parameter_size> createNewSimplex(std::string operationName, SimplexPoint<parameter_size > basedPoint);
+	void updateFactoriesSettings(std::vector<SimplexUpdateFactory> newSettings);
 private:
-	std::unordered_map<std::string, std::unique_ptr<ISimplexFactory<figure_size>>> m_avliableFactories;
-	bool checkInAvliable(std::string operationName);
+	std::unordered_map<std::string, std::unique_ptr<ISimplexFactory<parameter_size>>> m_availableFactories;
+	bool checkInAvailable(std::string operationName);
+	//TODO reimplement checkInAvaliable method
 };
 
 
-template< size_t figure_size>
-void SimplexCreatorFactory<figure_size>::registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<figure_size>> factory, SimplexCreatorSettigns settings)
+template< size_t parameter_size>
+void SimplexCreatorFactory<parameter_size>::registerNewFactory(std::string operationName, std::unique_ptr<ISimplexFactory<parameter_size>> factory, SimplexCreatorSettings settings)
 {
-	m_avliableFactories[operationName] = factory(settings);
+	m_availableFactories[operationName] = factory(settings);
 };
 
-template<size_t figure_size>
-void SimplexCreatorFactory<figure_size>::unRegisterFactory(std::string operationName)
+template<size_t parameter_size>
+void SimplexCreatorFactory<parameter_size>::unRegisterFactory(std::string operationName)
 {
-	if (checkInAvliable(operationName))
-		m_avliableFactories.erase(operationName);
+	if (checkInAvailable(operationName))
+		m_availableFactories.erase(operationName);
 	else
 		continue;
 };
 
-template<size_t figure_size>
-SimplexFigure<figure_size>SimplexCreatorFactory<figure_size>::createNewSimplex(std::string operationName, SimplexPoint<figure_size - 1> basedPoint)
+template<size_t parameter_size>
+SimplexFigure<parameter_size>SimplexCreatorFactory<parameter_size>::createNewSimplex(std::string operationName, SimplexPoint<parameter_size > basedPoint)
 {
 
 };
 
-template<size_t figure_size>
-void SimplexCreatorFactory<figure_size>::updateFactoriesSettings(std::vector<SimplexUpdateFactory> newSettings)
+template<size_t parameter_size>
+void SimplexCreatorFactory<parameter_size>::updateFactoriesSettings(std::vector<SimplexUpdateFactory> newSettings)
 {
 	for (auto& item : newSettings)
 	{
-		ISimplexFactory<figure_size>& factory = *m_avliableFactories[item.operationName];
+		ISimplexFactory<parameter_size>& factory = *m_availableFactories[item.operationName];
 		factory.updateSettings(item.settings);
 	}
 };
-template<size_t figure_size>
-bool SimplexCreatorFactory<figure_size>::checkInAvliable(std::string operationName)
+template<size_t parameter_size>
+bool SimplexCreatorFactory<parameter_size>::checkInAvailable(std::string operationName)
 {
-	return m_avliableFactories.find(operationName) == m_avliableFactories.end();
+	return m_availableFactories.find(operationName) == m_availableFactories.end();
 };
 }
 }

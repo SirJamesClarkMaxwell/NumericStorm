@@ -1,17 +1,21 @@
 
 #pragma once
 #include <string>
-namespace NumericStorm 
+namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
-class SimplexCreatorSettigns 
+template<size_t parameter_size>
+class SimplexCreatorSettings
 {
 public:
-	SimplexCreatorSettigns(std::string operationName)
-		:m_name(operationName){};
+	SimplexCreatorSettings(std::string operationName, const SimplexPoint<parameter_size>& minBounds, const SimplexPoint<parameter_size>& maxBounds)
+		:m_name(operationName), m_minBounds(minBounds), m_maxBounds(maxBounds) {};
 private:
 	std::string m_name;
+	SimplexPoint<parameter_size> m_minBounds;
+	SimplexPoint<parameter_size> m_maxBounds;
+
 };
 }
 

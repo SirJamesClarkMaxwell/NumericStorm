@@ -14,25 +14,24 @@ template <size_t parameter_size>
 class BasicSimplexFitter : public SimplexFitter<parameter_size>
 {
 public:
-	BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
-		: SimplexFitter<parameter_size>(simplexFigure) {}
+	BasicSimplexFitter(const SimplexPoint<parameter_size>& initialPoint)
+		: SimplexFitter<parameter_size>(initialPoint) {}
 
 	void setUp(BasicSimplexFitterSettings<parameter_size> fitterSettings);
-	void minimize() override {};
-	// TODO add factory to Simplex decision
-	Parameters<parameter_size> getFittedParameters()
-	{
-		return this->m_fittedParameters;
-	};
+	void minimize(std::shared_ptr<Data> referenceData, double maxError, double maxIterations) override;
 
-private:
-	SimplexOperationFactory<parameter_size + 1> m_simplexOperationFactory;
+	Parameters<parameter_size> getFittedParameters() { return this->m_fittedParameters; };
+
 };
 
 template <size_t parameter_size>
 void BasicSimplexFitter<parameter_size>::setUp(BasicSimplexFitterSettings<parameter_size> fitterSettigns)
 {
-}
-
-}
+	//TODO: implement setUp function
+};
+template <size_t parameter_size>
+void BasicSimplexFitter<parameter_size>::minimize(std::shared_ptr<Data> referenceData, double maxError, double maxIterations)
+{
+	//TODO: implement minimize function
+};
 }
