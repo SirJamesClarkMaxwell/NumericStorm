@@ -1,8 +1,8 @@
 #pragma once
 #include <memory>
-#include "../SimplexSettings.hpp"
 #include "../../Model.hpp"
 #include "../../ErrorModel.hpp"
+#include "../SimplexFitterSettings.hpp"
 #include "../SimplexOperations/SimplexOperationsHeader.hpp"
 #include "../SimplexDecision/StrategyManager.hpp"
 #include "../SimplexDecision/BasicSimplexStrategy.hpp"

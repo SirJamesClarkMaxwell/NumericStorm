@@ -23,8 +23,6 @@
 #include "./Fitting/Nealder-Mead/SimplexFigure.hpp"
 #include "./Fitting/Nealder-Mead/SimplexPoint.hpp"
 
-#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitter.hpp"
-#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitterSettings.hpp"
 
 #include "./Fitting/Nealder-Mead/SimplexCreator/ISimplexFactory.hpp"
 #include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorFactory.hpp"
@@ -37,3 +35,7 @@
 
 #include "./Fitting/Nealder-Mead/SimplexOperations/ISimplexOperation.hpp"
 #include "./Fitting/Nealder-Mead/SimplexOperations/SimplexOperationFactory.hpp"
+
+
+#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitter.hpp"
+#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitterSettings.hpp"

@@ -31,7 +31,7 @@ public:
 private:
     int m_greedyApproach;
     int checkReflectionCondition(const SimplexPoint<parameter_size>& bestPointOldSimplex, const SimplexPoint<parameter_size>& reflectedPoint, const SimplexPoint<parameter_size>& expandedPoint, const SimplexPoint<parameter_size>& secondBestPointOldSimplex);
-    int heckShrinkingCondition(const SimplexPoint<parameter_size>& contractedPoint, const SimplexPoint<parameter_size>& reflectedPoint, const SimplexPoint<parameter_size>& worstOldPoint);
+    int checkReflectionCondition(const SimplexPoint<parameter_size>& contractedPoint, const SimplexPoint<parameter_size>& reflectedPoint, const SimplexPoint<parameter_size>& worstOldPoint);
 };
 template <size_t parameter_size>
 SimplexFigure<parameter_size> BasicSimplexDecision<parameter_size>::makeDecision(const std::vector<SimplexFigure<parameter_size>>& simplexFigures)

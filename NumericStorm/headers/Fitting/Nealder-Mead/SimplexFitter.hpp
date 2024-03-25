@@ -4,9 +4,10 @@
 #include "SimplexPoint.hpp"
 #include "../Model.hpp"
 #include "../ErrorModel.hpp"
-#include "../SimplexOperations/SimplexOperationsFactory.hpp"
-#include "SimplexDecision/StrategyManager.hpp"
-#include "SimplexCreator/SimplexCreatorFactory.hpp"
+#include "./SimplexOperations/SimplexOperationsHeader.hpp"
+#include "./SimplexDecision/BasicSimplexStrategy.hpp"
+#include "./SimplexDecision/StrategyManager.hpp"
+#include "./SimplexCreator/SimplexCreatorFactory.hpp"
 namespace NumericStorm
 {
 namespace Fitting
