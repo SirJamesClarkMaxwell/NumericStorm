@@ -6,23 +6,21 @@
 #include "StrategySettings.hpp"
 namespace NumericStorm
 {
-	namespace Fitting
-	{
+namespace Fitting
+{
 
-		template <size_t parameter_size>
-		class IDecision : public CreatorInterface<SimplexFigure<parameter_size>&, bool, StrategySettings<parameter_size>>
-		{
-		public:
+template <size_t parameter_size>
+class IDecision : public CreatorInterface<SimplexFigure<parameter_size>&, bool, StrategySettings<parameter_size>>
+{
+public:
+	IDecision() = default;
+	IDecision(const IDecision<parameter_size>&) = default;
+	IDecision(IDecision<parameter_size>&&) = default;
+	IDecision<parameter_size>& operator=(const IDecision<parameter_size>&) = default;
+	IDecision<parameter_size>& operator=(IDecision<parameter_size>&&) = default;
 
+	virtual ~IDecision() = default;
+};
 
-			IDecision() = default;
-			IDecision(const IDecision<parameter_size>&) = default;
-			IDecision(IDecision<parameter_size>&&) = default;
-			IDecision<parameter_size>& operator=(const IDecision<parameter_size>&) = default;
-			IDecision<parameter_size>& operator=(IDecision<parameter_size>&&) = default;
-
-			virtual ~IDecision() = default;
-		};
-
-	}
+}
 }

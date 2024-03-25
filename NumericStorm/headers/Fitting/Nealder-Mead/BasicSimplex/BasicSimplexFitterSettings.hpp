@@ -5,13 +5,13 @@
 #include "../../Model.hpp"
 #include "../../ErrorModel.hpp"
 #include "../SimplexOperations/SimplexOperationsHeader.hpp"
-
-namespace NumericStorm 
+//todo we need to discus bout how we gonna implement the actual basic fitter
+namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
 template<size_t parameter_size>
-class BasicSimplexFitterSettings :SimplexSettings<parameter_size> 
+class BasicSimplexFitterSettings :SimplexSettings<parameter_size>
 {
 public:
 	BasicSimplexFitterSettings() = delete;
@@ -22,10 +22,10 @@ public:
 
 	virtual ~BasicSimplexFitterSettings() = default;
 
-	BasicSimplexFitterSettings(const Model<parameter_size>& model, const ErrorModel& errorModel, long int maxIteration, double minError,double alpha,double beta,double gamma,double delta)
-		: SimplexSettings<parameter_size> (model,errorModel,maxIteration,minError),
+	BasicSimplexFitterSettings(const Model<parameter_size>& model, const ErrorModel& errorModel, long int maxIteration, double minError, double alpha, double beta, double gamma, double delta)
+		: SimplexSettings<parameter_size>(model, errorModel, maxIteration, minError),
 		m_alpha{ alpha }, m_beta{ beta }, m_gamma{ gamma }, m_delta{ delta } {};
-
+	//BUG this parameters should be removed
 	double getAlpha() const { return m_alpha; }
 	double getBeta() const { return m_beta; }
 	double getGamma() const { return m_gamma; }
@@ -36,7 +36,8 @@ private:
 	double m_beta{};
 	double m_gamma{};
 	double m_delta{};
-
+	// todo think about the all possible settings of basic simplex fitter and set them manually
+	//NOTE here we definitely need a builder pattern 
 };
 
 

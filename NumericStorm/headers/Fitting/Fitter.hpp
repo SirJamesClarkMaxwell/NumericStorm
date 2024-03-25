@@ -4,9 +4,9 @@
 #include <memory>
 #include <concepts>
 
-namespace NumericStorm 
+namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
 template<size_t parameter_size, class DerivedSettings = FitterSettings<parameter_size>>
 class Fitter
@@ -29,13 +29,15 @@ public:
 	virtual ~Fitter() = default;
 
 	virtual void proposeParameters(const Parameters<parameter_size>& parameters) { m_proposedParameters = parameters; }
-	virtual const Parameters<parameter_size>& getFittedParameters() { return m_fittedParamters; }
+	//QUESTION why we might want to return this initial parameters? it should be a private parameters and it might be passed into fit function
+
+	virtual const Parameters<parameter_size>& getFittedParameters() { return m_fittedParameters; }
 
 	virtual void fit() = 0;
 	virtual void setUp(const DerivedSettings&) = 0;
 
 protected:
-	Parameters<parameter_size> m_fittedParamters{};
+	Parameters<parameter_size> m_fittedParameters{};
 	Parameters<parameter_size> m_proposedParameters{};
 	std::unique_ptr<DerivedSettings> m_settings{ nullptr };
 };

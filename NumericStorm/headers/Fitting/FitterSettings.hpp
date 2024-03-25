@@ -5,9 +5,9 @@
 #include <memory>
 #include <functional>
 
-namespace NumericStorm 
+namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
 template <size_t parameter_size>
 class FitterSettings
@@ -21,7 +21,7 @@ public:
 
 	virtual ~FitterSettings() = default;
 
-	FitterSettings(const Model<parameter_size>& model, const ErrorModel& errorModel, const AdditionalParameters& add_params, long int maxIteration,double minError)
+	FitterSettings(const Model<parameter_size>& model, const ErrorModel& errorModel, const AdditionalParameters& add_params, long int maxIteration, double minError)
 		: m_functionModel{ model }, m_errorModel{ errorModel }, m_maxIteration{ maxIteration }, m_minError{ minError }, m_add_params{ add_params } {}
 
 	//there is no reason for this to be an abstract class since all the methods return data defined in this very class
@@ -38,6 +38,8 @@ protected:
 	std::unique_ptr<Data> m_ref_data{ nullptr };
 	long int m_maxIteration{};
 	double m_minError{};
+	//QUESTION why we don't initialize maxIteration and min error? for example 1000 steps and 0.1 error could be 
+	// a good idea. and we might use a roll builderPattern 
 };
 
 }

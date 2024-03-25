@@ -13,7 +13,7 @@ namespace NumericStorm
 namespace Fitting
 {
 template<size_t parameter_size>
-class ISimplexFactory : public CreatorInterface<const SimplexPoint<parameter_size>&, SimplexFigure<parameter_size>, SimplexCreatorSettigns>
+class ISimplexFactory : public CreatorInterface<const SimplexPoint<parameter_size>&, SimplexFigure<parameter_size>, SimplexCreatorSettings>
 {
 public:
 	using InterfaceType = CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>;
@@ -29,8 +29,9 @@ public:
 
 	virtual ~ISimplexFactory() = default;
 
-	ISimplexFactory(const SimplexCreatorSettigns& settings)
-		: CreatorInterface<In, Out, Settings>{}  {
+	//todo same story with default constructor in InterfaceType
+	ISimplexFactory(const SimplexCreatorSettings& settings)
+		: CreatorInterface<In, Out, Settings>{} {
 		this->m_settings = settings;
 	}
 

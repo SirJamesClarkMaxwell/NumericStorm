@@ -6,12 +6,10 @@
 #include "../../Exceptions/NoAvailableFactoryException.hpp"
 #include "../../Factory.hpp"
 
-namespace NumericStorm 
+namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
-
-
 template<size_t parameter_size>
 class SimplexCreatorFactory : public Factory<ISimplexFactory<parameter_size>>
 {

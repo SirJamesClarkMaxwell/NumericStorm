@@ -21,6 +21,7 @@ class SimplexSettings : public FitterSettings<parameter_size>
 
 	SimplexSettings(const Model<parameter_size>& model, const ErrorModel& errorModel, int maxIteration, double minError)
 		: FitterSettings<parameter_size>(model, errorModel, maxIteration, minError) {}
+	//NOTE technical thing, i would move this constructor into the beginning of this public section
 };
 }
 }

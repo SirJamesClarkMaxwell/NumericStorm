@@ -13,7 +13,7 @@ template <size_t parameter_size>
 class StrategyManager : public Factory<IDecision<parameter_size>>
 {
 
-	
+
 public:
 	StrategyManager() = default;
 	StrategyManager(const StrategyManager<parameter_size>&) = default;
