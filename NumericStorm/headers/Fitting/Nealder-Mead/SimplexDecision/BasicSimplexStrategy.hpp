@@ -1,56 +1,75 @@
 #include "IDecision.hpp"
 #include "SimplexPoint.hpp"
 #include "SimplexFigure.hpp"
+#include <string>
 
 namespace NumericStorm
 {
     namespace Fitting
     {
-        enum SimplexOperationType
-        {
-            OldSimplex,
-            Reflection,
-            Expansion,
-            Contraction,
-            Shrinking
-        };
         template <size_t parameter_size>
         class BasicSimplexDecision : public IDecision<parameter_size>
         {
         public:
-            BasicSimplexDecision();
-            virtual ~BasicSimplexDecision();
-            virtual SimplexFigure<parameter_size> makeDecision(const std::vector<SimplexFigure<parameter_size>> &simplexFigures) override;
-            void checkDimensionsOfVector(const std::vector<SimplexFigure<parameter_size>> &simplexFigures) const throw(std::out_of_range);
-        };
-        template <size_t parameter_size>
-        SimplexFigure<parameter_size> BasicSimplexDecision<parameter_size>::makeDecision(const std::vector<SimplexFigure<parameter_size>> &simplexFigures)
-        {
-            this->checkDimensionsOfVector(simplexFigures.size());
-            SimplexFigure<parameter_size> toReturn;
-            SimplexPoint<parameter_size> bestPointOldSimplex = simplexFigures[OldSimplex][0];
-            SimplexPoint<parameter_size> reflectedPoint = simplexFigures[Reflection][0];
-            SimplexPoint<parameter_size> expandedPoint = simplexFigures[Expansion][0];
-            SimplexPoint<parameter_size> contractedPoint = simplexFigures[Contraction][0];
-            if ((reflectedPoint < bestPointOldSimplex) and (reflectedPoint > simplexFigures[OldSimplex][parameter_size - 2]))
-                toReturn = simplexFigures[Reflection];
-            else if (expandedPoint < bestPointOldSimplex)
-                toReturn = simplexFigures[Expansion];
-            else if (contractedPoint < simplexFigures[OldSimplex][1])
-                toReturn = simplexFigures[complicatedSimplex];
-            else
-                toReturn = simplexFigures[Shrinking];
+            BasicSimplexDecision() = default;
+            BasicSimplexDecision(const BasicSimplexDecision<parameter_size>&) = default;
+            BasicSimplexDecision(BasicSimplexDecision<parameter_size>&&) = default;
+            BasicSimplexDecision<parameter_size>& operator=(const BasicSimplexDecision<parameter_size>&) = default;
+            BasicSimplexDecision<parameter_size>& operator=(BasicSimplexDecision<parameter_size>&&) = default;
 
-            return toReturn;
-        }
-        template <size_t parameter_size>
-        void BasicSimplexDecision<parameter_size>::checkDimensionsOfVector(const int sizeOfVector) const throw(std::out_of_range)
-        {
-            if (!(simplexFigures.size() == Shrinking + 1))
+
+            virtual ~BasicSimplexDecision() = default;
+            virtual bool operator()(SimplexFigure<parameter_size>& figure) override 
             {
-                throw std::out_of_range("The number of simplex figures must be" + std::to_string(Shrinking + 1) + "!");
+                switch (m_curr_operation) {
+                    case "reflection":
+                        if (figure[m_settings.getBestInd()] <= figure.getReflected() && figure.getReflected() < figure[m_settings.getSecondWorstInd()]) {
+                            figure[m_settings.getSecondWorstInd()] = figure.getReflected();
+                            return reset();
+                        }
+
+                        if (figure.getReflected() < figure[m_settings.getBestInd()]) {
+                            m_curr_operation = "expansion";
+                        }
+                        else {
+                            m_curr_operation = "contraction";
+                        }
+
+                        return true;
+                        break;
+                    case "expansion":
+                        if (figure.getFinal() < figure.getReflected()) {
+                            figure[m_settings.getWorstInd()] = figure.getFinal();
+                        }
+                        else {
+                            figure[m_settings.getWorstInd()] = figure.getReflected();
+                        }
+
+                        return reset();
+                        break;
+                    case "contraction":
+                        if (figure.getFinal() <= figure.getReflected()) {
+                            figure[m_settings.getWorstInd()] = figure.getFinal();
+                            return false;
+                        }
+
+                        m_curr_operation = "shrinking";
+                        return true;
+                        break;
+                    case "shrinking":
+                        return reset();
+                        break;
+                    default:
+                        break;
+                }
             }
-        }
+            const std::string& getOperation() const { return m_curr_operation; }
+            bool reset() { m_curr_operation = "reflection"; return false; }
+        
+        private:
+            std::string m_curr_operation{ "reflection" };
+            
+        };
     }
 
 }

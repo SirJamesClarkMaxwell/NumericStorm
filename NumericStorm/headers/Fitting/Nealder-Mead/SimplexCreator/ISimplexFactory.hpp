@@ -5,7 +5,7 @@
 
 #include "../SimplexPoint.hpp"
 #include "../SimplexFigure.hpp"
-#include "SimplexCreatorSetting.hpp"
+#include "SimplexCreatorSettings.hpp"
 #include "../../CreatorInterface.hpp"
 
 namespace NumericStorm
@@ -13,7 +13,7 @@ namespace NumericStorm
 namespace Fitting
 {
 template<size_t parameter_size>
-class ISimplexFactory : public CreatorInterface<SimplexPoint<parameter_size>, SimplexFigure<parameter_size>, SimplexCreatorSettigns>
+class ISimplexFactory : public CreatorInterface<const SimplexPoint<parameter_size>&, SimplexFigure<parameter_size>, SimplexCreatorSettigns>
 {
 public:
 	using InterfaceType = CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>;
@@ -29,7 +29,7 @@ public:
 
 	virtual ~ISimplexFactory() = default;
 
-	ISimplexFactory(SimplexCreatorSettigns settings)
+	ISimplexFactory(const SimplexCreatorSettigns& settings)
 		: CreatorInterface<In, Out, Settings>{}  {
 		this->m_settings = settings;
 	}

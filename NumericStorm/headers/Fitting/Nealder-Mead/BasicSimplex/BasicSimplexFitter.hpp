@@ -5,6 +5,8 @@
 #include "../SimplexPoint.hpp"
 #include "BasicSimplexFitterSettings.hpp"
 #include "../SimplexOperations/SimplexOperationsHeader.hpp"
+#include "../SimplexCreator/SimplexCreatorFactory.hpp"
+#include "../SimplexDecision/StrategyManager.hpp"
 // TODO: write BasicSimplexFitter minimize implementation
 namespace NumericStorm
 {
@@ -25,15 +27,27 @@ namespace NumericStorm
 			BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
 				: SimplexFitter<parameter_size>{ simplexFigure } {}
 
-			virtual void setUp(const DerivedSettings& fitterSettings) override { this->m_settings = std::make_unique<DerivedSettings>(fitterSettings); }
+			virtual void setUp(const DerivedSettings& fitterSettings) override { 
+				this->m_settings = std::make_unique<DerivedSettings>(fitterSettings); 
+			
+			}
 			virtual void fit() override {
+				int iter = 0;
+				while (iter++ <= this->m_settings->getMaxIteration() && this->m_simplexFigure[parameter_size] <= this->m_settings->getMinError()) {
+					this->m_simplexFigure.sort();
+					
+					do {
 
+					} while (true);
+				}
 
 				
 			}
 
-		private:
-			SimplexOperationFactory<parameter_size> m_simplexOperationFactory;
+		protected:
+			SimplexOperationFactory<parameter_size> m_simplexOperationFactory{};
+			SimplexCreatorFactory<parameter_size> m_simplexCreatorFactory{};
+			StrategyManager<parameter_size> m_strategyManager{};
 		};
 
 	}

@@ -5,6 +5,8 @@
 #include "Data.hpp"
 #include "Parameters.hpp"
 
+#include <memory>
+
 namespace NumericStorm
 {
 namespace Fitting
@@ -16,7 +18,7 @@ class Model
 public:
     //we dont want to create a Model with no model
     Model() = delete;
-    Model(std::function<Data(const std::vector<double>&, const Parameters<parameter_size>&,
+    Model(std::function<void(Data&, const Parameters<parameter_size>&,
         const AdditionalParameters&)>
         model)
         : m_model{ model } {};
@@ -27,13 +29,13 @@ public:
     Model<parameter_size>& operator=(Model<parameter_size>&&) = default;
     virtual ~Model() = default;
 
-    virtual Data operator()(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
+    virtual void operator()(Data& arguments, const Parameters<parameter_size>& parameters,
         const AdditionalParameters& additionalParameters) const {
         return m_model(arguments, parameters, additionalParameters);
     }
 
 protected:
-    std::function<Data(const std::vector<double>&, const Parameters<parameter_size>&,
+    std::function<void(Data&, const Parameters<parameter_size>&,
         const AdditionalParameters&)> m_model;
 };
 

@@ -33,12 +33,10 @@ public:
 	SimplexPoint(const std::vector<double> arguments, const std::array<double, parameter_size>& parameters)
 		: Parameters<parameter_size>{ parameters }, m_data{ std::make_unique<Data>(arguments) } {};
 
-	void updateData(const Data& data) {
-		*(m_data) = data;
-		m_data_valid = true;
-	}
+
 
 	const Data& getData() const { return *(m_data); }
+	Data& getData() { m_data_valid = true; return *(m_data); }
 
 
 	bool isDataValid() const { return m_data_valid; }

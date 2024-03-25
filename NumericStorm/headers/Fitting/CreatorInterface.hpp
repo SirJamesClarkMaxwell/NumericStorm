@@ -5,9 +5,9 @@ namespace Fitting {
 	template<class CreatorInput, class CreatorOutput, class CreatorSettings>
 	class CreatorInterface {
 	public:
-		using In = CreatorInput;
-		using Out = CreatorOutput;
-		using Settings = CreatorSettings;
+		using In = typename CreatorInput;
+		using Out = typename CreatorOutput;
+		using Settings = typename CreatorSettings;
 
 
 		CreatorInterface() = default;
