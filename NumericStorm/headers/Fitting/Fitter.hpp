@@ -11,12 +11,6 @@ namespace Fitting
 template<size_t parameter_size, class DerivedSettings = FitterSettings<parameter_size>>
 class Fitter
 {
-	//its C++ baby
-	//what we are doing here is apparently called "Curiously recurring template pattern"
-	//one of the pure virtual functions is defined using the template parameter DerivedSettings
-	//then when inheriting from Fitter we specify in its template what kind of settings we want to use
-
-	//here we check the provided class to be inherited from FitterSettings
 	static_assert(std::derived_from<DerivedSettings, FitterSettings> == true);
 
 public:
@@ -27,18 +21,10 @@ public:
 	Fitter<parameter_size, DerivedSettings>& operator=(Fitter<parameter_size, DerivedSettings>&&) = default;
 
 	virtual ~Fitter() = default;
-
-	virtual void proposeParameters(const Parameters<parameter_size>& parameters) { m_proposedParameters = parameters; }
-	//QUESTION why we might want to return this initial parameters? it should be a private parameters and it might be passed into fit function
-
-	virtual const Parameters<parameter_size>& getFittedParameters() { return m_fittedParameters; }
-
-	virtual void fit() = 0;
+	virtual Parameters<parameter_size> fit(const Parameters<parameter_size>& initialParameters) = 0;
 	virtual void setUp(const DerivedSettings&) = 0;
 
 protected:
-	Parameters<parameter_size> m_fittedParameters{};
-	Parameters<parameter_size> m_proposedParameters{};
 	std::unique_ptr<DerivedSettings> m_settings{ nullptr };
 };
 

@@ -21,38 +21,46 @@ public:
 
 	virtual ~Factory() = default;
 
-	virtual void registerCreator(const std::string& creatorName, const Creator& instance) {
-		m_creatorList[creatorName] = std::make_unique<Creator>(instance);
-	}
-	virtual void deleteCreator(const std::string& creatorName) throw (NoAvailableFactoryException) {
-		if (checkIfAvailable(creatorName))
-			m_creatorList.erase(creatorName);
-		else
-			throw NoAvailableFactoryException(creatorName);
-	}
-	virtual typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input) throw (NoAvailableFactoryException) {
-		if (checkIfAvailable(creatorName))
-			return m_creatorList[creatorName]->get()->operator()(input);
-
-		throw NoAvailableFactoryException(creatorName);
-	}
-	virtual void updateSettings(const std::string& creatorName, const typename Creator::Settings& settings) throw (NoAvailableFactoryException) {
-		auto simplexCreator = m_creatorList.find(creatorName);
-
-		if (checkIfAvailable(creatorName))
-			return m_creatorList[creatorName]->get()->updateSettings(settings);
-
-		throw NoAvailableFactoryException(creatorName);
-	}
-	//TODO i will move definitions of the method below the class, i could explain why 
+	virtual void registerCreator(const std::string& creatorName, const Creator& instance);
+	virtual void deleteCreator(const std::string& creatorName) throw (NoAvailableFactoryException);
+	virtual typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input) throw (NoAvailableFactoryException);
+	virtual void updateSettings(const std::string& creatorName, const typename Creator::Settings& settings) throw (NoAvailableFactoryException);
 protected:
-	//TODO make strings inside this map a lower of upper version
 	std::unordered_map<std::string, std::unique_ptr<Creator>> m_creatorList{};
 
+private:
 	bool checkIfAvailable(const std::string& creatorName) const {
 		return m_creatorList.find(creatorName) != m_creatorList.end();
 	}
-
 };
+template<class Creator>
+void Factory<Creator>::registerCreator(const std::string& creatorName, const Creator& instance) {
+	m_creatorList[creatorName] = std::make_unique<Creator>(instance);
+};
+template<class Creator>
+void Factory<Creator>::deleteCreator(const std::string& creatorName) {
+	if (checkIfAvailable(creatorName))
+		m_creatorList.erase(creatorName);
+	else
+		throw NoAvailableFactoryException(creatorName);
+};
+template<class Creator>
+typename Creator::Out Factory<Creator>::invoke(const std::string& creatorName, const typename Creator::In& input) {
+	if (checkIfAvailable(creatorName))
+		return m_creatorList[creatorName]->get()->operator()(input);
+
+	throw NoAvailableFactoryException(creatorName);
+};
+template<class Creator>
+void Factory<Creator>::updateSettings(const std::string& creatorName, const typename Creator::Settings& settings) {
+	auto simplexCreator = m_creatorList.find(creatorName);
+
+	if (checkIfAvailable(creatorName))
+		return m_creatorList[creatorName]->get()->updateSettings(settings);
+
+	throw NoAvailableFactoryException(creatorName);
+};
+
+
 }
 }

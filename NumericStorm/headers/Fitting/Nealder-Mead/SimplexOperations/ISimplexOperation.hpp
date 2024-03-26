@@ -28,14 +28,10 @@ public:
 
     //NOTE again, i will move this constructor into the beginning of this class
     //todo if we decide to have a general constructor, we should call it here
-    ISimplexOperation(const std::string& operationName, const SimplexOperationSettings& arguments)
-        : CreatorInterface<In, Out, Settings>{} {
-        m_operationName = operationName;
-        this->m_settings = arguments;
-    };
+    ISimplexOperation(const SimplexOperationSettings& arguments)
+        : CreatorInterface<In, Out, Settings>{ arguments } {};
     const std::string& getOperationName() const { return m_operationName; }
-protected:
-    std::string m_operationName{};
+
 };
 
 }

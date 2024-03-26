@@ -9,8 +9,9 @@ public:
 	using Out = typename CreatorOutput;
 	using Settings = typename CreatorSettings;
 
-	//Q why we can't make a general constructor for all derived types? and use it later?
 	CreatorInterface() = default;
+	CreatorInterface(const CreatorSettings& settings)
+		:m_settings{ settings } {};
 	CreatorInterface(const CreatorInterface<In, Out, Settings>&) = default;
 	CreatorInterface(CreatorInterface<In, Out, Settings>&&) = default;
 	CreatorInterface<In, Out, Settings>& operator=(const CreatorInterface<In, Out, Settings>&) = default;

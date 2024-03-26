@@ -13,13 +13,7 @@ public:
 		: Parameters<bounds_size>(bounds) {};
 
 	virtual double& operator [](int index) = 0;
-	virtual std::array<double, size_p> getParameters() = 0;
-
-	virtual double getError() { return -1 };
-	//TODO remove error
-	virtual void setUp() = 0;
-
-	virtual calculateError(const Data& referenceData) {};
+	virtual std::array<double, bounds_size> getParameters() = 0;
 };
 
 }
