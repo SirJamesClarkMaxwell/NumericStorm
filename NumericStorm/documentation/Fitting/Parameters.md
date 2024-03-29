@@ -17,6 +17,7 @@ The template parameter `parameter_size` determines the number of parameters that
 ```cpp
 Parameters()
 Parameters(std::array<double, parameter_size> parameters):
+Parameters(std::initializer_list<double>& parameters)
 ```
 
 The default constructor initializes the parameter set to all zeros and sets the error to -1.
@@ -27,22 +28,22 @@ The copy constructor is generated automatically by the compiler.
 
 ```cpp
 std::array<double, parameter_size> m_parameters;
-double m_error;
 ```
 
 ## Public methods
 
 ```cpp
 std::array<double, parameter_size> getParameters() const;
-double getError() const;
 double& operator[](int index) noexcept;
 const double& operator[](int index) const noexcept;
+Parameters<parameter_size>& operator=(const Parameters<parameter_size>&);
+Parameters<parameter_size>& operator=(Parameters<parameter_size>&&);
 ```
 
 - Returns the parameters of the object.
-- Returns the error associated with the parameters.
 - Returns a reference to the parameter at the specified index.
 - Returns a const reference to the parameter at the specified index.
+- Allows you to assing new instance of parameters into new object even if it is const
 
 # An example usage is:
 
@@ -53,16 +54,18 @@ int main()
 {
     // Create a Parameters object with 3 parameters
     std::array<double, 3> params = {1.0, 2.0, 3.0};
-    Parameters<3> parameters(params);
 
+    Parameters<3> parameters(params);
+    Parameters<3> parameters2({1.0, 2.0, 3.0});
     std::cout << "Parameters: ";
+
     for (int i = 0; i < 3; i++)
         std::cout << i << ":" << parameters[i] << " ";
     std::cout << std::endl;
 
-    // Get the error
-    double error = parameters.getError();
-    std::cout << "Error: " << error << std::endl;
+    for (int i = 0; i < 3; i++)
+        std::cout << i << ":" << parameters2[i] << " ";
+    std::cout << std::endl;
 
     // Access a parameter by index
     double& param_ref = parameters[0];

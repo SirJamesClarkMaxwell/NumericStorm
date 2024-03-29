@@ -1,65 +1,77 @@
-## General Description of the Abstract Model Class
+#### General Description of the Model Class
 
-This abstract class is responsible for holding information about the function that will calculate the data needed to evaluate the goal function in the fitting procedure. This is achieved using <span style = "color:green">std::function<> </span>.
+This class is responsible for holding information about the function that will calculate the data needed to evaluate the goal function in the fitting procedure. This is achieved using <span style = "color:green">std::function<> </span>.
+
+#### template arguments
+
+1. <span style = "color:green"> size_t </span> parameter_size
+2. <span style="color: lightblue"> class</span></span><span style = "color:green"> AuxilaryParameters </span> = <span style = "color:green"> AdditionalParameters</span>
+3. <span style = "color:green"> size_t </span> dimension
+
+Let's explain how this class is working.
+
+First of all this is a concrete class. The `parameter_size` template argument is responsible for determining the array size, that is stored inside the Parameter class.
+Why we used the std::array instead of the std::vector, check the `Parameters` documentation page.
+
+The `AdditionalParameters` reason is a little bit more complicated. We decided to use the template argument instead of the abstract class `AdditionalParameters`, because we are not be able to write a class responsible for holding all possible combinations of additional parameters, and provide the methods for setting and getting this auxiliary parameters.
+The way how this is working: You have to implement your own class and pass it as the template argument into the derived model class. In your method that will evaluate the data (this is described more detail in the next paragraph) you could do what ever you want with your derived AdditionalParameters.
+To see why `Data` class is templated by `size_t dimension`, check the Data documentation.
+
+#### How to make my own Model class
+
+What we are suggesting here is that you should inherit from the Model class, instead defining a std::function object in code and pass it into the constructor. In derived class add the static [^1] and pass it as the argument into the initializer list as it is
+done in the example code below.
+
+[^1]: this is really important that this method should be static in other case the code will not compile, it could be private it doesn't matter
 
 ### Constructor:
 
 ```cpp
-Model(std::function<std::unique_ptr<Data>(
-    const std::vector<double>& arguments,
+template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
+Model(std::function<void(
+    Data<dimension>& data,
     const Parameters<parameter_size>& parameters,
-    const AdditionalParameters& additionalParameters)> model)
+    const AuxilaryParameters& additionalParameters)> model);
 ```
 
 Let's go break this down piece by piece:
 
-- the return value is the unique pointer in <span style = "color: lightblue">abstract</span> <span style = "color: green"> Data</span> class
-- The fist argument is `arguments` which is as <span style ="color: green"> std::vector </span> <<span style = "color: lightblue">double</span></span>> , These are the x-values for standard mathematical functions.
+- we are not returning anything from the function, because we want to avoid unnecessary copying/moving the data. Instead of this calculated data would be inject into the pre-defined memory.
+- The fist argument is `arguments` which is as <span style ="color: green"> Data<dimesion> & </span>. This object store the multi-dimensional vector of data needed to calculated the data, or stored the calculated data.
 - <span style = "color: green"> Parameters </span> This object will be fitted inside the fitter class.
-- <span style="color: green"> AdditionalParameters</span> this argument is optional. If the function requires any other additional parameters to return the correct result, this is the right place to store this type of information.
-  All arguments are passed by const reference to avoid unnecessary copies of this potentially heavy object.
-
-The return type is a unique pointer because we don't want to return data by value, as it may be heavy. Moreover, we don't want multiple pointers to the same block of memory, so unique pointers are used.
-
-One more addition to this description of the class: because this is an abstract class, you need to implement the function call operator. Additionally, you need to implement the concrete <span style="color:green"> Data </span> class by inheriting from it.
-
-This class is the abstract responsible for holding the information about the function that will be responsible for calculating the data needed to evaluating the goal function in fitting procedure. This is done by <span style=" color: green"> std::function<>. </span>
+- <span style="color: green"> AuxilaryParameters </span> this argument is optional. If the function requires any other additional parameters to return the correct result, this is the right place to store this type of information.
 
 ### Constructor:
 
 ```cpp
-Model(std::function<std::unique_ptr<Data>(
-    const std::vector<double>& arguments,
+Model(void(
+    Data<dimension>& data,
     const Parameters<parameter_size>& parameters,
-    const AdditionalParameters& additionalParameters)> model)
+    const AuxilaryParameters& additionalParameters)> model)
 ```
 
 ### Overloaded calling operator:
 
-<!-- TODO: add this section about the logic how this operator is working and add the short description of how we are returning the shared pointer instead of unique one -->
-
-<!-- TODO add note that it will change in time, and to be sure what you need to pass into the operator check the source code -->
+```cpp
+template<size_t dimension>
+void operator()(Data<dimension>& data, const Parameters<parameter_size>& parameters, const AuxilaryParameters& additionalParameters)
+```
 
 Let's go break this out piece by piece:
 
-- the returning value is the unique pointer into <span style = "color: lightblue">abstract</span> <span style = "color: green"> Data</span> class
-- <span style ="color: green"> std::vector </span> <<span style = "color: lightblue">double</span></span>> the fist argument is arguments, this is just a set of x's for standard mathematical functions
-- <span style = "color: green"> Parameters </span> This is the the object that will be fitted inside the fitter class.
-- <span style="color: green"> AdditionalParameters</span> this argument will optional. If function needs any other additional parameters to return correct result this is the right place to store this type of information
+1.  We are not returning any thing from this function, all calculated data should be stored in data object. This is a reason why we decided to pass this object as reference instead of const reference.
+2.  The Data object is a wrapper for multi-dimensional array. To get more details, see the `Data` documentation page.
+3.  Parameter is the object that stores the evaluated parameters.
+4.  <span style = "color: green"> AuxilaryParameters</span>, in reality it is a <span style = "color: green">AdditionalParameters</span>. It was named in this way, because we wanted to avoid naming problems.
 
-All arguments are passed by const reference, because we want to avoid unnecessary copies of this potentially heavy object.
+### Example of usage
 
-The return type is a unique pointer because we don't want to return data by value. This will potentially be a heavy item. Moreover, we don't particularly want to have multiple pointers to the same block of memory -> unique pointers arrived.
-
-One more addition to this description of class, because this is the abstract class you need to implement the calling operator. And also you need to implement the concrete <span style="color:green"> Data </span> class by inheriting from it.
-
-# Example of usage
-
+<!---
 All code of declared function will be available in the end of this file, in table of context it will marked as the `Full Code`
 This class could be used in in two different ways:
 
-1.  By a roll classes
-2.  By derived classes
+1. By a roll classes
+2. By derived classes
 
 We highly suggest to use the second option, your code will be cleaner and more easier to change in the future. But we want to mark it that there is a another way how you can use this class. In both cases we will implement a standard Gaussian function.
 
@@ -168,3 +180,4 @@ public:
 };
 
 ```
+--->
