@@ -10,7 +10,7 @@ public:
     GaussianData(const std::vector<double>& arguments, const std::vector<double>& values)
         : Data(arguments, values) {}
     virtual ~GaussianData() {};
-    std::vector<double> getArguments() override { return this->m_argumets; };
+    std::vector<double> getArguments() override { return this->m_arguments; };
     std::vector<double> getValues() override { return this->m_values; };
 };
 
@@ -40,7 +40,7 @@ public:
     // No need for constructor parameters
     GaussianModel() : Model<4>(gaussianFunction) {};
 
-    static std::unique_ptr<Data> gaussianFunction(const std::vector<double>& arguments, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters) 
+    static std::unique_ptr<Data> gaussianFunction(const std::vector<double>& arguments, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters)
     {
         std::vector<double> calculateData;
         calculateData.resize(arguments.size());
