@@ -6,27 +6,27 @@
 namespace NumericStorm {
 namespace Fitting {
 
+template <size_t dimension>
 class ErrorModel {
 
 public:
-    //again as with Model.hpp
     ErrorModel() = delete;
-    ErrorModel(const ErrorModel&) = default;
-    ErrorModel(ErrorModel&&) = default;
-    ErrorModel& operator=(const ErrorModel&) = default;
-    ErrorModel& operator=(ErrorModel&&) = default;
+    ErrorModel(const ErrorModel<dimension>&) = default;
+    ErrorModel(ErrorModel<dimension>&&) = default;
+    ErrorModel<dimension>& operator=(const ErrorModel<dimension>&) = default;
+    ErrorMode<dimension>& operator=(ErrorModel<dimension>&&) = default;
 
-    ErrorModel(std::function<double(const Data&, const Data&)> errorModel)
+    ErrorModel(std::function<double(const <dimension>&, const <dimension>&)> errorModel)
         : m_errorModel{ errorModel } {}
-    
+
     virtual ~ErrorModel() {};
 
-    virtual double operator()(const Data& referencedData, const Data& comparedData) const {
+    virtual double operator()(const <dimension>& referencedData, const <dimension>& comparedData) const {
         return m_errorModel(referencedData, comparedData);
     }
 
 protected:
-    std::function<double(const Data&, const Data&)> m_errorModel;
+    std::function<double(const Data<dimension>&, const Data<dimension>&)> m_errorModel;
 };
 }
 }
