@@ -6,7 +6,7 @@ This class is responsible for holding information about the function that will c
 
 1. <span style = "color:green"> size_t </span> parameter_size
 2. <span style="color: lightblue"> class</span></span><span style = "color:green"> AuxilaryParameters </span> = <span style = "color:green"> AdditionalParameters</span>
-3. <span style = "color:green"> size_t </span> dimension
+3.
 
 Let's explain how this class is working.
 
@@ -15,7 +15,6 @@ Why we used the std::array instead of the std::vector, check the `Parameters` do
 
 The `AdditionalParameters` reason is a little bit more complicated. We decided to use the template argument instead of the abstract class `AdditionalParameters`, because we are not be able to write a class responsible for holding all possible combinations of additional parameters, and provide the methods for setting and getting this auxiliary parameters.
 The way how this is working: You have to implement your own class and pass it as the template argument into the derived model class. In your method that will evaluate the data (this is described more detail in the next paragraph) you could do what ever you want with your derived AdditionalParameters.
-To see why `Data` class is templated by `size_t dimension`, check the Data documentation.
 
 #### How to make my own Model class
 
@@ -24,44 +23,23 @@ done in the example code below.
 
 [^1]: this is really important that this method should be static in other case the code will not compile, it could be private it doesn't matter
 
-### Constructor:
+### Constructor and overloaded () operator:
+
+What we suggest is this type of alias for the type of argument passed into the constructor, and
 
 ```cpp
 template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
-Model(std::function<void(
-    Data<dimension>& data,
-    const Parameters<parameter_size>& parameters,
-    const AuxilaryParameters& additionalParameters)> model);
-```
+using ModelFunctionType = std::function<void(Data&, const Parameters<parameter_size>&, const AuxilaryParameters&)>;
+Model(const ModelFunctionType& model);
 
-Let's go break this down piece by piece:
-
-- we are not returning anything from the function, because we want to avoid unnecessary copying/moving the data. Instead of this calculated data would be inject into the pre-defined memory.
-- The fist argument is `arguments` which is as <span style ="color: green"> Data<dimesion> & </span>. This object store the multi-dimensional vector of data needed to calculated the data, or stored the calculated data.
-- <span style = "color: green"> Parameters </span> This object will be fitted inside the fitter class.
-- <span style="color: green"> AuxilaryParameters </span> this argument is optional. If the function requires any other additional parameters to return the correct result, this is the right place to store this type of information.
-
-### Constructor:
-
-```cpp
-Model(void(
-    Data<dimension>& data,
-    const Parameters<parameter_size>& parameters,
-    const AuxilaryParameters& additionalParameters)> model)
-```
-
-### Overloaded calling operator:
-
-```cpp
-template<size_t dimension>
-void operator()(Data<dimension>& data, const Parameters<parameter_size>& parameters, const AuxilaryParameters& additionalParameters)
+void operator()(Data& data, const Parameters<parameter_size>& parameters, const AuxilaryParameters& additionalParameters)
 ```
 
 Let's go break this out piece by piece:
 
-1.  We are not returning any thing from this function, all calculated data should be stored in data object. This is a reason why we decided to pass this object as reference instead of const reference.
-2.  The Data object is a wrapper for multi-dimensional array. To get more details, see the `Data` documentation page.
-3.  Parameter is the object that stores the evaluated parameters.
+1.  We are not returning any thing from overloaded calling operator, all calculated data should be inject into data object. This is a reason why we decided to pass this object as reference instead of const reference.
+2.  <span style = "color: green"> Data </span> is a wrapper for multi-dimensional vector. To get more details, see the `Data` documentation page.
+3.  <span style = "color: green"> Parameter </span> is the object that stores the evaluating parameters.
 4.  <span style = "color: green"> AuxilaryParameters</span>, in reality it is a <span style = "color: green">AdditionalParameters</span>. It was named in this way, because we wanted to avoid naming problems.
 
 ### Example of usage

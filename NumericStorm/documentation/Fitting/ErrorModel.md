@@ -1,27 +1,25 @@
 # ErrorModel class
 
-The ErrorModel class is an abstract base class that defines the interface for all error models used in the fitting process.
+The ErrorModel class is a base class that defines the interface for all error models used in the fitting process.
 
 An error model is a function that maps a pair of data points to a scalar error value. The error model is used to quantify the uncertainty associated with a fitted curve or surface.
 
-The ErrorModel class provides a virtual operator() method that must be implemented by derived classes. The operator() method takes two data points (referencedData and comparedData) as input and returns a double value that represents the error between the two data points.
+The ErrorModel class provides a virtual operator() method that could be, but we don't recommend this, implemented in derived classes. The operator() method takes two data points (referencedData and comparedData) as input and returns a double value that represents the error between the two data points.
 
-## Member functions
+What we actually recommend is to derive form this class and in derived class make one static private function that will be passed into the constructor of based class, check the [Example Of Usage](##-Example-of-usage) how to do it properly.
 
-```cpp
-ErrorModel(std::function<double(const Data& referenceData, const Data& evaluatedData)> errorModel)
-```
+What could be useful, is a `revert` argument in constructor. This argument in really easy way allows you to change form minimization (the default = false) into maximize problem.
 
-The constructor that takes an error function.
+## List of implemented ErrorMetrics:
 
-```cpp
-virtual double operator()(const Data& referencedData, const Data& comparedData) = 0;
-```
+- $\chi^2$
+- min/max
 
-Evaluates the error model.
+<!-- TODO after tests add example of usage  -->
 
 ## Example of usage
 
+<!---
 ```cpp
 #include "pch.h"
 
@@ -103,3 +101,4 @@ int main()
 
 }
 ```
+-->
