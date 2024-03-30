@@ -10,81 +10,88 @@ namespace Fitting {
 template<size_t parameter_size>
 class SimplexFigure {
 public:
-	SimplexFigure() {};
-	SimplexFigure(std::array<SimplexPoint<parameter_size>, parameter_size + 1> points)
-		:m_points(points), m_centroid(calculateCentroid()) {};
+	SimplexFigure() = default;
+	SimplexFigure(const SimplexFigure<parameter_size>&) = default;
+	SimplexFigure(SimplexFigure<parameter_size>&&) = default;
+	SimplexFigure<parameter_size>& operator=(const SimplexFigure<parameter_size>&) = default;
+	SimplexFigure<parameter_size>& operator=(SimplexFigure<parameter_size>&&) = default;
 
-	SimplexFigure(std::array<SimplexPoint<parameter_size>, parameter_size + 1> points, const std::shared_ptr<Data>& referencedData)
-		:m_points(points), m_centroid(calculateCentroid()), m_referencedData(referencedData), m_setData(true) {};
+	virtual ~SimplexFigure() = default;
 
-	std::array<SimplexPoint<parameter_size >, parameter_size> getPoints() { return m_points; }
-	void sort(bool reverse = true);
-	SimplexPoint<parameter_size>& getCentroid() { return m_centroid; }
-	SimplexPoint<parameter_size>& operator[](size_t index);
-	const SimplexPoint<parameter_size>& operator[](size_t index) const;
-	void recalculateErrors();
-	void recalculateError(unsigned int index);
+	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points) {
+		//cant be member initializer list because it cant guarantee order of operations
+		m_points = points;
+		m_centroid = calculateCentroid();
+	}
+
+	const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& getPoints() const { return m_points; }
+
+
+	SimplexPoint<parameter_size>& operator[](int p_index) {
+		m_centroid_valid = false;
+		m_sorted = false;
+
+		if (p_index > parameter_size || p_index < 0) {
+			throw std::out_of_range("Index out of bounds");
+		}
+		return m_points[p_index];
+	}
+
+	const SimplexPoint<parameter_size>& operator[](int p_index) const {
+
+		if (p_index > parameter_size || p_index < 0) {
+			throw std::out_of_range("Index out of bounds");
+	}
+		return m_points[p_index];
+}
+
+
+	void sort(bool reverse = true) {
+		m_sorted = true;
+		std::sort(m_points.begin(), m_points.end());
+		if (reverse)
+			std::reverse(m_points.begin(), m_points.end());
+	}
+
+
+	const SimplexPoint<parameter_size>& getCentroid() {
+		if (!m_centroid_valid) m_centroid = calculateCentroid();
+		return m_centroid;
+	}
+
+	bool isCentroidValid() const { return m_centroid_valid; }
+	bool isSorted() const { return m_sorted; }
+	//TODO remove this method and fields and move this responsibility into IDecision
+	SimplexPoint<parameter_size>& getReflected() { return m_reflected; }
+	const SimplexPoint<parameter_size>& getReflected() { return m_reflected; }
+
+	SimplexPoint<parameter_size>& getFinal() { return m_final; }
+	const SimplexPoint<parameter_size>& getFinal() { return m_final; }
+
 protected:
-	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points;
-	SimplexPoint<parameter_size> m_centroid;
+	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points{};
+	SimplexPoint<parameter_size> m_centroid{};
+	SimplexPoint<parameter_size> m_reflected{};
+	//Q what is the final? 
+	/*
+	is it returned parameters? why we need them if fit/minimize function will return it?
+	*/
+	SimplexPoint<parameter_size> m_final{};
+	bool m_centroid_valid{ false };
+	bool m_sorted{ false };
 
 private:
-	SimplexPoint<parameter_size> calculateCentroid();
-	std::shared_ptr<Data> m_referencedData = nullptr;
-	bool m_setData = false;
-};
-
-template<size_t parameter_size>
-void SimplexFigure<parameter_size>::sort(bool reverse)
-{
-	std::sort(m_points.begin(), m_points.end());
-	if (reverse)
-		std::reverse(m_points.begin(), m_points.end());
-};
-
-template<size_t parameter_size>
-SimplexPoint<parameter_size> SimplexFigure<parameter_size>::calculateCentroid()
-{
+	SimplexPoint<parameter_size> calculateCentroid() {
+		m_centroid_valid = true;
+		if (!m_sorted) sort(); //we must sort because we dont want to include the worst point specifically
 #if DEBUG
-	SimplexPoint<parameter_size> sum = std::accumulate(m_points.begin() + 1, m_points.end(), m_points[0]);
-	SimplexPoint<parameter_size > toReturn = sum / (parameter_size);
-	return toReturn;
+		SimplexPoint<parameter_size> sum = std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>{});
+		sum /= (parameter_size);
+		return sum;
 #endif
-	return std::accumulate((m_points.begin() + 1), m_points.end(), m_points[0]) / (parameter_size);
-};
-
-template<size_t parameter_size>
-SimplexPoint<parameter_size>& SimplexFigure<parameter_size>::operator[](size_t index) {
-	if (index >= parameter_size + 1) {
-		throw std::out_of_range("Index out of bounds");
+		return std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>()) / (parameter_size);
 	}
-	return m_points[index];
-};
 
-template<size_t parameter_size>
-const SimplexPoint<parameter_size>& SimplexFigure<parameter_size>::operator[](size_t index) const {
-	if (index >= parameter_size + 1) {
-		throw std::out_of_range("Index out of bounds");
-	}
-	return m_points[index];
-}
-
-template<size_t parameter_size>
-void SimplexFigure<parameter_size>::recalculateErrors()
-{
-	if (!(m_setData))
-		throw NoSetDataException();
-	for (auto& point : m_points)
-		point.calculateError(m_referencedData);
-}
-template<size_t parameter_size>
-void SimplexFigure<parameter_size>::recalculateError(unsigned int index)
-{
-	if (index >= parameter_size + 1)
-		throw std::out_of_range("Index out of bounds");
-	if (!(m_setData))
-		throw NoSetDataException();
-	m_points[index].recalculateError(m_referencedData);
 };
 
 }

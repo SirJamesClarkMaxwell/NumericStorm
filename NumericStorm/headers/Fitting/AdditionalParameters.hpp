@@ -8,7 +8,7 @@ class AdditionalParameters
 {
 public: 
 	AdditionalParameters() = default;
-	~AdditionalParameters() {}
+	virtual ~AdditionalParameters() = default;
 };
 }
 

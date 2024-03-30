@@ -10,30 +10,28 @@ namespace Fitting
 template <size_t parameter_size>
 class Reflection : public ISimplexOperation<parameter_size>
 {
+	//todo redefine this class to be parameterized by the returning type of calling operator -> SimplexPoint
 public:
+	//todo add default things, but maybe it is defined i ISimplexOperation
+
 	Reflection(const SimplexOperationSettings& settings)
 		: ISimplexOperation<parameter_size>("reflection", settings) {};
 
-	virtual SimplexFigure<parameter_size> operator()(SimplexFigure<parameter_size>& simplexFigure) override;
-};
-
-template <size_t parameter_size>
-SimplexFigure<parameter_size> Reflection<parameter_size>::operator()(SimplexFigure<parameter_size>& simplexFigure)
-{
-
-	double alpha = this->m_settings.getFactor();
-	SimplexPoint<parameter_size> centroid = simplexFigure.getCentroid();
-	SimplexPoint<parameter_size> pointToReflectAround(centroid);
+	virtual SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& simplexFigure) override {
+		double alpha = this->m_settings.getFactor();
+		const SimplexPoint<parameter_size>& centroid = simplexFigure.getCentroid();
+		SimplexPoint<parameter_size>& reflectedPoint = simplexFigure.getReflected();
+		const SimplexPoint<parameter_size>& worstPoint = simplexFigure[0];
 
 #if DEBUG
-	auto difference = centroid - simplexFigure[0];
-	auto multiplied = difference * alpha;
-	pointToReflectAround += multiplied;
-#else if REALASE
-	pointToReflectAround += (centroid - simplexFigure[parameter_size]) * alpha;
+		auto difference = centroid - worstPoint;
+		auto scaled = difference * alpha;
+		reflectedPoint = centroid + scaled;
+#elif RELEASE
+		reflectedPoint = centroid + (centroid - worstPoint) * alpha;
 #endif
-	simplexFigure[0] = pointToReflectAround;
-	return simplexFigure;
+		return simplexFigure;
+	}
 };
 
 }

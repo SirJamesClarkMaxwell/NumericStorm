@@ -28,7 +28,7 @@
 
 #include "./Fitting/Nealder-Mead/SimplexCreator/ISimplexFactory.hpp"
 #include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorFactory.hpp"
-#include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorSetting.hpp"
+#include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorSettings.hpp"
 
 #include "./Fitting/Nealder-Mead/SimplexOperations/Reflection.hpp"
 #include "./Fitting/Nealder-Mead/SimplexOperations/Contraction.hpp"

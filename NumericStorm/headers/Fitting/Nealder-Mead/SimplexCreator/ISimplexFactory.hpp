@@ -5,26 +5,36 @@
 
 #include "../SimplexPoint.hpp"
 #include "../SimplexFigure.hpp"
-#include "SimplexCreatorSetting.hpp"
+#include "SimplexCreatorSettings.hpp"
+#include "../../CreatorInterface.hpp"
 
-namespace NumericStorm 
+namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
-template<size_t figure_size>
-class ISimplexFactory 
+template<size_t parameter_size>
+class ISimplexFactory : public CreatorInterface<const SimplexPoint<parameter_size>&, SimplexFigure<parameter_size>, SimplexCreatorSettings>
 {
 public:
-	ISimplexFactory(SimplexCreatorSettigns settings) 
-	:m_settings(settings){};
-	SimplexFigure<figure_size> operator ()(SimplexPoint<figure_size-1> basedPoint)override = 0;
-	void updateSettings(SimplexCreatorSettigns newSettigns);
-private:
-	SimplexCreatorSettigns m_settings;
-};
+	using InterfaceType = CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>;
+	using In = typename InterfaceType::In;
+	using Out = typename InterfaceType::Out;
+	using Settings = typename InterfaceType::Settings;
 
-template<size_t figure_size>
-void ISimplexFactory<figure_size>::updateSettings(SimplexCreatorSettigns newSettigns)
-	{m_settings = newSettigns;};
+	ISimplexFactory() = default;
+	ISimplexFactory(const ISimplexFactory&) = default;
+	ISimplexFactory(ISimplexFactory&&) = default;
+	ISimplexFactory& operator=(const ISimplexFactory&) = default;
+	ISimplexFactory& operator=(ISimplexFactory&&) = default;
+
+	virtual ~ISimplexFactory() = default;
+
+	//todo same story with default constructor in InterfaceType
+	ISimplexFactory(const SimplexCreatorSettings& settings)
+		: CreatorInterface<In, Out, Settings>{} {
+		this->m_settings = settings;
+	}
+
+};
 }
 }

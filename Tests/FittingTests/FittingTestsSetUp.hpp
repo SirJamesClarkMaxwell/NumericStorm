@@ -10,7 +10,7 @@ public:
     GaussianData(const std::vector<double>& arguments, const std::vector<double>& values)
         : Data(arguments, values) {}
     virtual ~GaussianData() {};
-    std::vector<double> getArguments() override { return this->m_argumets; };
+    std::vector<double> getArguments() override { return this->m_arguments; };
     std::vector<double> getValues() override { return this->m_values; };
 };
 

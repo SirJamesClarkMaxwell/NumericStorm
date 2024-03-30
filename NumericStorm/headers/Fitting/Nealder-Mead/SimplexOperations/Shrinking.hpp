@@ -12,34 +12,19 @@ template <size_t parameter_size>
 class Shrinking : public ISimplexOperation<parameter_size>
 {
 public:
+
     Shrinking(const SimplexOperationSettings& settings)
-        : ISimplexOperation<parameter_size>("shrinking", settings) {};
-    SimplexFigure<parameter_size> operator()(SimplexFigure<parameter_size>& simplexFigure) override;
-};
-
-template <size_t parameter_size>
-SimplexFigure<parameter_size> Shrinking<parameter_size>::operator()(SimplexFigure<parameter_size>& simplexFigure)
-{
-    double delta = this->m_settings.getFactor();
-
-    SimplexFigure<parameter_size> result( simplexFigure);
-    const SimplexPoint<parameter_size> bestPoint = simplexFigure[parameter_size];
-
-#if DEBUG
-    for (int i = 0; i < parameter_size ; ++i)
+        : ISimplexOperation<parameter_size>("shrinking", settings) {}
+    SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& simplexFigure) override
     {
-        auto diff = simplexFigure[i] - bestPoint;
-        auto multiplied = diff * delta;
-        auto added = bestPoint + multiplied;
-        result[i] = added;
+        double delta = this->m_settings.getFactor();
+        SimplexPoint<parameter_size>& bestPoint = simplexFigure[parameter_size];
+        //todo add debug version of this method
+        for (size_t i = 0; i < parameter_size; ++i)
+            simplexFigure[i] = bestPoint + (simplexFigure[i] - bestPoint) * delta;
+        return simplexFigure;
     }
-#elif REALASE
-    for (int i = 0; i < parameter_size -1; ++i)
-        result[i] = bestPoint + (simplexFigure[i] - bestPoint) * delta;
-#endif
-
-    return result;
-}
+};
 
 }
 }

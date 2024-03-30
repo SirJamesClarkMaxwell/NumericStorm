@@ -2,28 +2,31 @@
 
 #include <vector>
 #include "Fitting.hpp"
-namespace NumericStorm 
+namespace NumericStorm
 {
 namespace Fitting
 {
-class Data 
+class Data
 {
 public:
 	Data() = default;
-	Data(const std::vector<double>& arguments,const std::vector<double>& values)
-		:m_argumets(arguments),m_values(values) {}
-	virtual ~Data() {};
-	virtual std::vector<double> getArguments() = 0;
-	virtual std::vector<double> getValues() = 0;
-#if REALESE	
-protected:
-#endif
-	std::vector<double> m_argumets;
-	std::vector<double> m_values;
+	Data(const Data&) = default;
+	Data(Data&& d) = default;
+	Data& operator=(const Data& d) = default;
+	Data& operator=(Data&& d) = default;
+	std::vector<double> operator[](size_t index);
 
+	virtual ~Data() = default;
+protected:
+	std::vector<std::vector<double>> m_data{};
 };
 
-
-
+std::vector<double> Data::operator[](size_t index)
+{
+	int dimension = m_data.size();
+	if (index >= dimension or index < 0)
+		throw std::out_of_range("Index out of range");
+	return m_data[index];
+};
 }
 }

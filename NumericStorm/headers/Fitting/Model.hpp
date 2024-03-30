@@ -5,34 +5,34 @@
 #include "Data.hpp"
 #include "Parameters.hpp"
 
+#include <memory>
+
 namespace NumericStorm
 {
 namespace Fitting
 {
-
-template <size_t parameter_size>
+template <size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
 class Model
 {
 public:
-	Model(std::function<std::unique_ptr<Data>(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
-		const AdditionalParameters& additionalParameters)>
-		model)
-		: m_model(model) {};
-	Model(const Model<parameter_size>& other) = default;
-	virtual ~Model() {};
-	std::shared_ptr<Data> operator()(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
-		const AdditionalParameters& additionalParameters);
+    using ModelFunctionType = std::function<void(Data&, const Parameters<parameter_size>&, const AuxilaryParameters&)>;
+    Model() = delete;
+    Model(const ModelFunctionType& model)
+        : m_model{ model } {};
 
+    Model(const Model<parameter_size, AuxilaryParameters>&) = default;
+    Model(Model<parameter_size, AuxilaryParameters>&&) = default;
+    Model<parameter_size, AuxilaryParameters>& operator=(const Model<parameter_size, AuxilaryParameters>&) = default;
+    Model<parameter_size, AuxilaryParameters>& operator=(Model<parameter_size, AuxilaryParameters>&&) = default;
+    virtual ~Model() = default;
+
+    virtual void operator()(Data& arguments, const Parameters<parameter_size>& parameters, const AuxilaryParameters& additionalParameters) const
+    {
+        m_model(arguments, parameters, additionalParameters);
+    }
 protected:
-	std::function<std::unique_ptr<Data>(const std::vector<double>& arguments, const Parameters<parameter_size>& parameters,
-		const AdditionalParameters& additionalParameters)> m_model;
+    ModelFunctionType m_model;
 };
 
-template <size_t parameter_size>
-std::shared_ptr<Data> Model<parameter_size>::operator()(const std::vector<double>&arguments, const Parameters<parameter_size>&parameters,
-	const AdditionalParameters& additionalParameters)
-{
-	return std::move(m_model(arguments, parameters, additionalParameters));
-}
 }
 }

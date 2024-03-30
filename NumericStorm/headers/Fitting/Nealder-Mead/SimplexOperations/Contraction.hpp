@@ -11,47 +11,36 @@ namespace Fitting
 template <size_t parameter_size>
 class Contraction : public ISimplexOperation<parameter_size>
 {
+	//todo redefine this class to be parameterized by the returning type of calling operator -> SimplexPoint
 public:
 	Contraction(const SimplexOperationSettings& arguments)
-		: ISimplexOperation<parameter_size>("contraction", arguments) {};
-	SimplexFigure<parameter_size> operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure);
+		: ISimplexOperation<parameter_size>("contraction", arguments) {}
 
-private:
-	SimplexPoint<parameter_size> decidePointToContraction(SimplexFigure<parameter_size> reflectedFigure);
-	std::string m_operationName;
-};
-template <size_t parameter_size>
-SimplexFigure<parameter_size> Contraction<parameter_size>::operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure)
-{
-	SimplexFigure<parameter_size> contractedFigure(reflectedSimplexFigure);
-	SimplexPoint<parameter_size> reflectedPoint(reflectedSimplexFigure[0]);
-
-	SimplexPoint<parameter_size> pointToContraction = decidePointToContraction(reflectedSimplexFigure);
-	SimplexPoint<parameter_size> pointToContractArround(reflectedSimplexFigure.getCentroid());
-
-	double beta = this->m_settings.getFactor();
+	SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure) override {
+		const SimplexPoint<parameter_size>& centroid = reflectedSimplexFigure.getCentroid();
+		SimplexPoint<parameter_size>& contracted = reflectedSimplexFigure.getFinal(); //NU why this is not a centroid?
+		const SimplexPoint<parameter_size>& pointToContractAround = decidePointToContractAround(reflectedSimplexFigure);
+		double beta = this->m_settings.getFactor();
 
 #if DEBUG
-	auto difference = (pointToContraction - pointToContractArround);
-	auto multiplication = difference * beta;
-	pointToContractArround += multiplication;
+		auto difference = (pointToContractAround - centroid);
+		auto scaled = difference * beta;
+		contracted = centroid + scaled;
+#elif RELEASE
+		contracted = centroid + (pointToContractAround - centroid) * beta;
 #endif
 
-#if REALESE
-	pointToContractArround += (pointToContraction - pointToContractArround) * beta;
-#endif
+		return reflectedSimplexFigure;
+	}
 
-	contractedFigure[0] = pointToContractArround;
-	return contractedFigure;
-}
 
-template <size_t parameter_size>
-SimplexPoint<parameter_size> Contraction<parameter_size>::decidePointToContraction(SimplexFigure<parameter_size> reflectedFigure)
-{
-	SimplexPoint<parameter_size> reflectedPoint = reflectedFigure[0];
-	SimplexPoint<parameter_size> bestPoint = reflectedFigure[parameter_size];
-	return (reflectedPoint < bestPoint) ? reflectedPoint : bestPoint;
-}
+private:
+	const SimplexPoint<parameter_size>& decidePointToContractAround(const SimplexFigure<parameter_size>& reflectedSimplexFigure) {
+		const SimplexPoint<parameter_size>& reflectedPoint = reflectedSimplexFigure.getReflected();
+		const SimplexPoint<parameter_size>& worst = reflectedSimplexFigure[0];
+		return (reflectedPoint <= worst) ? reflectedPoint : worst;
+	}
+};
 
 }
 }
