@@ -15,8 +15,9 @@ public:
 	Data(Data<dimension>&& d) = default;
 	Data<dimension>& operator=(const Data<dimension>& d) = default;
 	Data<dimension>& operator=(Data<dimension>&& d) = default;
-
-	std::vector<double> operator[](size_t index) override throw(std::out_of_range);
+	//should be a reference to vector
+	//removed throw indication since its ignored by the compiler anyway since cpp14
+	std::vector<double> operator[](size_t index) override;
 
 	virtual ~Data() = default;
 protected:

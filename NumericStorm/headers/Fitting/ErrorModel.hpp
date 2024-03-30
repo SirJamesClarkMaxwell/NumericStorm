@@ -14,14 +14,14 @@ public:
     ErrorModel(const ErrorModel<dimension>&) = default;
     ErrorModel(ErrorModel<dimension>&&) = default;
     ErrorModel<dimension>& operator=(const ErrorModel<dimension>&) = default;
-    ErrorMode<dimension>& operator=(ErrorModel<dimension>&&) = default;
+    ErrorModel<dimension>& operator=(ErrorModel<dimension>&&) = default;
 
-    ErrorModel(std::function<double(const <dimension>&, const <dimension>&)> errorModel)
+
+    ErrorModel(std::function<double(const Data<dimension>&, const Data<dimension>&)> errorModel)
         : m_errorModel{ errorModel } {}
 
     virtual ~ErrorModel() {};
-
-    virtual double operator()(const <dimension>& referencedData, const <dimension>& comparedData) const {
+    virtual double operator()(const Data<dimension>& referencedData, const Data<dimension>& comparedData) const {
         return m_errorModel(referencedData, comparedData);
     }
 
