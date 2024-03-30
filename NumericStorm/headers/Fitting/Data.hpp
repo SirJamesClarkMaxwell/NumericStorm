@@ -6,27 +6,24 @@ namespace NumericStorm
 {
 namespace Fitting
 {
-template<size_t dimension>
 class Data
 {
 public:
 	Data() = default;
-	Data(const Data<dimension>&) = default;
-	Data(Data<dimension>&& d) = default;
-	Data<dimension>& operator=(const Data<dimension>& d) = default;
-	Data<dimension>& operator=(Data<dimension>&& d) = default;
-	//should be a reference to vector
-	//removed throw indication since its ignored by the compiler anyway since cpp14
-	std::vector<double> operator[](size_t index) override;
+	Data(const Data&) = default;
+	Data(Data&& d) = default;
+	Data& operator=(const Data& d) = default;
+	Data& operator=(Data&& d) = default;
+	std::vector<double> operator[](size_t index);
 
 	virtual ~Data() = default;
 protected:
-	std::array<std::vector<double>, dimension> m_data{};
+	std::vector<std::vector<double>> m_data{};
 };
 
-template<size_t dimension>
-std::vector<double> Data<dimension>::operator[](size_t index)
+std::vector<double> Data::operator[](size_t index)
 {
+	int dimension = m_data.size();
 	if (index >= dimension or index < 0)
 		throw std::out_of_range("Index out of range");
 	return m_data[index];

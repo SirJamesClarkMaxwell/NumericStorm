@@ -8,17 +8,17 @@ namespace NumericStorm
 {
 namespace Fitting
 {
-template<size_t parameter_size, size_t dimension = 2, class AuxilaryParameters = AdditionalParameters, class DerivedSettings = FitterSettings<parameter_size, AuxilaryParameters, dimension>>
+template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters, class DerivedSettings = FitterSettings<parameter_size, AuxilaryParameters>>
 class Fitter
 {
-	static_assert(std::derived_from<DerivedSettings, FitterSettings<parameter_size, AuxilaryParameters, dimension>> == true);
+	static_assert(std::derived_from<DerivedSettings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 
 public:
 	Fitter() = default;
-	Fitter(const Fitter<parameter_size, dimension, AuxilaryParameters, DerivedSettings>&) = default;
-	Fitter(Fitter<parameter_size, dimension, AuxilaryParameters, DerivedSettings>&&) = default;
-	Fitter<parameter_size, dimension, AuxilaryParameters, DerivedSettings>& operator=(const Fitter<parameter_size, dimension, AuxilaryParameters, DerivedSettings>&) = default;
-	Fitter<parameter_size, dimension, AuxilaryParameters, DerivedSettings>& operator=(Fitter<parameter_size, dimension, AuxilaryParameters, DerivedSettings>&&) = default;
+	Fitter(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
+	Fitter(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
+	Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
+	Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
 
 	virtual ~Fitter() = default;
 	virtual Parameters<parameter_size> fit(const Parameters<parameter_size>& initialParameters) = 0;
