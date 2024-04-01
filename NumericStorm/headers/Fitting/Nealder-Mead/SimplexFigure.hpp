@@ -17,11 +17,9 @@ public:
 
 	virtual ~SimplexFigure() = default;
 
-	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points) {
-		//cant be member initializer list because it cant guarantee order of operations
-		m_points = points;
-		m_centroid = calculateCentroid();
-	}
+	//changed back because the order is actually defined in the way the fields are declared
+	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points) 
+		: m_points{ points }, m_centroid{ calculateCentroid() } {}
 
 	const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& getPoints() const { return m_points; }
 
