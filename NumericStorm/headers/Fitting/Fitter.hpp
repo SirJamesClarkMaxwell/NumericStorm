@@ -8,7 +8,7 @@ namespace NumericStorm
 {
 namespace Fitting
 {
-template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters, class DerivedSettings = FitterSettings<parameter_size, AuxilaryParameters>>
+template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters<parameter_size>, class DerivedSettings = FitterSettings<parameter_size, AuxilaryParameters>>
 class Fitter
 {
 	static_assert(std::derived_from<DerivedSettings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
@@ -25,9 +25,8 @@ public:
 	virtual void setUp(const DerivedSettings&) = 0;
 
 protected:
-	std::unique_ptr<DerivedSettings> m_settings{ nullptr };
+	DerivedSettings m_settings{ };
 };
 
 }
 }
-
