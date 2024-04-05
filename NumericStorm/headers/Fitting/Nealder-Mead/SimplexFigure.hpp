@@ -18,7 +18,7 @@ public:
 	virtual ~SimplexFigure() = default;
 
 	//changed back because the order is actually defined in the way the fields are declared
-	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points) 
+	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points)
 		: m_points{ points }, m_centroid{ calculateCentroid() } {}
 
 	const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& getPoints() const { return m_points; }
@@ -58,29 +58,18 @@ public:
 
 	bool isCentroidValid() const { return m_centroid_valid; }
 	bool isSorted() const { return m_sorted; }
-	//TODO remove this method and fields and move this responsibility into IDecision
-	SimplexPoint<parameter_size>& getReflected() { return m_reflected; }
-	const SimplexPoint<parameter_size>& getReflected() { return m_reflected; }
 
-	SimplexPoint<parameter_size>& getFinal() { return m_final; }
-	const SimplexPoint<parameter_size>& getFinal() { return m_final; }
 
 protected:
 	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points{};
 	SimplexPoint<parameter_size> m_centroid{};
-	SimplexPoint<parameter_size> m_reflected{};
-	//Q what is the final? 
-	/*
-	is it returned parameters? why we need them if fit/minimize function will return it?
-	*/
-	SimplexPoint<parameter_size> m_final{};
 	bool m_centroid_valid{ false };
 	bool m_sorted{ false };
 
 private:
 	SimplexPoint<parameter_size> calculateCentroid() {
 		m_centroid_valid = true;
-		if (!m_sorted) sort(); //we must sort because we dont want to include the worst point specifically
+		if (!m_sorted) sort(false);
 #if DEBUG
 		SimplexPoint<parameter_size> sum = std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>{});
 		sum /= (parameter_size);
