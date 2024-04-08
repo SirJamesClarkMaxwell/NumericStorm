@@ -1,6 +1,7 @@
 #pragma once
 #include "../Parameters.hpp"
 #include "../Data.hpp"
+#include "AdditionalParameters.hpp"
 
 #include <vector>
 #include <array>
@@ -14,31 +15,32 @@ namespace Fitting
 template <std::size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
 class SimplexPoint {
 public:
+	SimplexPoint() = delete;
+	SimplexPoint(std::shared_ptr<Data> ref_data, const std::array<double, parameter_size>& parameters, AuxilaryParameters* additionalParameters)
+		: m_parameters{ parameters }, m_referenceData{ ref_data } m_data {
+		*ref_data
+	}, m_additionalParameters{ additionalParameters } {};
+		SimplexPoint(const SimplexPoint<parameter_size, AuxilaryParameters>&) = default;
+		SimplexPoint(SimplexPoint<parameter_size, AuxilaryParameters>&&) = default;
+		SimplexPoint<parameter_size, AuxilaryParameters>& operator=(const SimplexPoint<parameter_size, AuxilaryParameters>&) = default;
+		SimplexPoint<parameter_size, AuxilaryParameters>& operator=(SimplexPoint<parameter_size, AuxilaryParameters>&&) = default;
 
-	SimplexPoint(const std::vector<double> arguments, const std::array<double, parameter_size>& parameters)
-		: Parameters<parameter_size, AuxilaryParameters>{ parameters }, m_data{ std::make_unique<Data>(arguments) } {};
-	SimplexPoint() = default;
-	SimplexPoint(const SimplexPoint<parameter_size, AuxilaryParameters>&) = default;
-	SimplexPoint(SimplexPoint<parameter_size, AuxilaryParameters>&&) = default;
-	SimplexPoint<parameter_size, AuxilaryParameters>& operator=(const SimplexPoint<parameter_size, AuxilaryParameters>&) = default;
-	SimplexPoint<parameter_size, AuxilaryParameters>& operator=(SimplexPoint<parameter_size, AuxilaryParameters>&&) = default;
-
-	virtual ~SimplexPoint() = default;
-
-	SimplexPoint(const Parameters<parameter_size, AuxilaryParameters>& params) : Parameters<parameter_size, AuxilaryParameters>(params), m_data{ std::make_unique<Data>() } {}
-	SimplexPoint(Parameters<parameter_size, AuxilaryParameters>&& params) : Parameters<parameter_size, AuxilaryParameters>(params), m_data{ std::make_unique<Data>() } {}
-	bool isDataValid() const { return m_data_valid; }
-
+		virtual ~SimplexPoint() = default;
+		bool isDataValid() const { return m_data_valid; }
+		void setModels(Model* model, ErrorModel* errorModel) { m_model = model; m_errorModel = errorModel; };
+		bool evaluatePoint() {}
 private:
-	Parameters<parameter_size, AuxilaryParameters> m_parameters{};
-	bool m_data_valid{ false };
-	//NOTE I am not sure that storing a copy of input arguments in each simplex point is the best approach, might change later
-	//NOTE we could store a reference into the data defined in the simplexFigure, or somewhere else maybe in FitterSettings or in Fitter
-	std::unique_ptr<Data> m_data{ nullptr };
-	std::shared_ptr<Data> m_referenceData{ nullptr };
-	double m_error{ -1 };
+	Parameters<parameter_size> m_parameters{};
+	AuxilaryParameters* m_additionalParameters{ nullptr };
+
 	Model<parameter_size, AuxilaryParameters>* m_model{ nullptr };
 	ErrorModel* m_errorModel{ nullptr };
+
+	double m_error{ -1 };
+	std::shared_ptr<Data> m_referenceData{ nullptr };
+	Data m_data{};
+
+	bool m_calculateData();
 
 public:
 	bool operator ==(const SimplexPoint<parameter_size, AuxilaryParameters>& other) const
@@ -106,6 +108,25 @@ public:
 		result /= scalar;
 		return result;
 	}
+
+};
+template <std::size_t parameter_size, class AuxilaryParameters>
+bool SimplexPoint<parameter_size, AuxilaryParameters>::m_calculateData()
+{
+	if (m_model == nullptr)
+		return false;
+	m_model(m_data, m_parameters, m_additionalParameters);
+	m_data
+		return true;
+};
+template <std::size_t parameter_size, class AuxilaryParameters>
+bool SimplexPoint<parameter_size, AuxilaryParameters>::evaluatePoint()
+{
+	if (m_errorModel == nullptr)
+		return false;
+	m_calculateData(m_data, m_parameters, m_additionalParameters);
+	m_error = m_errorModel(m_referenceData, m_data);
+	return true;
 
 };
 }

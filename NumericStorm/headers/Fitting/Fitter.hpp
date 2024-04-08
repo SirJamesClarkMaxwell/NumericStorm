@@ -14,20 +14,22 @@ class Fitter
 	static_assert(std::derived_from<DerivedSettings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 
 public:
-	Fitter() = default;
+	Fitter() = delete;
+	Fitter(const DerivedSettings& settings)
+		:m_settings{ settings } {};
 	Fitter(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
 	Fitter(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
 	Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
 	Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
 
 	virtual ~Fitter() = default;
-	virtual Parameters<parameter_size> fit(const Parameters<parameter_size>& initialParameters) = 0;
-	virtual void setUp(const DerivedSettings&) = 0;
+	virtual Parameters<parameter_size> fit(
+		const Parameters<parameter_size>& initialParameters,
+		const AuxilaryParameters<parameter_size>& additionalParameters) = 0;
 
 protected:
-	std::unique_ptr<DerivedSettings> m_settings{ nullptr };
+	DerivedSettings m_settings{ };
 };
 
 }
 }
-

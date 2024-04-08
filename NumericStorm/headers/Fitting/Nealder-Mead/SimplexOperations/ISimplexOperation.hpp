@@ -18,6 +18,7 @@ public:
     using In = typename InterfaceType::In;
     using Out = typename InterfaceType::Out;
     using Settings = typename InterfaceType::Settings;
+    using ParentType = typename ISimplexOperation<parameter_size>;
 
     ISimplexOperation() = default;
     ISimplexOperation(const ISimplexOperation<parameter_size>&) = default;

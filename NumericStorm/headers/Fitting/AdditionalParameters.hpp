@@ -1,14 +1,15 @@
 #pragma once
 namespace NumericStorm
 {
-namespace Fitting 
+namespace Fitting
 {
 
 class AdditionalParameters
 {
-public: 
+public:
 	AdditionalParameters() = default;
 	virtual ~AdditionalParameters() = default;
+
 };
 }
 

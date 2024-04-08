@@ -5,15 +5,15 @@
 #include "../Model.hpp"
 #include "../ErrorModel.hpp"
 #include "SimplexSettings.hpp"
+#include "./SimplexDecision/StrategyManager.hpp"
+#include "./SimplexOperations/SimplexOperationsHeader.hpp"
 
 
 namespace NumericStorm
 {
 namespace Fitting
 {
-template<size_t parameter_size, class DerivedSettings = SimplexSettings<parameter_size>>
-//NOTE this naming convention is a little bit suspicious for me I don't like DerivedSettings 
-// yes we need some type of shorter type, but this is not i am big fan of 
+template<size_t parameter_size, class DerivedSettings = FitterSettings<parameter_size>>
 class SimplexFitter : public Fitter<parameter_size, DerivedSettings>
 {
 
@@ -36,6 +36,10 @@ public:
 		: Fitter<parameter_size, DerivedSettings>{}, m_simplexFigure{ simplexFigure } {};
 protected:
 	SimplexFigure<parameter_size> m_simplexFigure{};
+
+	StrategyManager<parameter_size> m_simplexStrategyFactory;
+	SimplexOperationFactory<parameter_size> m_simplexOperationFactory;
+	SimplexOperationFactory<parameter_size> m_simplexCreatorFactory;
 };
 }
 }
