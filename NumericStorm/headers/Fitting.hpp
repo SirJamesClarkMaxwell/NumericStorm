@@ -18,10 +18,13 @@
 #include "./Fitting/Exceptions/NoSetErrorModelExeption.hpp"
 #include "./Fitting/Exceptions/NoSetModelExeption.hpp"
 #include "./Fitting/Exceptions/NoAvailableFactoryException.hpp"
+#include "./Fitting/Exceptions/WrongTemplateArgument.hpp"
 
 #include "./Fitting/Nealder-Mead/SimplexFitter.hpp"
 #include "./Fitting/Nealder-Mead/SimplexFigure.hpp"
 #include "./Fitting/Nealder-Mead/SimplexPoint.hpp"
+#include "./Fitting/Nealder-Mead/SimplexSettings.hpp"
+
 
 #include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitter.hpp"
 #include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitterSettings.hpp"
