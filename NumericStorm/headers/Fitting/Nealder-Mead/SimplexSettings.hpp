@@ -4,6 +4,7 @@
 #include "../FitterSettings.hpp"
 #include "../Model.hpp"
 #include "../ErrorModel.hpp"
+#include "../Exceptions/WrongTemplateArgument.hpp"
 namespace NumericStorm
 {
 namespace Fitting
@@ -18,8 +19,6 @@ template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
 class SimplexSettings : public FitterSettings<parameter_size, AuxilaryParameters>
 {
 public:
-	template<class SettingsType>
-	using CreatorInfoVector = std::vector<CreatorSetUpInfo<StrategyManager>>;
 	//todo implement builder
 	SimplexSettings(const Model<parameter_size>& model, const ErrorModel& errorModel, int maxIteration, double minError)
 		: FitterSettings<parameter_size, AuxilaryParameters>(model, errorModel, maxIteration, minError) {}
@@ -31,36 +30,47 @@ public:
 	virtual ~SimplexSettings() = default;
 
 protected:
+	template<class SettingsType>
+	using CreatorInfoVector = std::vector<CreatorSetUpInfo<StrategyManager>>;
 	CreatorInfoVector<SimplexCreatorSettings> m_simplexCreatorSetUpInfo;
 	CreatorInfoVector<SimplexOperationSettings> m_simplexOperationSetUpInfo;
 	CreatorInfoVector<StrategySettings> m_simplexStrategySetUpInfo;
 protected:
-	template <class Creator>
-	void registerOperations(Factory<Creator::parent>& factory, int pos, const std::vector<Creator::SetUpInfo>& info_vec) {
 
-	}
-	template <class Factory, class Creator>
-	void registerOperations(Factory<Creator::parent>& factory, int pos, const std::vector<CreatorSetUpInfo<Creator::Settings>>& info_vec) {
-		registerOneCreator(factory, info_vec[pos]);
-	}
-
+	//NOTE this ParentType must be defined in all class derived from CreatorInterface
 	template <class Factory, class Creator, class... CreatorTypes>
-	void registerOperations(Factory<Creator::parent>& factory, int pos, const std::vector<CreatorSetUpInfo<Creator::Settings>>& info_vec) {
+	void registerCreators(Factory<Creator::ParentType>& factory, int pos, const std::vector<CreatorSetUpInfo<Creator::Settings>>& info_vec)
+	{
+		if (info_vec.size() == 0)
+			throw WrongTemplateArgument();
+
 		registerOneCreator(factory, info_vec[pos]);
-		if (pos >= info_vec.size()) return;
-		registerOperations<Factory, CreatorTypes...>(factory, pos + 1, info_vec);
+		if (pos >= info_vec.size())
+			return;
+		registerCreators<Factory, CreatorTypes...>(factory, pos + 1, info_vec);
 	}
 
 	template <class Creator>
-	void registerOneCreator(Factory<Creator::parent>& factory, const CreatorSetUpInfo<Creator::Settings>& creatorSetUpInfo) {
+	void registerOneCreator(Factory<Creator::ParentType>& factory, const CreatorSetUpInfo<Creator::Settings>& creatorSetUpInfo)
+	{
 		Creator cr(creatorSetUpInfo.settings);
 		factory.registerCreator(creatorSetUpInfo.name, cr);
 	}
 
-	SimplexOperationFactory<ISimplexOperation<parameter_size>> fac;
-	std::vector<CreatorSetUpInfo<ISimplexOperation::Settings>> info;
-
-	registerOperations(fac, 0, info);
+	template <class Factory, class Creator>
+	void registerCreators(Factory<Creator::ParentType>& factory, int pos, const std::vector<CreatorSetUpInfo<Creator::Settings>>& info_vec)
+	{
+		if (pos >= info_vec.size())
+			return;
+		registerOneCreator(factory, info_vec[pos]);
+	}
+	/*
+	template <class Creator>
+	void registerCreators(Factory<Creator::ParentType>& factory, int pos, const std::vector<Creator::SetUpInfo>& info_vec)
+	{
+		//NOTE If we are using exception we don't have to use this method
+	}
+	*/
 };
 }
 }
