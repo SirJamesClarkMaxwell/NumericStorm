@@ -2,7 +2,7 @@
 #include "../SimplexFigure.hpp"
 #include "../SimplexPoint.hpp"
 
-#include "ISimplexFactory.hpp"
+#include "IFigureCreator.hpp"
 #include "../../Exceptions/NoAvailableFactoryException.hpp"
 #include "../../Factory.hpp"
 

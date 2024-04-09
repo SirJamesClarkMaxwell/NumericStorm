@@ -29,8 +29,7 @@ public:
 	BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
 		: SimplexFitter<parameter_size>{ simplexFigure } {}
 
-	virtual void setUp(const DerivedSettings& fitterSettings) override {
-		this->m_settings = std::make_unique<DerivedSettings>(fitterSettings);
+	virtual void setUp() override {
 		//todo move definition of setUp method below the class
 		//NOTE more things should be there
 		/*
@@ -56,10 +55,8 @@ public:
 		}
 	}
 
-protected:
-	SimplexOperationFactory<parameter_size> m_simplexOperationFactory{};
-	SimplexCreatorFactory<parameter_size> m_simplexCreatorFactory{};
-	StrategyManager<parameter_size> m_strategyManager{};
+private:
+	auto setUpFittingsProcedure() {};
 	//todo add oneStep method and call it in minimize it, make it public in the debug configuration
 };
 
