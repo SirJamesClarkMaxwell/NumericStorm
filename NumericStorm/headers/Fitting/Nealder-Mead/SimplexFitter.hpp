@@ -25,21 +25,21 @@ public:
 	SimplexFitter<parameter_size, DerivedSettings>& operator=(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
 
 	virtual ~SimplexFitter() = default;
+	SimplexFitter(const SimplexSettings<parameter_size>& simplexSettings)
+		: Fitter<parameter_size, DerivedSettings>{ simplexSettings } {};
 
-	//NOTE constructor argument
-	/*
-	I am not sure that this is what we should do. The question is where we will have simplex creator
-	as i wrote in Fitter class, I would pass the initial point into the minimize method,
-	and create simplex inside the fitter based on some simplexCreator
-	*/
-	SimplexFitter(const SimplexFigure<parameter_size>& simplexFigure)
-		: Fitter<parameter_size, DerivedSettings>{}, m_simplexFigure{ simplexFigure } {};
 protected:
-	SimplexFigure<parameter_size> m_simplexFigure{};
+	SimplexOperationFactory<parameter_size> m_simplexOperationFactory{};
+	SimplexCreatorFactory<parameter_size> m_simplexCreatorFactory{};
+	StrategyManager<parameter_size> m_strategyManager{};
 
-	StrategyManager<parameter_size> m_simplexStrategyFactory;
-	SimplexOperationFactory<parameter_size> m_simplexOperationFactory;
-	SimplexOperationFactory<parameter_size> m_simplexCreatorFactory;
 };
+
+//todo implement the setUp function based on the Fitter settings
+	//* setUp function
+	//todo initialize settings of the creators, fill the settings
+	//todo initialize factories
+	//todo register the creators
+
 }
 }

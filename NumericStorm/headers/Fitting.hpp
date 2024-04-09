@@ -29,7 +29,7 @@
 #include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitter.hpp"
 #include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitterSettings.hpp"
 
-#include "./Fitting/Nealder-Mead/SimplexCreator/ISimplexFactory.hpp"
+#include "./Fitting/Nealder-Mead/SimplexCreator/IFigureCreator.hpp"
 #include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorFactory.hpp"
 #include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorSettings.hpp"
 

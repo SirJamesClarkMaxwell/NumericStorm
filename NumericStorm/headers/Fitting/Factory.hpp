@@ -8,6 +8,12 @@
 
 namespace NumericStorm {
 namespace Fitting {
+template<class SettingType>
+struct CreatorSetUpInfo
+{
+	std::string name;
+	SettingType settings;
+};
 template<class Creator>
 class Factory {
 
@@ -21,18 +27,52 @@ public:
 
 	virtual ~Factory() = default;
 
-	virtual void registerCreator(const std::string& creatorName, const Creator& instance);
-	virtual void deleteCreator(const std::string& creatorName) throw (NoAvailableFactoryException);
-	virtual typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input) throw (NoAvailableFactoryException);
-	virtual void updateSettings(const std::string& creatorName, const typename Creator::Settings& settings) throw (NoAvailableFactoryException);
+	virtual void deleteCreator(const std::string& creatorName);
+	virtual typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input);
+	virtual void updateSettings(const std::string& creatorName, const typename Creator::Settings& settings);
+	template <class... CreatorTypes>
+	virtual void registerCreators(const std::vector<CreatorSetUpInfo<Creator::Settings>>& settingsVector)
+	{
+		registerCreators<CreatorTypes...>(0, settingsVector);
+	};
+
+
 protected:
 	std::unordered_map<std::string, std::unique_ptr<Creator>> m_creatorList{};
 
 private:
-	bool checkIfAvailable(const std::string& creatorName) const {
+
+	template<class CurrentCreator, class NextCreator, class ...RestCreators>
+	void registerCreators(int position, std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
+	{
+		if (position >= settingsVector.size())
+			return;
+		registerOneCreator<CurrentCreator>(settingsVector[position]);
+		registerCreators<NextCreator, RestCreators...>(position + 1, settingsVector);
+
+	};
+	template<class NextCreator>
+	void registerCreators(int position, std::vector<typename Creator::Settings >> settingsVector)
+	{
+		if (position >= settingsVector.size())
+			return;
+		registerOneCreator<NextCreator>(settingsVector[position]);
+
+	};
+	bool checkIfAvailable(const std::string& creatorName) const
+	{
 		return m_creatorList.find(creatorName) != m_creatorList.end();
 	}
+	void registerCreator(const std::string& creatorName, const Creator& instance);
+	template<class DerivedCreator>
+	void registerOneCreator(const CreatorSetUpInfo<typename Creator::Settings>& creatorSetUpInfo)
+	{
+		static_assert(std::derived_from<DerivedCreator, Creator> == true);
+		DerivedCreator creator(creatorSetUpInfo.settings);
+		factory.registerCreator(creatorSetUpInfo.name, creator);
+	};
 };
+
 template<class Creator>
 void Factory<Creator>::registerCreator(const std::string& creatorName, const Creator& instance) {
 	m_creatorList[creatorName] = std::make_unique<Creator>(instance);

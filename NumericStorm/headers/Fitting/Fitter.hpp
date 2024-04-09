@@ -26,7 +26,8 @@ public:
 	virtual Parameters<parameter_size> fit(
 		const Parameters<parameter_size>& initialParameters,
 		const AuxilaryParameters<parameter_size>& additionalParameters) = 0;
-
+	void updateSettings(const DerivedSettings& newSettings) { m_settings = newSettings; };
+	virtual void setUp() = 0;
 protected:
 	DerivedSettings m_settings{ };
 };

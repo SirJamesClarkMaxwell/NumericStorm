@@ -71,12 +71,17 @@ public:
             break;
         }
     }
+    /*
+    virtual bool operator()(SimplexFigure<parameter_size>& figure) override
+    {
+
+
+    }
+    */
     const std::string& getOperation() const { return m_curr_operation; }
     bool reset() { m_curr_operation = "reflection"; return false; }
 
 private:
-
-
     std::string m_curr_operation{ "reflection" };
 
 };
