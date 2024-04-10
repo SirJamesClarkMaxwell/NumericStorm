@@ -29,9 +29,9 @@ public:
 
 	virtual void deleteCreator(const std::string& creatorName);
 	virtual typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input);
-	virtual void updateSettings(const std::string& creatorName, const typename Creator::Settings& settings);
+	virtual void updateSettings(const CreatorSetUpInfo<typename Creator::Settings>& newSettings);
 	template <class... CreatorTypes>
-	virtual void registerCreators(const std::vector<CreatorSetUpInfo<Creator::Settings>>& settingsVector)
+	virtual void registerCreators(const std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
 	{
 		registerCreators<CreatorTypes...>(0, settingsVector);
 	};
@@ -63,7 +63,10 @@ private:
 	{
 		return m_creatorList.find(creatorName) != m_creatorList.end();
 	}
-	void registerCreator(const std::string& creatorName, const Creator& instance);
+	void registerCreator(const std::string& creatorName, const Creator& instance)
+	{
+		m_creatorList[creatorName] = std::make_unique<Creator>(instance);
+	};;
 	template<class DerivedCreator>
 	void registerOneCreator(const CreatorSetUpInfo<typename Creator::Settings>& creatorSetUpInfo)
 	{
@@ -73,10 +76,7 @@ private:
 	};
 };
 
-template<class Creator>
-void Factory<Creator>::registerCreator(const std::string& creatorName, const Creator& instance) {
-	m_creatorList[creatorName] = std::make_unique<Creator>(instance);
-};
+
 template<class Creator>
 void Factory<Creator>::deleteCreator(const std::string& creatorName) {
 	if (checkIfAvailable(creatorName))
@@ -92,11 +92,12 @@ typename Creator::Out Factory<Creator>::invoke(const std::string& creatorName, c
 	throw NoAvailableFactoryException(creatorName);
 };
 template<class Creator>
-void Factory<Creator>::updateSettings(const std::string& creatorName, const typename Creator::Settings& settings) {
+void Factory<Creator>::updateSettings(const CreatorSetUpInfo<typename Creator::Settings>& newSettings) {
+	std::string creatorName = newSettings.name;
 	auto simplexCreator = m_creatorList.find(creatorName);
 
 	if (checkIfAvailable(creatorName))
-		return m_creatorList[creatorName]->get()->updateSettings(settings);
+		return m_creatorList[creatorName]->get()->updateSettings(newSettings.settings);
 
 	throw NoAvailableFactoryException(creatorName);
 };
