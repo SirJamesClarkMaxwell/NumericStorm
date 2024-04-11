@@ -2,18 +2,18 @@
 #include "../SimplexFigure.hpp"
 #include "SimplexOperationSettigns.hpp"
 #include "../../CreatorInterface.hpp"
-
+#include "SimplexIntermediatePoints.hpp"
 namespace NumericStorm
 {
 namespace Fitting
 {
 template <size_t parameter_size>
-class ISimplexOperation : public CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>
+class ISimplexOperation : public CreatorInterface<SimplexIntermediatePoints<parameter_size, AdditionalParameters>&, void, SimplexOperationSettings>
 {
 
 public:
 
-    using InterfaceType = CreatorInterface<SimplexFigure<parameter_size>&, SimplexFigure<parameter_size>&, SimplexOperationSettings>;
+    using InterfaceType = CreatorInterface<SimplexFigure<parameter_size>&, void, SimplexOperationSettings>;
     //Q could we define this alias befor? I am assuming that if you didn't done it we can't
     using In = typename InterfaceType::In;
     using Out = typename InterfaceType::Out;

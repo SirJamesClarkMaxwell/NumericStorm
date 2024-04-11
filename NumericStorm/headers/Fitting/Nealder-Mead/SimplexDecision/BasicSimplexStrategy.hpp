@@ -28,39 +28,33 @@ public:
     virtual ~BasicSimplexDecision() = default;
     virtual bool operator()(SimplexFigure<parameter_size>& figure) override
     {
-        switch (m_curr_operation) {
+        switch (m_curr_operation)
+        {
         case "reflection":
-            if (figure[m_settings.getBestInd()] <= figure.getReflected() && figure.getReflected() < figure[m_settings.getSecondWorstInd()]) {
+            if (reflectionDecision(figure)) {
                 figure[m_settings.getSecondWorstInd()] = figure.getReflected();
                 return reset();
                 //NOTE 5b. we need to check that in both cases expansion and reflection of returned reflection type
             }
 
-            if (figure.getReflected() < figure[m_settings.getBestInd()]) {
+            if (expansionCondition(figure))
                 m_curr_operation = "expansion";
-            }
-            else {
+            else
                 m_curr_operation = "contraction";
-            }
-
             return true;
             break;
         case "expansion":
-            if (figure.getFinal() < figure.getReflected()) {
+            if (expansionDecision(figure))
                 figure[m_settings.getWorstInd()] = figure.getFinal();
-            }
-            else {
+            else
                 figure[m_settings.getWorstInd()] = figure.getReflected();
-            }
-
             return reset();
             break;
         case "contraction":
-            if (figure.getFinal() <= figure.getReflected()) {
+            if (contractionDecision(figure)) {
                 figure[m_settings.getWorstInd()] = figure.getFinal();
                 return false;
             }
-
             m_curr_operation = "shrinking";
             return true;
             break;
@@ -70,6 +64,22 @@ public:
         default:
             break;
         }
+    }
+    const bool contractionDecision(NumericStorm::Fitting::SimplexFigure<parameter_size>& figure)
+    {
+        return figure.getFinal() <= figure.getReflected();
+    }
+    const bool expansionDecision(NumericStorm::Fitting::SimplexFigure<parameter_size>& figure)
+    {
+        return figure.getFinal() < figure.getReflected();
+    }
+    const bool expansionCondition(NumericStorm::Fitting::SimplexFigure<parameter_size>& figure)
+    {
+        return figure.getReflected() < figure[m_settings.getBestInd()];
+    }
+    const bool reflectionDecision(NumericStorm::Fitting::SimplexFigure<parameter_size>& figure)
+    {
+        return figure[m_settings.getBestInd()] <= figure.getReflected() && figure.getReflected() < figure[m_settings.getSecondWorstInd()];
     }
     /*
     virtual bool operator()(SimplexFigure<parameter_size>& figure) override

@@ -14,6 +14,7 @@
 #include "./Fitting/AdditionalParameters.hpp"
 #include "./Fitting/ErrorModel.hpp"
 #include "./Fitting/FitterSettings.hpp"
+#include "./Fitting/Nealder-Mead/SimplexIntermediatePoints.hpp"
 
 #include "./Fitting/Exceptions/NoSetErrorModelExeption.hpp"
 #include "./Fitting/Exceptions/NoSetModelExeption.hpp"

@@ -38,7 +38,7 @@ public:
 
 
 protected:
-	std::unordered_map<std::string, std::unique_ptr<Creator>> m_creatorList{};
+	std::unordered_map<std::string, std::shared_ptr<Creator>> m_creatorList{};
 
 private:
 
@@ -65,7 +65,7 @@ private:
 	}
 	void registerCreator(const std::string& creatorName, const Creator& instance)
 	{
-		m_creatorList[creatorName] = std::make_unique<Creator>(instance);
+		m_creatorList[creatorName] = std::make_shared<Creator>(instance);
 	};;
 	template<class DerivedCreator>
 	void registerOneCreator(const CreatorSetUpInfo<typename Creator::Settings>& creatorSetUpInfo)
@@ -102,6 +102,18 @@ void Factory<Creator>::updateSettings(const CreatorSetUpInfo<typename Creator::S
 	throw NoAvailableFactoryException(creatorName);
 };
 
+template <class Creator>
+Factory<Creator>::Factory(const Factory<Creator>& factory)
+{
+	if (this == &factory)
+		return *this;
+	for (auto& creator : factory.m_creatorList)
+	{
 
+
+	}
+
+
+}
 }
 }

@@ -14,14 +14,6 @@ using namespace NumericStorm ::Fitting ;
 template <std::size_t parameter_size>
 ```
 
-### Constructors
-
-```cpp
-SimplexPoint() = default;
-SimplexPoint(std::array<double, parameter_size> parameters, AdditionalParametersadditionalParameters);
-SimplexPoint(const SimplexPoint<parameter_size>& other) = default;
-```
-
 ### Methods and Operators
 
 #### Operator for numeric types
@@ -42,20 +34,6 @@ void calculateError(const Data& referenceData, const Data& calculatedData);
 Data calculateData() const;
 ```
 
-#### member variables
-
-```cpp
-private:
-
-Parameters<parameter_size> m_parameters;
-AdditionalParameters m_additionalParameters;
-double m_error;
-bool m_modelSet;
-bool m_errorModelSet;
-std::shared_ptr<Model<parameter_size>> m_model;
-std::shared_ptr<ErrorModel> m_errorModel;
-```
-
 ## Explanation
 
 The SimplexPoint class is templated on the number of parameters it represents. The template parameter is specified as a constant expression of type <span style= "color:green"> std::size_t
@@ -73,7 +51,7 @@ The SimplexPoint class uses a private member variable to store the error value, 
 
 The SimplexPoint class provides overloaded operators for comparison, subscripting, and arithmetic operations.
 
-The comparison operators == and != compare two SimplexPoints for equality or inequality, respectively. The comparison operators <=, >=, <, and > compare two SimplexPoints and return true if the first SimplexPoint has a lower/higher/different error value and/or a different set of parameters, respectively.
+The comparing two simplex Points is done by comparing his errors. From our point of view it is a little bit saddle to use SimplexPoint out of the SimplexFigure class, but if you want, you can. You need to remember about one thing, that you have to manually recalculate the error after performed operation.
 
 The subscript operator [] allows you to access the parameters of the SimplexPoint by index. If the index is out of range, the operator returns the first/last parameter.
 

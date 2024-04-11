@@ -29,7 +29,7 @@ public:
 	void updateSettings(const DerivedSettings& newSettings) { m_settings = newSettings; };
 	virtual void setUp() = 0;
 protected:
-	DerivedSettings m_settings{ };
+	DerivedSettings m_settings;
 };
 
 }

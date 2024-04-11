@@ -35,11 +35,7 @@ protected:
 
 };
 
-//todo implement the setUp function based on the Fitter settings
-	//* setUp function
-	//todo initialize settings of the creators, fill the settings
-	//todo initialize factories
-	//todo register the creators
+
 
 }
 }
