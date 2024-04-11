@@ -10,7 +10,7 @@ namespace Fitting {
 template<size_t parameter_size>
 class SimplexFigure {
 public:
-	SimplexFigure() = default;
+	SimplexFigure() = delete;
 	SimplexFigure(const SimplexFigure<parameter_size>&) = default;
 	SimplexFigure(SimplexFigure<parameter_size>&&) = default;
 	SimplexFigure<parameter_size>& operator=(const SimplexFigure<parameter_size>&) = default;
@@ -28,19 +28,11 @@ public:
 	SimplexPoint<parameter_size>& operator[](int p_index) {
 		m_centroid_valid = false;
 		m_sorted = false;
-
-		if (p_index > parameter_size || p_index < 0) {
-			throw std::out_of_range("Index out of bounds");
-		}
-		return m_points[p_index];
+		return m_points.at(p_index);
 	}
 
 	const SimplexPoint<parameter_size>& operator[](int p_index) const {
-
-		if (p_index > parameter_size || p_index < 0) {
-			throw std::out_of_range("Index out of bounds");
-	}
-		return m_points[p_index];
+		return m_points.at(p_index);
 }
 
 

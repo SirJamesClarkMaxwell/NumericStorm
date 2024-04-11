@@ -63,10 +63,11 @@ private:
 	{
 		return m_creatorList.find(creatorName) != m_creatorList.end();
 	}
-	void registerCreator(const std::string& creatorName, const Creator& instance)
+	template<class ConcreteCreator>
+	void registerCreator(const std::string& creatorName, const ConcreteCreator& instance)
 	{
-		m_creatorList[creatorName] = std::make_shared<Creator>(instance);
-	};;
+		m_creatorList[creatorName] = std::make_shared<ConcreteCreator>(instance);
+	}
 	template<class DerivedCreator>
 	void registerOneCreator(const CreatorSetUpInfo<typename Creator::Settings>& creatorSetUpInfo)
 	{
@@ -102,18 +103,6 @@ void Factory<Creator>::updateSettings(const CreatorSetUpInfo<typename Creator::S
 	throw NoAvailableFactoryException(creatorName);
 };
 
-template <class Creator>
-Factory<Creator>::Factory(const Factory<Creator>& factory)
-{
-	if (this == &factory)
-		return *this;
-	for (auto& creator : factory.m_creatorList)
-	{
 
-
-	}
-
-
-}
 }
 }

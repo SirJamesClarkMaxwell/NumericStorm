@@ -16,6 +16,7 @@ public:
 	Data& operator=(const Data& d) = default;
 	Data& operator=(Data&& d) = default;
 	std::vector<double>& operator[](size_t index);
+	const std::vector<double>& operator[](size_t index) const;
 
 	virtual ~Data() = default;
 protected:
@@ -24,10 +25,12 @@ protected:
 
 std::vector<double>& Data::operator[](size_t index)
 {
-	int dimension = m_data.size();
-	if (index >= dimension or index < 0)
-		throw std::out_of_range("Index out of range");
-	return m_data[index];
+	return m_data.at(index);
+};
+
+const std::vector<double>& Data::operator[](size_t index) const 
+{
+	return m_data.at(index);
 };
 
 }

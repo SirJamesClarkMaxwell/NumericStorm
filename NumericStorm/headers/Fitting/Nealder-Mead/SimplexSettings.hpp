@@ -27,7 +27,8 @@ public:
 
 protected:
 	template<class SettingsType>
-	using CreatorInfoVector = std::vector<CreatorSetUpInfo<StrategyManager>>;
+	using CreatorInfoVector = std::vector<CreatorSetUpInfo<SettingsType>>;
+
 	CreatorInfoVector<SimplexCreatorSettings> m_simplexCreatorSetUpInfo;
 	CreatorInfoVector<SimplexOperationSettings> m_simplexOperationSetUpInfo;
 	CreatorInfoVector<StrategySettings> m_simplexStrategySetUpInfo;
