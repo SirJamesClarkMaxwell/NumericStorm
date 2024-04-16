@@ -1,3 +1,4 @@
+#pragma once
 #include <unordered_map>
 #include <string>
 #include <vector>
@@ -10,7 +11,7 @@ namespace Fitting
 {
 
 template <size_t parameter_size>
-class IDecision : public CreatorInterface<SimplexFigure<parameter_size>&, bool, StrategySettings<parameter_size>>
+class IDecision : public CreatorInterface<SimplexFigure<parameter_size>&, bool, StrategySettings>
 {
 public:
 	IDecision() = default;

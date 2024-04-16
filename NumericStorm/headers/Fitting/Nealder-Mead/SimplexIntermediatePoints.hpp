@@ -1,6 +1,7 @@
 #pragma once
 #include "SimplexPoint.hpp"
 #include "SimplexFigure.hpp"
+#include "PIndecies.hpp"
 namespace NumericStorm
 {
 namespace Fitting
@@ -11,14 +12,18 @@ struct SimplexIntermediatePoints
 {
 public:
     SimplexIntermediatePoints() = delete;
-    SimplexIntermediatePoints(const SimplexFigure<parameter_size>& simplexFigure)
-        : this->simplexFigure{ simplexFigure } {};
-    SimplexFigure<parameter_size> simplexFigure{};
-    std::vector<SimplexPoint<parameter_size>> intermediatePoints{};
+    template<typename IndeciesEnum>
+    SimplexIntermediatePoints(const SimplexFigure<parameter_size>& simplexFigure, IndeciesEnum pCount)
+        : m_simplexFigure{ simplexFigure }, m_intermediatePoints{ pCount, simplexFigure[0] } {}
 
+    SimplexFigure<parameter_size> m_simplexFigure{};
+    std::vector<SimplexPoint<parameter_size>> m_intermediatePoints;
 
-    SimplexPoint<parameter_size>& operator[](int index) return intermediatePoints.at(index);
-    const SimplexPoint<parameter_size>& operator[](int index) const return intermediatePoints.at(index);
+    template<typename IndeciesEnum>
+    SimplexPoint<parameter_size>& operator[](IndeciesEnum index) { return m_intermediatePoints.at(index); }
+
+    template<typename IndeciesEnum>
+    const SimplexPoint<parameter_size>& operator[](IndeciesEnum index) const { return m_intermediatePoints.at(index); }
 };
 
 }

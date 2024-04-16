@@ -1,12 +1,13 @@
 
 namespace NumericStorm {
 namespace Fitting {
-enum class PIndecies {
+enum PIndecies {
 	Reflected,
 	Expanded,
 	Contracted,
-	PointCount
-	};
+
+	PointCount // should always be the last element
+};
 
 
 }

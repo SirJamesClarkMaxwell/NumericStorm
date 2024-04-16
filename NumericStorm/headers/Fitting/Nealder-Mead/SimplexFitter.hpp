@@ -7,6 +7,7 @@
 #include "SimplexSettings.hpp"
 #include "./SimplexDecision/StrategyManager.hpp"
 #include "./SimplexOperations/SimplexOperationsHeader.hpp"
+#include "./SimplexCreator/SimplexCreatorFactory.hpp"
 
 
 namespace NumericStorm

@@ -16,14 +16,13 @@ class SimplexPoint {
 public:
 	SimplexPoint() = delete;
 	SimplexPoint(std::shared_ptr<Data> ref_data, const std::array<double, parameter_size>& parameters)
-		: m_parameters{ parameters }, m_referenceData{ ref_data } m_data { *ref_data } {};
+		: m_parameters{ parameters }, m_referenceData{ ref_data }, m_data { *ref_data } {};
 		SimplexPoint(const SimplexPoint<parameter_size>&) = default;
 		SimplexPoint(SimplexPoint<parameter_size>&&) = default;
 		SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>&) = default;
 		SimplexPoint<parameter_size>& operator=(SimplexPoint<parameter_size>&&) = default;
 
 		virtual ~SimplexPoint() = default;
-		void setModels(Model* model, ErrorModel* errorModel) { m_model = model; m_errorModel = errorModel; }
 
 		template<class AuxParameters>
 		void evaluatePoint(const Model<parameter_size, AuxParameters>& model, const ErrorModel& errorModel, const AuxParameters& auxParams) {

@@ -27,11 +27,11 @@ public:
 
 	virtual ~Factory() = default;
 
-	virtual void deleteCreator(const std::string& creatorName);
-	virtual typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input);
-	virtual void updateSettings(const CreatorSetUpInfo<typename Creator::Settings>& newSettings);
+	void deleteCreator(const std::string& creatorName);
+	typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input);
+	void updateSettings(const CreatorSetUpInfo<typename Creator::Settings>& newSettings);
 	template <class... CreatorTypes>
-	virtual void registerCreators(const std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
+	void registerCreators(const std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
 	{
 		registerCreators<CreatorTypes...>(0, settingsVector);
 	};
@@ -52,7 +52,7 @@ private:
 
 	};
 	template<class NextCreator>
-	void registerCreators(int position, std::vector<typename Creator::Settings >> settingsVector)
+	void registerCreators(int position, std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
 	{
 		if (position >= settingsVector.size())
 			return;
@@ -73,7 +73,7 @@ private:
 	{
 		static_assert(std::derived_from<DerivedCreator, Creator> == true);
 		DerivedCreator creator(creatorSetUpInfo.settings);
-		factory.registerCreator(creatorSetUpInfo.name, creator);
+		registerCreator(creatorSetUpInfo.name, creator);
 	};
 };
 

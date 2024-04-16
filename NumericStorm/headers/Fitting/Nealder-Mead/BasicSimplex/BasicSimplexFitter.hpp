@@ -8,6 +8,7 @@
 #include "../SimplexCreator/SimplexCreatorFactory.hpp"
 #include "../SimplexDecision/StrategyManager.hpp"
 
+
 //todo manage includes!
 //todo make a nspch.h file
 namespace NumericStorm

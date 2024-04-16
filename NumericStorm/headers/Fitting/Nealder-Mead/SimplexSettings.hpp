@@ -5,6 +5,12 @@
 #include "../Model.hpp"
 #include "../ErrorModel.hpp"
 #include "../Exceptions/WrongTemplateArgument.hpp"
+#include "../Factory.hpp"
+#include "../SimplexCreator/SimplexCreatorSettings.hpp"
+#include "../SimplexDecision/StrategySettings.hpp"
+#include "../SimplexOperations/SimplexOperationSettigns.hpp"
+
+
 namespace NumericStorm
 {
 namespace Fitting
@@ -27,7 +33,7 @@ public:
 
 protected:
 	template<class SettingsType>
-	using CreatorInfoVector = std::vector<CreatorSetUpInfo<SettingsType>>;
+	using CreatorInfoVector = typename std::vector<CreatorSetUpInfo<SettingsType>>;
 
 	CreatorInfoVector<SimplexCreatorSettings> m_simplexCreatorSetUpInfo;
 	CreatorInfoVector<SimplexOperationSettings> m_simplexOperationSetUpInfo;

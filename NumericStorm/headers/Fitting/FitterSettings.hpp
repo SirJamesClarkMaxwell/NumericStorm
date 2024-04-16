@@ -15,10 +15,10 @@ class FitterSettings
 {
 public:
 	FitterSettings(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel, long int maxIteration, double minError, bool useBounds)
-		: m_functionModel{ model }, m_errorModel{ errorModel }, m_maxIteration{ maxIteration }, m_minError{ minError }, m_add_params{ add_params }, m_useBounds(useBounds) {}
+		: m_functionModel{ model }, m_errorModel{ errorModel }, m_maxIteration{ maxIteration }, m_minError{ minError }, m_useBounds(useBounds) {}
 	FitterSettings() = delete;
-	FitterSettings(const FitterSettings<parameter_size, AdditionalParameters>&) = default;
-	FitterSettings(FitterSettings<parameter_size, AdditionalParameters>&&) = default;
+	FitterSettings(const FitterSettings<parameter_size, AuxilaryParameters>&) = default;
+	FitterSettings(FitterSettings<parameter_size, AuxilaryParameters>&&) = default;
 	FitterSettings<parameter_size, AuxilaryParameters>& operator=(const FitterSettings<parameter_size, AuxilaryParameters>&) = default;
 	FitterSettings<parameter_size, AuxilaryParameters>& operator=(FitterSettings<parameter_size, AuxilaryParameters>&&) = default;
 
