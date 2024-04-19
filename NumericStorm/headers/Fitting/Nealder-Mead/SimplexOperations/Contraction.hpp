@@ -2,6 +2,8 @@
 #include "ISimplexOperation.hpp"
 #include "../SimplexFigure.hpp"
 #include "SimplexOperationSettigns.hpp"
+#include "../SimplexIntermediatePoints.hpp"
+#include "../PIndecies.hpp"
 
 namespace NumericStorm
 {
@@ -11,15 +13,16 @@ namespace Fitting
 template <size_t parameter_size>
 class Contraction : public ISimplexOperation<parameter_size>
 {
-	//todo redefine this class to be parameterized by the returning type of calling operator -> SimplexPoint
 public:
+	Contraction()
+		: ISimplexOperation<parameter_size>("contraction", SimplexOperationSettings{ 0.5 }) {}
 	Contraction(const SimplexOperationSettings& arguments)
 		: ISimplexOperation<parameter_size>("contraction", arguments) {}
 
-	SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure) override {
-		const SimplexPoint<parameter_size>& centroid = reflectedSimplexFigure.getCentroid();
-		SimplexPoint<parameter_size>& contracted = reflectedSimplexFigure.getFinal(); //NU why this is not a centroid?
-		const SimplexPoint<parameter_size>& pointToContractAround = decidePointToContractAround(reflectedSimplexFigure);
+	virtual void  operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override {
+		const SimplexPoint<parameter_size>& centroid = simplexIntPoints.m_simplexFigure.getCentroid();
+		SimplexPoint<parameter_size>& contracted = simplexIntPoints[Contracted];
+		const SimplexPoint<parameter_size>& pointToContractAround = decidePointToContractAround(simplexIntPoints);
 		double beta = this->m_settings.getFactor();
 
 #if DEBUG
@@ -29,15 +32,14 @@ public:
 #elif RELEASE
 		contracted = centroid + (pointToContractAround - centroid) * beta;
 #endif
-
-		return reflectedSimplexFigure;
+		contracted.evaluatePoint();
 	}
 
 
 private:
-	const SimplexPoint<parameter_size>& decidePointToContractAround(const SimplexFigure<parameter_size>& reflectedSimplexFigure) {
-		const SimplexPoint<parameter_size>& reflectedPoint = reflectedSimplexFigure.getReflected();
-		const SimplexPoint<parameter_size>& worst = reflectedSimplexFigure[0];
+	const SimplexPoint<parameter_size>& decidePointToContractAround(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints) {
+		const SimplexPoint<parameter_size>& reflectedPoint = simplexIntPoints[Reflected];
+		const SimplexPoint<parameter_size>& worst = simplexIntPoints.m_simplexFigure[worstPoint];
 		return (reflectedPoint <= worst) ? reflectedPoint : worst;
 	}
 };

@@ -1,7 +1,7 @@
-
+#pragma once
 namespace NumericStorm {
 namespace Fitting {
-enum PIndecies {
+enum PIndicies {
 	Reflected,
 	Expanded,
 	Contracted,

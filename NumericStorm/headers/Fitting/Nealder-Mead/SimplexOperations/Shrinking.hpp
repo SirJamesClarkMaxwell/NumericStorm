@@ -3,6 +3,8 @@
 #include "ISimplexOperation.hpp"
 #include "../SimplexFigure.hpp"
 #include "../SimplexPoint.hpp"
+#include "../SimplexIntermediatePoints.hpp"
+#include "../PIndecies.hpp"
 
 namespace NumericStorm
 {
@@ -13,16 +15,34 @@ class Shrinking : public ISimplexOperation<parameter_size>
 {
 public:
 
+    Shrinking()
+        : ISimplexOperation<parameter_size>("shrinking", SimplexOperationSettings{ 0.5 }) {}
     Shrinking(const SimplexOperationSettings& settings)
         : ISimplexOperation<parameter_size>("shrinking", settings) {}
-    SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& simplexFigure) override
+    virtual void operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
     {
         double delta = this->m_settings.getFactor();
-        SimplexPoint<parameter_size>& bestPoint = simplexFigure[parameter_size];
-        //todo add debug version of this method
-        for (size_t i = 0; i < parameter_size; ++i)
-            simplexFigure[i] = bestPoint + (simplexFigure[i] - bestPoint) * delta;
-        return simplexFigure;
+        const SimplexPoint<parameter_size>& bestPoint = simplexIntPoints[parameter_size];
+
+#if DEBUG
+
+        for (size_t i = 0; i < parameter_size - 1; ++i)
+        {
+            auto& shrinked = simplexIntPoints.m_simplexFigure[i];
+            auto difference = shrinked - bestPoint;
+            auto scaled = difference * delta;
+            shrinked = bestPoint + scaled;
+            shrinked.evaluatePoint();
+        }
+#else if RELEASE
+        for (size_t i = 0; i < parameter_size - 1; ++i)
+        {
+            //todo refactor to work with iterators of simplexFigure
+            simplexIntPoints.m_simplexFigure[i] = bestPoint + (simplexIntPoints.m_simplexFigure[i] - bestPoint) * delta;
+            point.evaluatePoint();
+        }
+#endif
+
     }
 };
 

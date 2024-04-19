@@ -3,25 +3,24 @@
 #include "SimplexOperationSettigns.hpp"
 #include "../SimplexFigure.hpp"
 
-// TODO: redefine interface of Expansion
 namespace NumericStorm
 {
 namespace Fitting
 {
-
 template <size_t parameter_size>
 class Expansion : public ISimplexOperation<parameter_size>
 {
-	//todo redefine this class to be parameterized by the returning type of calling operator -> SimplexPoint
 public:
+	Expansion()
+		: ISimplexOperation<parameter_size>("expansion", SimplexCreatorSettings{ 2 }) {};
 	Expansion(const SimplexOperationSettings& settings)
 		: ISimplexOperation<parameter_size>("expansion", settings) {};
 
-	SimplexFigure<parameter_size>& operator()(SimplexFigure<parameter_size>& reflectedSimplexFigure) override
+	virtual void operator ()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
 	{
-		const SimplexPoint<parameter_size>& centroid = reflectedSimplexFigure.getCentroid();
-		SimplexPoint<parameter_size>& expanded = reflectedSimplexFigure.getFinal();
-		const SimplexPoint<parameter_size>& reflected = reflectedSimplexFigure.getReflected();
+		const SimplexPoint<parameter_size>& centroid = simplexIntPoints.m_simplexFigure.getCentroid();
+		SimplexPoint<parameter_size>& expanded = simplexIntPoints[Expanded];
+		const SimplexPoint<parameter_size>& reflected = simplexIntPoints[Reflected];
 		double gamma = this->m_settings.getFactor();
 #if DEBUG
 		auto difference = reflected - centroid;
@@ -30,7 +29,7 @@ public:
 #elif RELEASE
 		expanded = centroid + (reflected - centroid) * gamma;
 #endif
-		return reflectedSimplexFigure;
+		expanded.evaluatePoint();
 	}
 
 };

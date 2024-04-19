@@ -10,21 +10,22 @@ namespace Fitting {
 template<size_t parameter_size>
 class SimplexFigure {
 public:
+	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points)
+		: m_points{ points }, m_centroid{ calculateCentroid() } {}
+	enum SimplexFigureIndicies
+	{
+		worstPoint = 0,
+		secondWorstPoint = 1,
+		bestPoint = parameter_size
+
+	};
 	SimplexFigure() = delete;
 	SimplexFigure(const SimplexFigure<parameter_size>&) = default;
 	SimplexFigure(SimplexFigure<parameter_size>&&) = default;
 	SimplexFigure<parameter_size>& operator=(const SimplexFigure<parameter_size>&) = default;
 	SimplexFigure<parameter_size>& operator=(SimplexFigure<parameter_size>&&) = default;
-
 	virtual ~SimplexFigure() = default;
-
-	//changed back because the order is actually defined in the way the fields are declared
-	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points)
-		: m_points{ points }, m_centroid{ calculateCentroid() } {}
-
 	const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& getPoints() const { return m_points; }
-
-
 	SimplexPoint<parameter_size>& operator[](int p_index) {
 		m_centroid_valid = false;
 		m_sorted = false;
@@ -33,7 +34,7 @@ public:
 
 	const SimplexPoint<parameter_size>& operator[](int p_index) const {
 		return m_points.at(p_index);
-}
+	}
 
 
 	void sort(bool reverse = true) {

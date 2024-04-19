@@ -5,15 +5,19 @@
 #include "../SimplexFigure.hpp"
 #include "../../CreatorInterface.hpp"
 #include "StrategySettings.hpp"
+#include "../SimplexIntermediatePoints.hpp"
+#include "../PIndecies.hpp"
 namespace NumericStorm
 {
 namespace Fitting
 {
 
 template <size_t parameter_size>
-class IDecision : public CreatorInterface<SimplexFigure<parameter_size>&, bool, StrategySettings>
+class IDecision : public CreatorInterface<SimplexIntermediatePoints<parameter_size>&, bool, StrategySettings>
 {
 public:
+	using enum PIndicies;
+	using enum SimplexFigure<parameter_size>::SimplexFigureIndicies;
 	IDecision() = default;
 	IDecision(const IDecision<parameter_size>&) = default;
 	IDecision(IDecision<parameter_size>&&) = default;
