@@ -1,14 +1,9 @@
 #pragma once
-#include <unordered_map>
-#include <string>
-#include <memory>
 
 #include "IDecision.hpp"
-#include "../../Exceptions/NoAvailableStrategyException.hpp"
-#include "../../Factory.hpp"
-namespace NumericStorm
-{
-namespace Fitting
+#include "Factory.hpp"
+
+namespace NumericStorm::Fitting
 {
 template <size_t parameter_size>
 class StrategyManager : public Factory<IDecision<parameter_size>>
@@ -25,7 +20,4 @@ public:
 	virtual ~StrategyManager() = default;
 
 };
-
-
-}
 }

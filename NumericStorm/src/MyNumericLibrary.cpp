@@ -1,5 +1,5 @@
 // #include "..\headers\MyNumericLibrary.hpp"
-#include "NumericStorm.hpp"
+#include "../headers/NumericStorm.hpp"
 
 namespace NumericStorm
 {

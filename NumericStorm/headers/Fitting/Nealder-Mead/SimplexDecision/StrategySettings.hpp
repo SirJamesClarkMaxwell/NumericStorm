@@ -1,7 +1,6 @@
 #pragma once
 
-namespace NumericStorm {
-namespace Fitting {
+namespace NumericStorm::Fitting {
 
 class StrategySettings {
 
@@ -10,5 +9,4 @@ class StrategySettings {
 private:
 
 };
-}
 }

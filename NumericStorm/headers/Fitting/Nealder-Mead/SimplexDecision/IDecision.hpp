@@ -1,23 +1,22 @@
 #pragma once
-#include <unordered_map>
-#include <string>
-#include <vector>
-#include "../SimplexFigure.hpp"
-#include "../../CreatorInterface.hpp"
+#include "SimplexFigure.hpp"
+#include "CreatorInterface.hpp"
 #include "StrategySettings.hpp"
-#include "../SimplexIntermediatePoints.hpp"
-#include "../PIndecies.hpp"
-namespace NumericStorm
-{
-namespace Fitting
+#include "SimplexIntermediatePoints.hpp"
+#include "PIndices.hpp"
+
+
+namespace NumericStorm::Fitting
 {
 
 template <size_t parameter_size>
 class IDecision : public CreatorInterface<SimplexIntermediatePoints<parameter_size>&, bool, StrategySettings>
 {
 public:
-	using enum PIndicies;
-	using enum SimplexFigure<parameter_size>::SimplexFigureIndicies;
+	using enum PIndices;
+	using enum SimplexFigureIndicies;
+	using bestPoint = SimplexFigure<parameter_size>::bestPoint;
+
 	IDecision() = default;
 	IDecision(const IDecision<parameter_size>&) = default;
 	IDecision(IDecision<parameter_size>&&) = default;
@@ -26,6 +25,4 @@ public:
 
 	virtual ~IDecision() = default;
 };
-
-}
 }

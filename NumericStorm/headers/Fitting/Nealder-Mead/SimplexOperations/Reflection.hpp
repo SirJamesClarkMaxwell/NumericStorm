@@ -1,11 +1,9 @@
 #pragma once
 #include "ISimplexOperation.hpp"
-#include "SimplexOperationSettigns.hpp"
-#include "../SimplexFigure.hpp"
+#include "SimplexOperationSettings.hpp"
+#include "SimplexFigure.hpp"
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 template <size_t parameter_size>
 class Reflection : public ISimplexOperation<parameter_size>
@@ -35,5 +33,4 @@ public:
 	}
 };
 
-}
 }

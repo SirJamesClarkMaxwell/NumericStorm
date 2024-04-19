@@ -1,24 +1,28 @@
 #pragma once
-#include "SimplexPoint.hpp"
-#include "../Exceptions/NoSetDataException.hpp"
+
 #include <numeric>
+#include <array>
 
-namespace NumericStorm {
-namespace Fitting {
+#include "SimplexPoint.hpp"
 
+
+namespace NumericStorm::Fitting {
+//using enum outside of the class because it is templated and cpp doesn allow that
+enum SimplexFigureIndicies
+{
+	worstPoint = 0,
+	secondWorstPoint = 1,
+};
 
 template<size_t parameter_size>
 class SimplexFigure {
 public:
 	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points)
 		: m_points{ points }, m_centroid{ calculateCentroid() } {}
-	enum SimplexFigureIndicies
-	{
-		worstPoint = 0,
-		secondWorstPoint = 1,
-		bestPoint = parameter_size
 
-	};
+	//since we cant have enum in the templated class, for the best point we use static int field
+	static const int bestPoint{ parameter_size };
+
 	SimplexFigure() = delete;
 	SimplexFigure(const SimplexFigure<parameter_size>&) = default;
 	SimplexFigure(SimplexFigure<parameter_size>&&) = default;
@@ -74,5 +78,4 @@ private:
 
 };
 
-}
 }

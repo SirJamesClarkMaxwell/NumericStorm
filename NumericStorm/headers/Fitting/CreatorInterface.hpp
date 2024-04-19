@@ -1,7 +1,7 @@
 #pragma once
 
-namespace NumericStorm {
-namespace Fitting {
+namespace NumericStorm::Fitting {
+
 template<class CreatorInput, class CreatorOutput, class CreatorSettings>
 class CreatorInterface {
 public:
@@ -26,5 +26,4 @@ protected:
 	Settings m_settings{};
 
 };
-}
 }

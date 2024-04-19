@@ -1,15 +1,15 @@
 #pragma once
+
+#include <array>
+
 #include "IFigureCreator.hpp"
-#include "SimplexCreatorSettings.hpp"
-
-#include "../SimplexPoint.hpp"
-#include "../SimplexFigure.hpp"
+#include "SimplexPoint.hpp"
+#include "SimplexFigure.hpp"
 
 
-namespace NumericStorm {
-namespace Fitting {
+namespace NumericStorm::Fitting {
 template <size_t parameter_size>
-class BasicSimplexCreator : public ISimplexFactory<parameter_size>
+class BasicSimplexCreator : public IFigureCreator<parameter_size>
 {
 public:
 	BasicSimplexCreator() = default;
@@ -21,7 +21,7 @@ public:
 	virtual ~BasicSimplexCreator() = default;
 
 	BasicSimplexCreator(const SimplexCreatorSettigns& settings)
-		: ISimplexFactory<parameter_size>{ settings } {}
+		: IFigureCreator<parameter_size>{ settings } {}
 
 
 	virtual SimplexFigure<parameter_size> operator()(const SimplexPoint<parameter_size>& point) override {
@@ -37,5 +37,4 @@ public:
 		return figure;
 	}
 };
-}
 }

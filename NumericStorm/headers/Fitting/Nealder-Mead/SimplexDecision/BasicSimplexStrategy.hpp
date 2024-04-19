@@ -1,8 +1,8 @@
 #pragma once
-#include "IDecision.hpp"
-#include "SimplexPoint.hpp"
-#include "SimplexFigure.hpp"
 #include <string>
+
+#include "IDecision.hpp"
+#include "SimplexFigure.hpp"
 #include "SimplexIntermediatePoints.hpp"
 
 
@@ -14,9 +14,7 @@
 //todo 5a. add recursive invoking of calling operator 
 
 //todo 6. remove ugly {} where we could do it
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 template <size_t parameter_size>
 class BasicSimplexDecision : public IDecision<parameter_size>
@@ -95,6 +93,4 @@ private:
     std::string m_curr_operation{ "reflection" };
 
 };
-}
-
 }

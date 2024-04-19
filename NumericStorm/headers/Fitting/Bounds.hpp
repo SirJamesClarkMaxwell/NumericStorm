@@ -1,9 +1,8 @@
 #pragma once
-#include "Fitting.hpp"
+#include <array>
+#include "Parameters.hpp"
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 template<size_t bounds_size>
 class Bounds :public Parameters<bounds_size>
@@ -16,5 +15,4 @@ public:
 	virtual std::array<double, bounds_size> getParameters() = 0;
 };
 
-}
 }

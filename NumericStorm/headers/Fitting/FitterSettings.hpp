@@ -6,9 +6,10 @@
 #include "ErrorModel.hpp"
 #include "Bounds.hpp"
 #include "AdditionalParameters.hpp"
-namespace NumericStorm
-{
-namespace Fitting
+#include "Data.hpp"
+
+
+namespace NumericStorm::Fitting
 {
 template <size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
 class FitterSettings
@@ -39,6 +40,4 @@ protected:
 	bool m_useBounds{ false };
 
 };
-}
-
 }

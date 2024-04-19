@@ -3,11 +3,12 @@
 #include <memory>
 #include <unordered_map>
 #include <string>
-#include "./Fitting/Exceptions/NoAvailableFactoryException.hpp"
+
+#include "NoAvailableFactoryException.hpp"
 #include "CreatorInterface.hpp"
 
-namespace NumericStorm {
-namespace Fitting {
+
+namespace NumericStorm::Fitting {
 template<class SettingType>
 struct CreatorSetUpInfo
 {
@@ -104,5 +105,4 @@ void Factory<Creator>::updateSettings(const CreatorSetUpInfo<typename Creator::S
 };
 
 
-}
 }

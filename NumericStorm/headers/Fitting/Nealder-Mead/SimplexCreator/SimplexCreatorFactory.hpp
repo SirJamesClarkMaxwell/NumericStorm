@@ -1,17 +1,12 @@
 #pragma once
-#include "../SimplexFigure.hpp"
-#include "../SimplexPoint.hpp"
 
 #include "IFigureCreator.hpp"
-#include "../../Exceptions/NoAvailableFactoryException.hpp"
-#include "../../Factory.hpp"
+#include "Factory.hpp"
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 template<size_t parameter_size>
-class SimplexCreatorFactory : public Factory<ISimplexFactory<parameter_size>>
+class SimplexCreatorFactory : public Factory<IFigureCreator<parameter_size>>
 {
 public:
 	SimplexCreatorFactory() = default;
@@ -22,7 +17,4 @@ public:
 
 	virtual ~SimplexCreatorFactory() = default;
 };
-
-
-}
 }

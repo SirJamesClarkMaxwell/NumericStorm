@@ -1,14 +1,8 @@
 #pragma once
-#include <unordered_map>
-#include <string>
 #include "ISimplexOperation.hpp"
-#include "SimplexOperationSettigns.hpp"
-#include "../../Factory.hpp"
-#include "../../Exceptions/NoAvailableFactoryException.hpp"
+#include "Factory.hpp"
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm:: Fitting
 {
 template <size_t parameter_size>
 class SimplexOperationFactory : public Factory<ISimplexOperation<parameter_size>>
@@ -23,7 +17,4 @@ public:
 	virtual ~SimplexOperationFactory() = default;
 
 };
-
-
-}
 }

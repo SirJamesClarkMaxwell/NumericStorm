@@ -1,7 +1,3 @@
--- dofile "/vendor/googletest-main/premake5.lua"
---dofile "../NumericStorm/premake5.lua"
-
-
 project "NumericStorm-Tests"
     kind "ConsoleApp"
     language "C++"
@@ -9,34 +5,28 @@ project "NumericStorm-Tests"
 
     location "%{wks.location}/Tests"
     files {
-        "*.cpp",
-        "*.h",
-        "*.hpp",
-        "../NumericStorm/headers/*.hpp",
-        "./FittingTests/*.*",
-        "./FittingTests/Nealder-Mead-Tests/*.*",
-        "./FittingTests/Nealder-Mead-Tests/SimplexOperation-Test/*.*"
+        "**.cpp",
+        "**.hpp"
     }
     
-        libdirs{
-            "../vendor/googletest-main/bin/Debug/"}
+        libdirs {
+            "../vendor/googletest-main/bin/%{cfg.buildcfg}"
+        }
         
-        targetdir ("bin/%{cfg.buildcfg}")
-        objdir ("obj/%{cfg.buildcfg}")
+        targetdir ("./bin/%{cfg.buildcfg}")
+        objdir ("./obj/%{cfg.buildcfg}")
     
         links { 
-        "NumericStorm",
-        "gtest"
-            }
+            "NumericStorm",
+            "gtest"
+        }
+
         includedirs { 
-            "../NumericStorm/headers/",
-            "../vendor/googletest-main/googletest/include/" ,
-            "../vendor/googletest-main/googletest/include/gtest",
-            "%{prj.location}/FittingTests",
-            "%{prj.location}/FittingTests/Nealder-Mead-Tests",
-            "%{prj.location}/FittingTests/Nealder-Mead-Tests/SimplexOperation-Test"
-            }
-        targetdir ("bin/%{cfg.buildcfg}") 
+            "../NumericStorm/headers/**",
+            "../vendor/googletest-main/googletest/include/**" ,
+            "./FittingTests/**"
+         }
+
     
         filter "configurations:Debug"
             defines { "DEBUG" }

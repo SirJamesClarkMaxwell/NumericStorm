@@ -1,13 +1,11 @@
 #pragma once
-#include "../SimplexFigure.hpp"
-#include "SimplexOperationSettigns.hpp"
-#include "../../CreatorInterface.hpp"
-#include "../PIndecies.hpp"
+#include "SimplexFigure.hpp"
+#include "SimplexOperationSettings.hpp"
+#include "CreatorInterface.hpp"
+#include "PIndices.hpp"
 #include "SimplexIntermediatePoints.hpp"
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 template <size_t parameter_size>
 class ISimplexOperation : public CreatorInterface<SimplexIntermediatePoints<parameter_size>&, void, SimplexOperationSettings>
@@ -18,8 +16,9 @@ public:
     using In = typename InterfaceType::In;
     using Out = typename InterfaceType::Out;
     using Settings = typename InterfaceType::Settings;
-    using enum PIndicies;
-    using enum SimplexFigure<parameter_size>::SimplexFigureIndicies;
+    using enum PIndices;
+    using enum SimplexFigureIndicies;
+    using bestPoint = SimplexFigure<parameter_size>::bestPoint;
 
     ISimplexOperation(const std::string& name, const SimplexOperationSettings& settings)
         : CreatorInterface<In, Out, Settings>{ settings }, m_operationName{ name } {};
@@ -34,5 +33,4 @@ protected:
     std::string m_operationName{};
 };
 
-}
 }

@@ -4,12 +4,9 @@
 #include <stdexcept>
 #include <utility>
 
-#include "Model.hpp"
-#include "ErrorModel.hpp"
-#include "AdditionalParameters.hpp"
 
-namespace NumericStorm {
-namespace Fitting {
+
+namespace NumericStorm::Fitting {
 
 
 
@@ -50,7 +47,6 @@ private:
         return true;
     };
 };
-}
 }
 
 

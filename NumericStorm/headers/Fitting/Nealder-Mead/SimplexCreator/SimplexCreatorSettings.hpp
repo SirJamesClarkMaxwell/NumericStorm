@@ -1,9 +1,7 @@
-
 #pragma once
 #include <string>
-namespace NumericStorm
-{
-namespace Fitting
+
+namespace NumericStorm::Fitting
 {
 class SimplexCreatorSettings
 {
@@ -25,6 +23,4 @@ private:
 	std::string m_name{};
 	double m_mu{};
 };
-}
-
 }

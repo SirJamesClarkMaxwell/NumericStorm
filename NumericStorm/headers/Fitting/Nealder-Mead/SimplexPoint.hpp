@@ -1,15 +1,13 @@
 #pragma once
-#include "../Parameters.hpp"
-#include "../Data.hpp"
 
-#include <vector>
 #include <array>
 #include <memory>
 
+#include "Parameters.hpp"
+#include "Data.hpp"
 
-namespace NumericStorm
-{
-namespace Fitting
+
+namespace NumericStorm::Fitting
 {
 template <std::size_t parameter_size>
 class SimplexPoint {
@@ -117,5 +115,4 @@ public:
 
 };
 
-}
 }

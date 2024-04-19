@@ -1,7 +1,7 @@
 #pragma once
 #include "ISimplexOperation.hpp"
-#include "SimplexOperationSettigns.hpp"
-#include "../SimplexFigure.hpp"
+#include "SimplexOperationSettings.hpp"
+#include "SimplexIntermediatePoints.hpp"
 
 namespace NumericStorm
 {
@@ -12,7 +12,7 @@ class Expansion : public ISimplexOperation<parameter_size>
 {
 public:
 	Expansion()
-		: ISimplexOperation<parameter_size>("expansion", SimplexCreatorSettings{ 2 }) {};
+		: ISimplexOperation<parameter_size>("expansion", SimplexOperationSettings{ 2 }) {};
 	Expansion(const SimplexOperationSettings& settings)
 		: ISimplexOperation<parameter_size>("expansion", settings) {};
 

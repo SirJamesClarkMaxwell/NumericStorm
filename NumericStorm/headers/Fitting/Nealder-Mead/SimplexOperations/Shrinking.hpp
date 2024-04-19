@@ -1,15 +1,13 @@
 #pragma once
-#include "SimplexOperationSettigns.hpp"
+#include "SimplexOperationSettings.hpp"
 #include "ISimplexOperation.hpp"
-#include "../SimplexFigure.hpp"
-#include "../SimplexPoint.hpp"
-#include "../SimplexIntermediatePoints.hpp"
-#include "../PIndecies.hpp"
+#include "SimplexFigure.hpp"
+#include "SimplexPoint.hpp"
+#include "SimplexIntermediatePoints.hpp"
 
-namespace NumericStorm
+namespace NumericStorm::Fitting
 {
-namespace Fitting
-{
+
 template <size_t parameter_size>
 class Shrinking : public ISimplexOperation<parameter_size>
 {
@@ -46,5 +44,4 @@ public:
     }
 };
 
-}
 }

@@ -1,6 +1,6 @@
 #pragma once
 #include "SimplexOperationFactory.hpp"
-#include "SimplexOperationSettigns.hpp"
+#include "SimplexOperationSettings.hpp"
 #include "ISimplexOperation.hpp"
 
 #include "Reflection.hpp"

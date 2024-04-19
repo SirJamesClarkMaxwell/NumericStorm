@@ -1,10 +1,9 @@
 #pragma once
 
 #include <vector>
-#include "Fitting.hpp"
-namespace NumericStorm
-{
-namespace Fitting
+
+
+namespace NumericStorm::Fitting
 {
 class Data
 {
@@ -33,5 +32,4 @@ const std::vector<double>& Data::operator[](size_t index) const
 	return m_data.at(index);
 };
 
-}
 }

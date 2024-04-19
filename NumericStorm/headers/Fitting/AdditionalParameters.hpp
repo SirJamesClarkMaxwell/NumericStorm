@@ -1,7 +1,5 @@
 #pragma once
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 
 class AdditionalParameters
@@ -11,6 +9,4 @@ public:
 	virtual ~AdditionalParameters() = default;
 
 };
-}
-
 }

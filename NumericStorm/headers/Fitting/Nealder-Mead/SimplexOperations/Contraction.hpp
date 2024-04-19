@@ -1,13 +1,9 @@
 #pragma once
 #include "ISimplexOperation.hpp"
-#include "../SimplexFigure.hpp"
-#include "SimplexOperationSettigns.hpp"
-#include "../SimplexIntermediatePoints.hpp"
-#include "../PIndecies.hpp"
+#include "SimplexIntermediatePoints.hpp"
+#include "SimplexOperationSettings.hpp"
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 
 template <size_t parameter_size>
@@ -44,5 +40,4 @@ private:
 	}
 };
 
-}
 }

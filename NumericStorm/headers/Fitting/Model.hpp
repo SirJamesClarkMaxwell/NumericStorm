@@ -5,7 +5,7 @@
 #include "Data.hpp"
 #include "Parameters.hpp"
 
-#include <memory>
+
 
 namespace NumericStorm
 {

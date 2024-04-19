@@ -1,8 +1,6 @@
 #pragma once
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 
 class SimplexOperationSettings
@@ -21,5 +19,4 @@ public:
 protected:
 	double m_factor{};
 };
-}
 }

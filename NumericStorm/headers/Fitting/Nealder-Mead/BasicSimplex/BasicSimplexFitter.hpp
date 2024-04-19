@@ -1,19 +1,16 @@
 #pragma once
 
-#include "../SimplexFigure.hpp"
-#include "../SimplexFitter.hpp"
-#include "../SimplexPoint.hpp"
+#include "SimplexFigure.hpp"
+#include "SimplexFitter.hpp"
 #include "BasicSimplexFitterSettings.hpp"
-#include "../SimplexOperations/SimplexOperationsHeader.hpp"
-#include "../SimplexCreator/SimplexCreatorFactory.hpp"
-#include "../SimplexDecision/StrategyManager.hpp"
+#include "SimplexOperationsHeader.hpp"
+#include "SimplexCreatorFactory.hpp"
+#include "StrategyManager.hpp"
 
 
 //todo manage includes!
 //todo make a nspch.h file
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 template <size_t parameter_size, class DerivedSettings = BasicSimplexFitterSettings<parameter_size>>
 class BasicSimplexFitter : public SimplexFitter<parameter_size, DerivedSettings>
@@ -27,7 +24,7 @@ public:
 
 	virtual ~BasicSimplexFitter() = default;
 
-	BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
+	BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure) 
 		: SimplexFitter<parameter_size>{ simplexFigure } {}
 
 	virtual void setUp() override {
@@ -57,7 +54,7 @@ public:
 	}
 
 private:
-	auto setUpFittingsProcedure() {};
+	//auto setUpFittingsProcedure() {};
 	//todo add oneStep method and call it in minimize it, make it public in the debug configuration
 };
 
@@ -67,5 +64,4 @@ private:
 	//todo initialize settings of the creators, fill the settings
 	//todo initialize factories
 	//todo register the creators
-}
 }

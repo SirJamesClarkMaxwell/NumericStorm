@@ -1,14 +1,13 @@
 #pragma once
 
-#include <memory>
-#include "../SimplexSettings.hpp"
-#include "../../Model.hpp"
-#include "../../ErrorModel.hpp"
-#include "../SimplexOperations/SimplexOperationsHeader.hpp"
+#include "SimplexSettings.hpp"
+#include "Model.hpp"
+#include "ErrorModel.hpp"
+#include "SimplexOperationsHeader.hpp"
 //todo we need to discus bout how we gonna implement the actual basic fitter
-namespace NumericStorm
-{
-namespace Fitting
+
+
+namespace NumericStorm::Fitting
 {
 template<size_t parameter_size>
 class BasicSimplexFitterSettings :SimplexSettings<parameter_size>
@@ -39,7 +38,4 @@ private:
 	// todo think about the all possible settings of basic simplex fitter and set them manually
 	//NOTE here we definitely need a builder pattern 
 };
-
-
-}
 }

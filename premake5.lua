@@ -14,16 +14,10 @@ workspace "NumericStorm-App"
         libdirs {"./vendor/googletest-main/bin/Debug/"}
     
         files { 
-            "./src/*.cpp", 
-            "./headers/*.hpp",
-            "./NumericStorm/headers/*.hpp",
-            "./NumericStorm/headers/Fitting/*.hpp",
-            "./NumericStorm/headers/Fitting/Exceptions/*.hpp",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/*.hpp",
-            "./NumericStorm/headers/Fitting/Nealer-Mead/SimplexOperations/*.hpp",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/BasicSimplex/*.hpp",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreator/*.hpp",
-            "./headers/Fitting/Nealder-Mead/SimplexDecision/*.hpp"
+            "./src/**.cpp", 
+            "./headers/**.hpp",
+            "./NumericStorm/**.hpp",
+            "./NumericStorm/**.cpp"
         }
         links { 
             "NumericStorm",
@@ -31,19 +25,9 @@ workspace "NumericStorm-App"
         }
         
         includedirs { 
-            "include",
-            "headers",
-            "./NumericStorm/headers/",
-            "./NumericStorm/headers/Fitting/",
-            "./NumericStorm/headers/Fitting/Exceptions/",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/",
-            "./NumericStorm/headers/Fitting/Nealer-Mead/SimplexOperations/",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/BasicSimplex/",
-            "./NumericStorm/headers/Fitting/Nealder-Mead/SimplexCreatorp",
-            "./headers/Fitting/Nealder-Mead/SimplexDecision/"
-            
+            "./NumericStorm/**"
         }
-        targetdir ("bin/%{cfg.buildcfg}") 
+        targetdir ("./bin/%{cfg.buildcfg}") 
         
         filter "configurations:Debug"
             defines { "DEBUG" }

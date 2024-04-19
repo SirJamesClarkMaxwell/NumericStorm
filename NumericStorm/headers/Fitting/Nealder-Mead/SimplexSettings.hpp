@@ -1,19 +1,16 @@
 #pragma once
 #include <memory>
 
-#include "../FitterSettings.hpp"
-#include "../Model.hpp"
-#include "../ErrorModel.hpp"
-#include "../Exceptions/WrongTemplateArgument.hpp"
-#include "../Factory.hpp"
-#include "../SimplexCreator/SimplexCreatorSettings.hpp"
-#include "../SimplexDecision/StrategySettings.hpp"
-#include "../SimplexOperations/SimplexOperationSettigns.hpp"
+#include "FitterSettings.hpp"
+#include "Model.hpp"
+#include "ErrorModel.hpp"
+#include "Factory.hpp"
+#include "SimplexCreatorSettings.hpp"
+#include "StrategySettings.hpp"
+#include "SimplexOperationSettings.hpp"
 
 
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 
 template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
@@ -40,5 +37,4 @@ protected:
 	CreatorInfoVector<StrategySettings> m_simplexStrategySetUpInfo;
 
 };
-}
 }

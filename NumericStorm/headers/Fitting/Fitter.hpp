@@ -1,13 +1,14 @@
 #pragma once
-#include "FitterSettings.hpp"
-#include "Parameters.hpp"
 #include <memory>
 #include <concepts>
 
-namespace NumericStorm
-{
-namespace Fitting
-{
+#include "AdditionalParameters.hpp"
+#include "FitterSettings.hpp"
+#include "Parameters.hpp"
+
+
+namespace NumericStorm::Fitting {
+
 template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters, class DerivedSettings = FitterSettings<parameter_size, AuxilaryParameters>>
 class Fitter
 {
@@ -32,5 +33,4 @@ protected:
 	DerivedSettings m_settings;
 };
 
-}
 }

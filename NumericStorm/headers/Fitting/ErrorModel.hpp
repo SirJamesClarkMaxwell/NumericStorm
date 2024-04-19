@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Data.hpp"
 #include <functional>
 
-namespace NumericStorm {
-namespace Fitting {
+#include "Data.hpp"
+
+namespace NumericStorm::Fitting {
 
 
 class ErrorModel {
@@ -31,5 +31,4 @@ protected:
     std::function<double(const Data&, const Data&)> m_errorModel;
     bool m_revert{ false };
 };
-}
 }

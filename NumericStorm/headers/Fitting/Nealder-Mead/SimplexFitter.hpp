@@ -1,20 +1,16 @@
 #pragma once
 
-#include "SimplexFigure.hpp"
-#include "SimplexPoint.hpp"
-#include "../Model.hpp"
-#include "../ErrorModel.hpp"
 #include "SimplexSettings.hpp"
-#include "./SimplexDecision/StrategyManager.hpp"
-#include "./SimplexOperations/SimplexOperationsHeader.hpp"
-#include "./SimplexCreator/SimplexCreatorFactory.hpp"
+#include "StrategyManager.hpp"
+#include "SimplexOperationsHeader.hpp"
+#include "SimplexCreatorFactory.hpp"
 
 
 namespace NumericStorm
 {
 namespace Fitting
 {
-template<size_t parameter_size, class DerivedSettings = FitterSettings<parameter_size>>
+template<size_t parameter_size, class DerivedSettings = SimplexSettings<parameter_size>>
 class SimplexFitter : public Fitter<parameter_size, DerivedSettings>
 {
 

@@ -1,10 +1,10 @@
 #pragma once
+
+#include <vector>
+
 #include "SimplexPoint.hpp"
 #include "SimplexFigure.hpp"
-#include "PIndecies.hpp"
-namespace NumericStorm
-{
-namespace Fitting
+namespace NumericStorm::Fitting
 {
 //rename to SimplexState
 template<size_t parameter_size>
@@ -14,7 +14,7 @@ public:
     SimplexIntermediatePoints() = delete;
     template<typename IndeciesEnum>
     SimplexIntermediatePoints(const SimplexFigure<parameter_size>& simplexFigure, IndeciesEnum pCount)
-        : m_simplexFigure{ simplexFigure }, m_intermediatePoints{ pCount, simplexFigure[0] } {}
+        : m_simplexFigure{ simplexFigure }, m_intermediatePoints{ pCount, simplexFigure[SimplexFigureIndicies::worstPoint] } {}
 
     SimplexFigure<parameter_size> m_simplexFigure{};
     std::vector<SimplexPoint<parameter_size>> m_intermediatePoints;
@@ -26,5 +26,4 @@ public:
     const SimplexPoint<parameter_size>& operator[](IndeciesEnum index) const { return m_intermediatePoints.at(index); }
 };
 
-}
 }
