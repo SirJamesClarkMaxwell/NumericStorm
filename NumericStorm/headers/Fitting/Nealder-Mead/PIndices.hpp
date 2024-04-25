@@ -1,7 +1,7 @@
 #pragma once
 namespace NumericStorm::Fitting {
 
-enum PIndices {
+enum PIndices : uint32_t {
 	Reflected,
 	Expanded,
 	Contracted,

@@ -23,7 +23,7 @@ public:
 	//since we cant have enum in the templated class, for the best point we use static int field
 	static const int bestPoint{ parameter_size };
 
-	SimplexFigure() = delete;
+	SimplexFigure() = default;
 	SimplexFigure(const SimplexFigure<parameter_size>&) = default;
 	SimplexFigure(SimplexFigure<parameter_size>&&) = default;
 	SimplexFigure<parameter_size>& operator=(const SimplexFigure<parameter_size>&) = default;
@@ -59,7 +59,7 @@ public:
 
 
 protected:
-	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points{};
+	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points;
 	SimplexPoint<parameter_size> m_centroid{};
 	bool m_centroid_valid{ false };
 	bool m_sorted{ false };
@@ -67,13 +67,13 @@ protected:
 private:
 	SimplexPoint<parameter_size> calculateCentroid() {
 		m_centroid_valid = true;
-		if (!m_sorted) sort(false);
+		if (!m_sorted) sort();
 #if DEBUG
 		SimplexPoint<parameter_size> sum = std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>{});
-		sum /= (parameter_size);
+		sum /= (parameter_size + 1);
 		return sum;
 #endif
-		return std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>()) / (parameter_size);
+		return std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>()) / (parameter_size + 1);
 	}
 
 };

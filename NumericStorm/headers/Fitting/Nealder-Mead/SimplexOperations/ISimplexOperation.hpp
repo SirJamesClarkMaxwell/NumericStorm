@@ -18,7 +18,7 @@ public:
     using Settings = typename InterfaceType::Settings;
     using enum PIndices;
     using enum SimplexFigureIndicies;
-    using bestPoint = SimplexFigure<parameter_size>::bestPoint;
+    static const int bestPoint = SimplexFigure<parameter_size>::bestPoint;
 
     ISimplexOperation(const std::string& name, const SimplexOperationSettings& settings)
         : CreatorInterface<In, Out, Settings>{ settings }, m_operationName{ name } {};

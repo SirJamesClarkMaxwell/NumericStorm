@@ -18,7 +18,7 @@ struct CreatorSetUpInfo
 template<class Creator>
 class Factory {
 
-	static_assert(std::derived_from<Creator, CreatorInterface> == true);
+	static_assert(std::derived_from<Creator, CreatorInterface<typename Creator::In, typename Creator::Out, typename Creator::Settings>> == true);
 public:
 	Factory() = default;
 	Factory(const Factory<Creator>&) = default;
@@ -29,7 +29,7 @@ public:
 	virtual ~Factory() = default;
 
 	void deleteCreator(const std::string& creatorName);
-	typename Creator::Out invoke(const std::string& creatorName, const typename Creator::In& input);
+	typename Creator::Out invoke(const std::string& creatorName, typename Creator::In& input);
 	void updateSettings(const CreatorSetUpInfo<typename Creator::Settings>& newSettings);
 	template <class... CreatorTypes>
 	void registerCreators(const std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
@@ -87,7 +87,7 @@ void Factory<Creator>::deleteCreator(const std::string& creatorName) {
 		throw NoAvailableFactoryException(creatorName);
 };
 template<class Creator>
-typename Creator::Out Factory<Creator>::invoke(const std::string& creatorName, const typename Creator::In& input) {
+typename Creator::Out Factory<Creator>::invoke(const std::string& creatorName, typename Creator::In& input) {
 	if (checkIfAvailable(creatorName))
 		return m_creatorList[creatorName]->get()->operator()(input);
 

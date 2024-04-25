@@ -25,18 +25,15 @@ public:
 
     virtual ~Parameters() = default;
     virtual const std::array<double, parameter_size>& getParameters() const { return m_parameters; };
+    virtual std::array<double, parameter_size>& getParameters() { return m_parameters; };
 
     virtual double& operator[](int index)
     {
-        if (index > parameter_size - 1 || index < 0)
-            throw std::out_of_range("Index out of bounds");
-        return m_parameters[index];
+        return m_parameters.at(index);
     }
     virtual const double& operator[](int index) const
     {
-        if (index > parameter_size - 1 || index < 0)
-            throw std::out_of_range("Index out of bounds");
-        return m_parameters[index];
+        return m_parameters.at(index);
     }
 private:
     std::array<double, parameter_size> m_parameters{};

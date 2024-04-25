@@ -12,7 +12,9 @@ namespace NumericStorm::Fitting
 template <std::size_t parameter_size>
 class SimplexPoint {
 public:
-	SimplexPoint() = delete;
+	using CallbackType = std::function<void(SimplexPoint<parameter_size>&)>;
+
+	SimplexPoint() = default;
 	SimplexPoint(std::shared_ptr<Data> ref_data, const std::array<double, parameter_size>& parameters)
 		: m_parameters{ parameters }, m_referenceData{ ref_data }, m_data { *ref_data } {};
 		SimplexPoint(const SimplexPoint<parameter_size>&) = default;
@@ -21,12 +23,23 @@ public:
 		SimplexPoint<parameter_size>& operator=(SimplexPoint<parameter_size>&&) = default;
 
 		virtual ~SimplexPoint() = default;
+		double getError() const { return m_error; }
 
 		template<class AuxParameters>
 		void evaluatePoint(const Model<parameter_size, AuxParameters>& model, const ErrorModel& errorModel, const AuxParameters& auxParams) {
 			m_calculateData(model, auxParams);
 			m_error = errorModel(*m_referenceData, m_data);
 		}
+
+		void evaluatePoint() {
+			if(m_evalCallback) m_evalCallback(*this);
+		}
+
+		void onEvaluate(const CallbackType& cb) {
+			m_evalCallback = cb;
+		}
+
+
 private:
 	Parameters<parameter_size> m_parameters{};
 
@@ -34,6 +47,8 @@ private:
 	std::shared_ptr<Data> m_referenceData{ nullptr };
 	
 	Data m_data{};
+
+	CallbackType m_evalCallback{};
 
 	template<class AuxParameters>
 	void m_calculateData(const Model<parameter_size, AuxParameters>& model, const AuxParameters& auxParams) {
@@ -52,19 +67,19 @@ public:
 	{
 		return this->m_parameters.getParameters() == other;
 	};
-	bool operator <=> (const SimplexPoint<parameter_size>& other) const
+	auto operator <=> (const SimplexPoint<parameter_size>& other) const
 	{
 		return this->m_error <=> other.m_error;
 	}
 
 	virtual double& operator[](int index)
 	{
-		return m_parameters.at(index);
+		return m_parameters[index];
 	}
 
 	virtual const double& operator[](int index) const 
 	{
-		return m_parameters.at(index);
+		return m_parameters[index];
 	}
 
 	SimplexPoint<parameter_size>& operator+=(const SimplexPoint<parameter_size>& other) {
@@ -79,13 +94,13 @@ public:
 	}
 
 	SimplexPoint<parameter_size>& operator*=(double scalar) {
-		for (auto& param : this->m_parameters) {
+		for (auto& param : this->m_parameters.getParameters()) {
 			param *= scalar;
 		}
 		return *this;
 	}
 	SimplexPoint<parameter_size>& operator/=(double scalar) {
-		for (auto& param : this->m_parameters) {
+		for (auto& param : this->m_parameters.getParameters()) {
 			param /= scalar;
 		}
 		return *this;

@@ -17,16 +17,16 @@ public:
 	virtual void operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
 	{
 		double alpha = this->m_settings.getFactor();
-		const SimplexPoint<parameter_size>& centroid = simplexIntPoints.getCentroid();
+		const SimplexPoint<parameter_size>& centroid = simplexIntPoints.m_simplexFigure.getCentroid();
 		SimplexPoint<parameter_size>& reflectedPoint = simplexIntPoints[Reflected];
-		const SimplexPoint<parameter_size>& worstPoint = simplexIntPoints.m_simplexFigure[worstPoint];
+		const SimplexPoint<parameter_size>& wPoint = simplexIntPoints.m_simplexFigure[worstPoint];
 
 #if DEBUG
-		auto difference = centroid - worstPoint;
+		auto difference = centroid - wPoint;
 		auto scaled = difference * alpha;
 		reflectedPoint = centroid + scaled;
 #elif RELEASE
-		reflectedPoint = centroid + (centroid - worstPoint) * alpha;
+		reflectedPoint = centroid + (centroid - wPoint) * alpha;
 #endif
 		reflectedPoint.evaluatePoint();
 

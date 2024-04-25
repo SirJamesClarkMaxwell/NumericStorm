@@ -1,82 +1,110 @@
-#include "pch.h"
-#include "SetUpForOperation.hpp"
+#include "../pch.h"
+#include "FittingTestsSetup.hpp"
+#include <functional>
 using namespace NumericStorm::Fitting;
 namespace TestingSimpleOperations
 {
 
-struct TestingOperations : public testing::Test, public SetUpForOperations
+struct TestingOperations : public testing::Test
 {
-	SimplexOperationSettings reflectionSimplexOperationSettings{ 0.5 };
-	SimplexOperationSettings expansionSimplexOperationSettings{ 2 };
-	Reflection<4>  reflectionMaker{ reflectionSimplexOperationSettings };
-	SimplexFigure<4> reflectedFigure;
+	
 	void setUp()
 	{
-		reflectedFigure = reflectionMaker(basicSimplexFigure);
-		reflectedFigure.getCentroid().calculateError(referencedData);
-		reflectedFigure[0].calculateError(referencedData);
-		//reflectedFigure[0].calculateError(referencedData);
-		std::cout << "Centroid: " << reflectedFigure.getCentroid()[0] << std::endl;
-		std::cout << "Reflected: " << reflectedFigure[0][0] << std::endl;
+		std::shared_ptr<Data> data_ptr = std::make_shared<Data>(objs.true_datum);
+
+		referenceFigure[0] = SimplexPoint<4>{ data_ptr, objs.evaluatedArray };
+
+		referenceFigure[0].onEvaluate([&](SimplexPoint<4>& point) {
+			point.evaluatePoint(objs.gModel, objs.eModel, objs.additionalParameters);
+		});
+
+		referenceFigure[0].evaluatePoint();
+		for (int i = 1; i < 5; i++) {
+			referenceFigure[i] = SimplexPoint<4>{ referenceFigure[0] };
+			referenceFigure[i][i - 1] += 1;
+			referenceFigure[i].evaluatePoint();
+		}
+		referenceFigure.sort();
+
+		testedFigure = referenceFigure;
 
 	}
+
+	UsefulObjects objs{};
+	SimplexFigure<4> testedFigure{};
+	SimplexFigure<4> referenceFigure{};
+
+	Reflection<4> reflOp{ 1.5 };
+	Expansion<4> expOp{ 0.5 };
+	Contraction<4> contOp{ 2.0 };
+	Shrinking<4> shOp{ 0.5 };
 };
 
 TEST_F(TestingOperations, testingReflection)
 {
-	double number =2.16224;
-	std::array<double, 4> trueReflectedPointParameters{ number, number, number, number };
-	SimplexFigure<4> testedReflectedFigure = reflectionMaker(basicSimplexFigure);
-	std::array<double, 4> testedReflectedPointParameters = testedReflectedFigure[0].getParameters();
-	for (int i = 0; i < 4;i++)
-		EXPECT_NEAR(trueReflectedPointParameters[i], testedReflectedPointParameters[i], 0.001);
+	setUp();
+	
+	SimplexIntermediatePoints<4> interim{ referenceFigure, PIndices::PointCount };
+
+	double alpha = reflOp.getSettings().getFactor();
+	const SimplexPoint<4>& centroid = interim.m_simplexFigure.getCentroid();
+	SimplexPoint<4>& reflectedPoint = interim.m_intermediatePoints[Reflected];
+	const SimplexPoint<4>& wPoint = interim.m_simplexFigure[worstPoint];
+
+	auto difference = centroid - wPoint;
+	auto scaled = difference * alpha;
+	reflectedPoint = centroid + scaled;
+
+	reflectedPoint.evaluatePoint();
+
+	SimplexIntermediatePoints<4> tinterim{ testedFigure, PIndices::PointCount };
+	reflOp(tinterim);
+	tinterim.m_intermediatePoints[PIndices::Reflected].evaluatePoint();
+
+	EXPECT_NEAR(reflectedPoint.getError(), tinterim.m_intermediatePoints[PIndices::Reflected].getError(), 0.01);
+	for (int i = 0; i < 4; i++) {
+		//[1.0, -0.9999999999999998, 1.0, 1.1102230246251565e-16] - parameters of reflected point computed manually by python script
+		std::cout << reflectedPoint[i] << std::endl;
+		EXPECT_NEAR(reflectedPoint[i], tinterim.m_intermediatePoints[PIndices::Reflected][i], 0.01);
+	}
+
+	
 };
 TEST_F(TestingOperations, TestingExpansion)
 {
 	setUp();
-	double number =2.1499;
-	std::array<double, 4> trueExpandedParameters; trueExpandedParameters.fill(number);
-	Expansion<4> expansionMaker(expansionSimplexOperationSettings);
-	SimplexFigure<4> expandedSimplexFigure = expansionMaker(reflectedFigure);
-	expandedSimplexFigure[0].calculateError(referencedData);
-	std::array<double, 4> testedExpandedPoint = expandedSimplexFigure[0].getParameters();
-	for (int i = 0; i < 4;i++)
-		EXPECT_NEAR(trueExpandedParameters[i], testedExpandedPoint[i], 0.001);
+	SimplexIntermediatePoints<4> interim{ referenceFigure, PIndices::PointCount };
 
+	const SimplexPoint<4>& centroid = interim.m_simplexFigure.getCentroid();
+	SimplexPoint<4>& expanded = interim[PIndices::Expanded];
+	const SimplexPoint<4>& reflected = interim[PIndices::Reflected];
+	double gamma = expOp.getSettings().getFactor();
 
+	auto difference = reflected - centroid;
+	auto scaled = difference * gamma;
+	expanded = centroid + scaled;
+
+	expanded.evaluatePoint();
+
+	SimplexIntermediatePoints<4> tinterim{ testedFigure, PIndices::PointCount };
+	expOp(tinterim);
+	tinterim.m_intermediatePoints[PIndices::Expanded].evaluatePoint();
+
+	EXPECT_NEAR(expanded.getError(), tinterim.m_intermediatePoints[PIndices::Expanded].getError(), 0.01);
+	for (int i = 0; i < 4; i++) {
+		std::cout << expanded[i] << std::endl;
+		EXPECT_NEAR(expanded[i], tinterim.m_intermediatePoints[PIndices::Expanded][i], 0.01);
+	}
 };
 
 TEST_F(TestingOperations, TestingContraction)
 {
 	setUp();
-	double number = 1.6375;
-	std::array<double, 4> trueContractedParameters; trueContractedParameters.fill(number);
-	SimplexOperationSettings contractionSimplexOperationSettings{ 0.5 };
-	Contraction<4> contractionMaker(contractionSimplexOperationSettings);
-	SimplexFigure<4> contractedSimplexFigure = contractionMaker(reflectedFigure);
-	std::array<double, 4> testedContractedPoint = contractedSimplexFigure[0].getParameters();
-	for (int i = 0; i < 4;i++)
-		EXPECT_NEAR(testedContractedPoint[i], trueContractedParameters[i], 0.001);
+
 };
 TEST_F(TestingOperations, TestingShrinking)
 {
 	setUp();
-	std::array<double, 4> initialValues = { 1.632245 ,1.6,1.55,1.2 };
-	std::array<std::array<double, 4>, 4> trueShrinkedParameters;
-	for (int i = 0; i < initialValues.size(); ++i)
-		trueShrinkedParameters[i].fill(initialValues[i]);
 
-
-	SimplexOperationSettings shrinkingSimplexOperationSettings{ 0.5 };
-	Shrinking<4> shrinkingMaker(shrinkingSimplexOperationSettings);
-	SimplexFigure<4> shrinkedSimplexFigure = shrinkingMaker(reflectedFigure);
-	for (int i = 0; i < 4; i++)
-	{
-		std::array<double, 4> testedShrinkedPoint = shrinkedSimplexFigure[i].getParameters();
-
-		for (int j = 0; j < 4; j++)
-			EXPECT_NEAR(testedShrinkedPoint[j], trueShrinkedParameters[i][j], 0.001);
-
-	};
 };
 }

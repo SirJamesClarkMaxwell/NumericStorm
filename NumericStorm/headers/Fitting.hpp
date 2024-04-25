@@ -25,6 +25,7 @@
 #include "./Fitting/Nealder-Mead/SimplexFigure.hpp"
 #include "./Fitting/Nealder-Mead/SimplexPoint.hpp"
 #include "./Fitting/Nealder-Mead/SimplexSettings.hpp"
+#include "./Fitting/Nealder-Mead/PIndices.hpp"
 
 
 #include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitter.hpp"
