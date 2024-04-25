@@ -29,6 +29,12 @@ struct TestingOperations : public testing::Test
 		testedFigure = referenceFigure;
 
 	}
+	template<size_t parameter_size>
+	const SimplexPoint<parameter_size>& decidePointToContractAround(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints) {
+		const SimplexPoint<parameter_size>& reflectedPoint = simplexIntPoints[PIndices::Reflected];
+		const SimplexPoint<parameter_size>& worst = simplexIntPoints.m_simplexFigure[worstPoint];
+		return (reflectedPoint <= worst) ? reflectedPoint : worst;
+	}
 
 	UsefulObjects objs{};
 	SimplexFigure<4> testedFigure{};
@@ -59,7 +65,6 @@ TEST_F(TestingOperations, testingReflection)
 
 	SimplexIntermediatePoints<4> tinterim{ testedFigure, PIndices::PointCount };
 	reflOp(tinterim);
-	tinterim.m_intermediatePoints[PIndices::Reflected].evaluatePoint();
 
 	EXPECT_NEAR(reflectedPoint.getError(), tinterim.m_intermediatePoints[PIndices::Reflected].getError(), 0.01);
 	for (int i = 0; i < 4; i++) {
@@ -88,7 +93,6 @@ TEST_F(TestingOperations, TestingExpansion)
 
 	SimplexIntermediatePoints<4> tinterim{ testedFigure, PIndices::PointCount };
 	expOp(tinterim);
-	tinterim.m_intermediatePoints[PIndices::Expanded].evaluatePoint();
 
 	EXPECT_NEAR(expanded.getError(), tinterim.m_intermediatePoints[PIndices::Expanded].getError(), 0.01);
 	for (int i = 0; i < 4; i++) {
@@ -100,11 +104,60 @@ TEST_F(TestingOperations, TestingExpansion)
 TEST_F(TestingOperations, TestingContraction)
 {
 	setUp();
+	SimplexIntermediatePoints<4> interim{ referenceFigure, PIndices::PointCount };
 
+	const SimplexPoint<4>& centroid = interim.m_simplexFigure.getCentroid();
+	SimplexPoint<4>& contracted = interim[Contracted];
+	const SimplexPoint<4>& pointToContractAround = decidePointToContractAround(interim);
+	double beta = contOp.getSettings().getFactor();
+
+
+	auto difference = (pointToContractAround - centroid);
+	auto scaled = difference * beta;
+	contracted = centroid + scaled;
+
+	contracted.evaluatePoint();
+
+	SimplexIntermediatePoints<4> tinterim{ testedFigure, PIndices::PointCount };
+	contOp(tinterim);
+
+
+	EXPECT_NEAR(contracted.getError(), tinterim.m_intermediatePoints[PIndices::Contracted].getError(), 0.01);
+	for (int i = 0; i < 4; i++) {
+		std::cout << contracted[i] << std::endl;
+		EXPECT_NEAR(contracted[i], tinterim.m_intermediatePoints[PIndices::Contracted][i], 0.01);
+	}
 };
 TEST_F(TestingOperations, TestingShrinking)
 {
 	setUp();
+	SimplexIntermediatePoints<4> interim{ referenceFigure, PIndices::PointCount };
+	double delta = shOp.getSettings().getFactor();
+	const SimplexPoint<4>& bestPoint = interim.m_simplexFigure[SimplexFigure<4>::bestPoint];
 
+
+	for (size_t i = 0; i < 3; ++i)
+	{
+		auto& shrinked = interim.m_simplexFigure[i];
+		auto difference = shrinked - bestPoint;
+		auto scaled = difference * delta;
+		shrinked = bestPoint + scaled;
+		shrinked.evaluatePoint();
+	}
+
+	SimplexIntermediatePoints<4> tinterim{ testedFigure, PIndices::PointCount };
+	shOp(tinterim);
+
+
+	
+	for (int k = 0; k < 3; k++)
+	{
+		EXPECT_NEAR(interim.m_simplexFigure[k].getError(), tinterim.m_simplexFigure[k].getError(), 0.01);
+		for (int i = 0; i < 4; i++) {
+			std::cout << interim.m_simplexFigure[k][i] << std::endl;
+			EXPECT_NEAR(interim.m_simplexFigure[k][i], tinterim.m_simplexFigure[k][i], 0.01);
+		}
+	}
+	
 };
 }

@@ -20,7 +20,7 @@ public:
     virtual void operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
     {
         double delta = this->m_settings.getFactor();
-        const SimplexPoint<parameter_size>& bestPoint = simplexIntPoints[parameter_size];
+        const SimplexPoint<parameter_size>& bestPoint = simplexIntPoints.m_simplexFigure[SimplexFigure<parameter_size>::bestPoint];
 
 #if DEBUG
 
