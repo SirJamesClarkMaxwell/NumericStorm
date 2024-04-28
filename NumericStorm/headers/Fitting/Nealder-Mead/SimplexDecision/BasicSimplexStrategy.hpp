@@ -16,6 +16,13 @@
 //todo 6. remove ugly {} where we could do it
 namespace NumericStorm::Fitting
 {
+enum Stage {
+    SReflection,
+    SExpansion,
+    SContraction,
+    SShrinking
+};
+
 template <size_t parameter_size>
 class BasicSimplexDecision : public IDecision<parameter_size>
 {
@@ -27,70 +34,86 @@ public:
     BasicSimplexDecision<parameter_size>& operator=(const BasicSimplexDecision<parameter_size>&) = default;
     BasicSimplexDecision<parameter_size>& operator=(BasicSimplexDecision<parameter_size>&&) = default;
 
+    BasicSimplexDecision(const StrategySettings& settings) : IDecision<parameter_size>{ settings } {}
+    using enum Stage;
 
     virtual ~BasicSimplexDecision() = default;
     virtual bool operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
     {
         //todo add ternary operator
         //todo add alias for the simplexIntPoints.simplexFigure
+        //!!! switch supports only int and int like stuff that is comparable during compilation
+        //! will switch to enum
         switch (m_curr_operation)
         {
-        case "reflection":
+        case SReflection:
             if (reflectionDecision(simplexIntPoints)) {
-                simplexIntPoints.m_simplexFigure[secondWorstPoint] = simplexIntPoints[Reflected];
+                simplexIntPoints.m_simplexFigure[worstPoint] = simplexIntPoints[Reflected];
+                simplexIntPoints.m_currentOperation = "reflection";
+
                 return reset();
                 //NOTE 5b. we need to check that in both cases expansion and reflection of returned reflection type
             }
 
             if (expansionCondition(simplexIntPoints))
-                m_curr_operation = "expansion";
+                m_curr_operation = SExpansion;
             else
-                m_curr_operation = "contraction";
+                m_curr_operation = SContraction;
+
+            simplexIntPoints.m_currentOperation = m_curr_operation == SExpansion ? "expansion" : "contraction";
             return true;
             break;
-        case "expansion":
+        case SExpansion:
             if (expansionDecision(simplexIntPoints))
                 simplexIntPoints.m_simplexFigure[worstPoint] = simplexIntPoints[Expanded];
             else
                 simplexIntPoints.m_simplexFigure[worstPoint] = simplexIntPoints[Reflected];
+
+            simplexIntPoints.m_currentOperation = "reflection";
             return reset();
             break;
-        case "contraction":
+        case SContraction:
             if (contractionDecision(simplexIntPoints)) {
-                simplexIntPoints.m_simplexFigure[secondWorstPoint] = simplexIntPoints.[Contracted];
-                return false;
+                simplexIntPoints.m_simplexFigure[worstPoint] = simplexIntPoints[Contracted];
+                simplexIntPoints.m_currentOperation = "reflection";
+
+                return reset();
             }
-            m_curr_operation = "shrinking";
+
+            m_curr_operation = SShrinking;
+            simplexIntPoints.m_currentOperation = "shrinking";
             return true;
             break;
-        case "shrinking":
+        case SShrinking:
+
+            simplexIntPoints.m_currentOperation = "reflection";
             return reset();
             break;
         default:
             break;
         }
     }
-    const std::string& getOperation() const { return m_curr_operation; }
-    bool reset() { m_curr_operation = "reflection"; return false; }
+    Stage getOperation() const { return m_curr_operation; }
+    bool reset() { m_curr_operation = SReflection; return false; }
 private:
 
-    const bool contractionDecision(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints)
+    bool contractionDecision(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints) const
     {
-        return simplexIntPoints.m_simplexFigure[Contracted] <= simplexIntPoints[Reflected];
+        return simplexIntPoints[Contracted] <= simplexIntPoints[Reflected];
     }
-    const bool expansionDecision(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints)
+    bool expansionDecision(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints) const
     {
-        return simplexIntPoints.m_simplexFigure[Expanded] < simplexIntPoints[Reflected];
+        return simplexIntPoints[Expanded] < simplexIntPoints[Reflected];
     }
-    const bool expansionCondition(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints)
+    bool expansionCondition(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints) const
     {
-        return simplexIntPoints[Reflected] < simplexIntPoints.m_simplexFigure[bestPoint];
+        return simplexIntPoints[Reflected] < simplexIntPoints.m_simplexFigure[IDecision<parameter_size>::bestPoint];
     }
-    const bool reflectionDecision(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints)
+    bool reflectionDecision(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints) const
     {
-        return simplexIntPoints.m_simplexFigure[bestPoint] <= simplexIntPoints[Reflected] && simplexIntPoints[Reflected] < simplexIntPoints.m_simplexFigure[secondWorstPoint];
+        return simplexIntPoints.m_simplexFigure[IDecision<parameter_size>::bestPoint] <= simplexIntPoints[Reflected] && simplexIntPoints[Reflected] < simplexIntPoints.m_simplexFigure[secondWorstPoint];
     }
-    std::string m_curr_operation{ "reflection" };
+    Stage m_curr_operation{ SReflection };
 
 };
 }

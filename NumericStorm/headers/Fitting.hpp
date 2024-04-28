@@ -42,3 +42,7 @@
 
 #include "./Fitting/Nealder-Mead/SimplexOperations/ISimplexOperation.hpp"
 #include "./Fitting/Nealder-Mead/SimplexOperations/SimplexOperationFactory.hpp"
+
+#include "./Fitting/Nealder-Mead//SimplexDecision/BasicSimplexStrategy.hpp"
+#include "./Fitting/Nealder-Mead//SimplexDecision/IDecision.hpp"
+#include "./Fitting/Nealder-Mead//SimplexDecision/StrategyManager.hpp"

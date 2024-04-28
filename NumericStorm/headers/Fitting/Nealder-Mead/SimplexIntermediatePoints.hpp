@@ -18,6 +18,7 @@ public:
 
     SimplexFigure<parameter_size> m_simplexFigure{};
     std::vector<SimplexPoint<parameter_size>> m_intermediatePoints;
+    std::string m_currentOperation{"reflection"};
 
     template<typename IndeciesEnum>
     SimplexPoint<parameter_size>& operator[](IndeciesEnum index) { return m_intermediatePoints.at(index); }

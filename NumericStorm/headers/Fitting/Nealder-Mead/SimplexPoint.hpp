@@ -40,7 +40,7 @@ public:
 		}
 
 
-private:
+protected:
 	Parameters<parameter_size> m_parameters{};
 
 	double m_error{ -1 };

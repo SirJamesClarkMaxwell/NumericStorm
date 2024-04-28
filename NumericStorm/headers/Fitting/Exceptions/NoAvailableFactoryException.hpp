@@ -19,7 +19,9 @@ private:
     std::string m_message;
     std::string m_factoryType;
     std::string createMessage (){
-    std::string message = "This " + m_factoryType + " isn't available. You could forget to register concrate facotry. To see how to do it, plase check our documentation.";
+        std::string message = "Error";
+        //message.append(m_factoryType);
+        //message.append(" isn't available. You could forget to register concrate facotry. To see how to do it, plase check our documentation.");
     return message;
     }
 };

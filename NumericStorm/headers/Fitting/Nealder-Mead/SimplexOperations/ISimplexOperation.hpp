@@ -12,7 +12,7 @@ class ISimplexOperation : public CreatorInterface<SimplexIntermediatePoints<para
 {
 public:
 
-    using InterfaceType = CreatorInterface<SimplexIntermediatePoints<parameter_size>&, void, SimplexOperationSettings>;
+    using InterfaceType = typename CreatorInterface<SimplexIntermediatePoints<parameter_size>&, void, SimplexOperationSettings>;
     using In = typename InterfaceType::In;
     using Out = typename InterfaceType::Out;
     using Settings = typename InterfaceType::Settings;

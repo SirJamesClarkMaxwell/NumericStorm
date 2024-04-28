@@ -44,7 +44,7 @@ protected:
 private:
 
 	template<class CurrentCreator, class NextCreator, class ...RestCreators>
-	void registerCreators(int position, std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
+	void registerCreators(int position, const std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
 	{
 		if (position >= settingsVector.size())
 			return;
@@ -53,7 +53,7 @@ private:
 
 	};
 	template<class NextCreator>
-	void registerCreators(int position, std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
+	void registerCreators(int position, const std::vector<CreatorSetUpInfo<typename Creator::Settings>>& settingsVector)
 	{
 		if (position >= settingsVector.size())
 			return;
@@ -89,7 +89,7 @@ void Factory<Creator>::deleteCreator(const std::string& creatorName) {
 template<class Creator>
 typename Creator::Out Factory<Creator>::invoke(const std::string& creatorName, typename Creator::In& input) {
 	if (checkIfAvailable(creatorName))
-		return m_creatorList[creatorName]->get()->operator()(input);
+		return m_creatorList[creatorName]->operator()(input);
 
 	throw NoAvailableFactoryException(creatorName);
 };
@@ -99,7 +99,7 @@ void Factory<Creator>::updateSettings(const CreatorSetUpInfo<typename Creator::S
 	auto simplexCreator = m_creatorList.find(creatorName);
 
 	if (checkIfAvailable(creatorName))
-		return m_creatorList[creatorName]->get()->updateSettings(newSettings.settings);
+		return m_creatorList[creatorName]->updateSettings(newSettings.settings);
 
 	throw NoAvailableFactoryException(creatorName);
 };

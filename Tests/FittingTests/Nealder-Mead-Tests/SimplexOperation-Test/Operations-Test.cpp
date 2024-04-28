@@ -14,9 +14,13 @@ struct TestingOperations : public testing::Test
 
 		referenceFigure[0] = SimplexPoint<4>{ data_ptr, objs.evaluatedArray };
 
-		referenceFigure[0].onEvaluate([&](SimplexPoint<4>& point) {
-			point.evaluatePoint(objs.gModel, objs.eModel, objs.additionalParameters);
-		});
+		//referenceFigure[0].onEvaluate([&](SimplexPoint<4>& point) {
+			//point.evaluatePoint(objs.gModel, objs.eModel, objs.additionalParameters);
+		//});
+
+		std::function<void(SimplexPoint<4>&)> f = std::bind(&TestingOperations::evalCallback, this, std::placeholders::_1);
+
+		referenceFigure[0].onEvaluate(f);
 
 		referenceFigure[0].evaluatePoint();
 		for (int i = 1; i < 5; i++) {
@@ -28,6 +32,10 @@ struct TestingOperations : public testing::Test
 
 		testedFigure = referenceFigure;
 
+	}
+
+	void evalCallback(SimplexPoint<4>& point) {
+		point.evaluatePoint(objs.gModel, objs.eModel, objs.additionalParameters);
 	}
 	template<size_t parameter_size>
 	const SimplexPoint<parameter_size>& decidePointToContractAround(const SimplexIntermediatePoints<parameter_size>& simplexIntPoints) {
