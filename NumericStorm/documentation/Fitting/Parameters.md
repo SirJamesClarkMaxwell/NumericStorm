@@ -4,7 +4,7 @@
 
 This class is a base class for all fitting algorithms. In your project, you may want to create your own Parameter class that inherits from this class or uses this class as a base. The library is designed to work with both solutions. The only thing you need to provide is the implementation of the Parameters API.
 
-The Parameters class template provides a simple container for holding a set of parameters and their associated errors. It provides methods for retrieving the parameters, their errors, and accessing a specific parameter by index.
+The Parameters class template provides a simple container for holding a set of parameters. It provides methods for retrieving the parameter and accessing a specific parameter by index.
 
 The template parameter `parameter_size` determines the number of parameters that can be stored. The member types are:
 
@@ -12,38 +12,29 @@ The template parameter `parameter_size` determines the number of parameters that
 - `reference`: a reference to a double in the parameter set
 - `const_reference`: a const reference to a double in the parameter set
 
-## Constructors
+## Important information
+
+If the `parameter_size` will be different than number of elements passed to the `std::initializer_list` you will get an exception! The size must be matched.
+
+## API
 
 ```cpp
-Parameters()
-Parameters(std::array<double, parameter_size> parameters):
-Parameters(std::initializer_list<double>& parameters)
+Parameters(const std::array<double, parameter_size>& parameters);
+Parameters(std::initializer_list<double>& parameters);
+virtual std::array<double, parameter_size>& getParameters() ;
 ```
 
-The default constructor initializes the parameter set to all zeros and sets the error to -1.
-Constructs a Parameters object with the specified parameters.
-The copy constructor is generated automatically by the compiler.
+Apart of listed methods this class also has default implementations of:
 
-## Member attributes
+- copy and move constructor
+- copy and move assignment operator
+- const version of index operator and `getParameters` methods
+
+### Member attributes
 
 ```cpp
 std::array<double, parameter_size> m_parameters;
 ```
-
-## Public methods
-
-```cpp
-std::array<double, parameter_size> getParameters() const;
-double& operator[](int index) noexcept;
-const double& operator[](int index) const noexcept;
-Parameters<parameter_size>& operator=(const Parameters<parameter_size>&);
-Parameters<parameter_size>& operator=(Parameters<parameter_size>&&);
-```
-
-- Returns the parameters of the object.
-- Returns a reference to the parameter at the specified index.
-- Returns a const reference to the parameter at the specified index.
-- Allows you to assing new instance of parameters into new object even if it is const
 
 # An example usage is:
 
@@ -53,9 +44,9 @@ Parameters<parameter_size>& operator=(Parameters<parameter_size>&&);
 int main()
 {
     // Create a Parameters object with 3 parameters
-    std::array<double, 3> params = {1.0, 2.0, 3.0};
+    std::array<double, 4> referencedArray{ 2, 1, 2, -1 };
+    Parameters<4> referencedParameters{ referencedArray };
 
-    Parameters<3> parameters(params);
     Parameters<3> parameters2({1.0, 2.0, 3.0});
     std::cout << "Parameters: ";
 
