@@ -22,7 +22,7 @@ public:
         double delta = this->m_settings.getFactor();
         const SimplexPoint<parameter_size>& bestPoint = simplexIntPoints.m_simplexFigure[SimplexFigure<parameter_size>::bestPoint];
 
-#if DEBUG
+#if 1//DEBUG
 
         for (size_t i = 0; i < parameter_size - 1; ++i)
         {
@@ -32,7 +32,7 @@ public:
             shrinked = bestPoint + scaled;
             shrinked.evaluatePoint();
         }
-#else if RELEASE
+#else if 0// RELEASE
         for (size_t i = 0; i < parameter_size - 1; ++i)
         {
             //todo refactor to work with iterators of simplexFigure

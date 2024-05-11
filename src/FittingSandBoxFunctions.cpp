@@ -48,11 +48,12 @@ double Chi2ErrorModel::chi2ErrorModelFunction(const Data& referenceData, const D
 }
 void testingModelAndErrorModel()
 {
-	std::cout << "-------------------------------" << std::endl;
-	std::cout << "Testing model and error model" << std::endl;
+	//std::cout << "-------------------------------" << std::endl;
+	//std::cout << "Testing model and error model" << std::endl;
 	std::vector<double> arguments;
-	for (int i = 0; i < 10; i++)
-		arguments.push_back(i);
+	arguments.resize(500);
+	for (int i = 0; i < 500; i++)
+		arguments[i] = i;
 
 	AdditionalParameters additionalParameters;
 
@@ -70,19 +71,25 @@ void testingModelAndErrorModel()
 
 	model(data1, parameters, additionalParameters);
 	model(data2, parameters2, additionalParameters);
+
 	double error = errorModel(data1, data2);
+
+
 	std::vector<double> calculatedValues1 = data1[1];
 	std::vector<double> calculatedValues2 = data2[1];
-	std::cout << "x: ";
-	for (size_t i = 0; i < arguments.size(); i++)
-		std::cout << std::fixed << std::setprecision(2) << arguments[i];
-	std::cout << std::endl << "value 1: ";
-	for (size_t i = 0; i < arguments.size(); i++)
-		std::cout << std::fixed << std::setprecision(2) << calculatedValues1[i];
-	std::cout << std::endl << "value 2: ";
-	for (size_t i = 0; i < arguments.size(); i++)
-		std::cout << std::fixed << std::setprecision(2) << calculatedValues2[i];
-	std::cout << std::endl;
+	/*
+		for (size_t i = 0; i < arguments.size(); i++)
+			std::cout << std::fixed << std::setprecision(2) << arguments[i];
+		std::cout << std::endl << "value 1: ";
+		for (size_t i = 0; i < arguments.size(); i++)
+			std::cout << std::fixed << std::setprecision(2) << calculatedValues1[i];
+		std::cout << std::endl << "value 2: ";
+		for (size_t i = 0; i < arguments.size(); i++)
+			std::cout << std::fixed << std::setprecision(2) << calculatedValues2[i];
+		std::cout << std::endl;
 
-	std::cout << "Error: " << error << std::endl;
+		std::cout << "Error: " << error << std::endl;
+		std::cout << "x: ";
+		*/
 };
+
