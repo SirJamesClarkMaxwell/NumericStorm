@@ -109,6 +109,8 @@ public:
         :m_size{ size }, m_dimensions{ dimensions }, m_ptr{ ptr }
     {
         m_references.resize(m_dimensions);
+        for (int i = 0; i < dimensions; i++)
+            m_references[i] = m_ptr + i *size;
     };
     Data3Iterator operator++()
     {
@@ -153,7 +155,9 @@ public:
                 return false;
         return true;
 #endif
-        return m_references == other.m_references;
+        //bool value = m_references == other.m_references;
+		bool value = m_references[m_dimensions - 1] == other.m_references[m_dimensions - 1];
+        return value;
     }
     bool operator!=(const Data3Iterator& other)
     {
@@ -211,6 +215,6 @@ private:
     std::vector<double> m_data{};
 public:
     Data3Iterator begin() { return Data3Iterator(m_dimensions, m_size, &m_data[0]); };
-    Data3Iterator end() { return Data3Iterator(m_dimensions, m_size, &m_data[m_size * m_dimensions]); };
+    Data3Iterator end() { return Data3Iterator(m_dimensions, m_size, &m_data.at(m_data.size()-1)); }
 
 };
