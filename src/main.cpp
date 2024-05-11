@@ -21,7 +21,7 @@ void myOwnFunction2(Data3& datum, const Parameters<4>& parameters, const Additio
 	 auto& [A, mu, sigma, c] = parameters.getParameters();
 	// auto x = datum.get(0);  // Get x-values
 	 auto f = datum.get(1);  // Get f-values
-
+	 int i = 0;
 	//for (Data3Iterator item = datum.begin();item!=datum.end();item++)
 	 for (Data3Iterator item = datum.begin();item!=datum.end();item++)
 	{
@@ -30,11 +30,14 @@ void myOwnFunction2(Data3& datum, const Parameters<4>& parameters, const Additio
 		//std::cout << item.m_ptr <<" " << datum.end().m_ptr <<" " << b << std::endl;
 
 		std::cout << "x: "<< *item[0] << " y: " << *item[1] << std::endl;
+		int j = i + datum.m_size;
+		std::cout << "dx: " << datum.m_data.at(i) << " y: "<< datum.m_data.at(j)<<std::endl<<std::endl;
+		i += 1;
 		//std::cout
 		 /*double updatedX = (*item[0] - mu);
 		 *item[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;*/
 	}
-	 datum.set(f, 1);
+	 //datum.set(f, 1);
 };
 int main()
 {

@@ -202,18 +202,11 @@ public:
 
     void presentData()
     {
-        for (int i = 0; i < m_dimensions; i++)
-        {
-            for (int j = 0; j < m_size; j++)
-            {
-                m_data[i * m_size + j] = j;
-                std::cout << m_data[i * m_size + j] << " ";
-            }
-            std::cout << std::endl;
-        }
+        for (auto& it : m_data) { std::cout << it; }
     }
 private:
     int m_dimensions;
+public:
     int m_size;
     std::vector<double> m_data{};
 public:
