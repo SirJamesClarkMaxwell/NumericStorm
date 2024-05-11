@@ -105,7 +105,7 @@ class Data3Iterator
 public:
     using PointerType = double*;
     using ReferencedType = double&;
-    Data3Iterator(int dimensions, int size, PointerType ptr)
+    Data3Iterator(int dimensions, int size, const PointerType& ptr)
         :m_size{ size }, m_dimensions{ dimensions }, m_ptr{ ptr }
     {
         m_references.resize(m_dimensions);
@@ -116,6 +116,7 @@ public:
     {
         for (auto& reference : m_references)
             reference++;
+        m_ptr++;
         return *this;
     }
     Data3Iterator operator++(int)
@@ -156,7 +157,8 @@ public:
         return true;
 #endif
         //bool value = m_references == other.m_references;
-		bool value = m_references[m_dimensions - 1] == other.m_references[m_dimensions - 1];
+		//bool value = m_references[m_dimensions - 1] == other.m_references[m_dimensions - 1];
+        bool value = m_ptr == other.m_ptr;
         return value;
     }
     bool operator!=(const Data3Iterator& other)
@@ -167,6 +169,7 @@ private:
     int m_size;
     int m_dimensions;
     std::vector<PointerType> m_references;
+public:
     PointerType m_ptr;
 };
 
@@ -215,6 +218,6 @@ private:
     std::vector<double> m_data{};
 public:
     Data3Iterator begin() { return Data3Iterator(m_dimensions, m_size, &m_data[0]); };
-    Data3Iterator end() { return Data3Iterator(m_dimensions, m_size, &m_data.at(m_data.size()-1)); }
+    Data3Iterator end() { return Data3Iterator(m_dimensions, m_size, &m_data.at(m_size)); }
 
 };
