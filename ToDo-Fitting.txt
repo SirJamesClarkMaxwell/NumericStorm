@@ -1,2 +1,5 @@
 TODO add bounds of parameter space to fitter settings
 TODO add iterator to Parameters
+
+TODO finish data iterators 
+TODO prepare for review of fitter implementation

@@ -20,10 +20,10 @@ void myOwnFunction2(Data3& datum, const Parameters<4>& parameters, const Additio
 {
 	auto& [A, mu, sigma, c] = parameters.getParameters();
 	
-	for (Data3Iterator item = datum.begin();item != datum.end();item++)
+	for (auto item : datum.columnOrder())
 	{
-		double updatedX = (*item[0] - mu);
-		*item[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
+		double updatedX = (item[0] - mu);
+		item[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
 	}
 	//for (const auto& item : datum)
 	//{
@@ -102,9 +102,9 @@ int main()
 	std::cout << "Second implementation: time per iteration " << secondTime / iteartionCount << std::endl;
 	std::cout << "Third implementation: time per iteration " << thirdTime / iteartionCount << std::endl;
 	std::cout << std::endl << std::endl;
-	std::cout << "firstTime / secondTime " << firstTime / secondTime << "% faster" << std::endl;
-	std::cout << "secondTime / thirdTime " << secondTime / thirdTime << "% faster" << std::endl;
-	std::cout << "firstTime / thirdTime " << firstTime / thirdTime << "% faster" << std::endl;
+	std::cout << "firstTime / secondTime " << firstTime / secondTime << " times faster" << std::endl;
+	std::cout << "secondTime / thirdTime " << secondTime / thirdTime << " times faster" << std::endl;
+	std::cout << "firstTime / thirdTime " << firstTime / thirdTime << " times faster" << std::endl;
 #endif
 	//std::cin.get();
 	return 0;
