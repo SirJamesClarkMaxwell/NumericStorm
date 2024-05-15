@@ -196,6 +196,7 @@ public:
             m_data[row * m_size + i] = newValues[i];
     };
 
+    
 
     void presentData()
     {
@@ -211,7 +212,7 @@ public:
     public:
         using iterator_category = std::forward_iterator_tag;
         using difference_type = std::ptrdiff_t;
-        using value_type = double;
+        using value_type = ColumnIterator;
         using pointer = value_type*;
         using reference = value_type&;
 
@@ -224,6 +225,7 @@ public:
             m_column++;
             return c;
         }
+
         ColumnIterator& operator++() {
             m_val_ptr++;
             m_column++;
