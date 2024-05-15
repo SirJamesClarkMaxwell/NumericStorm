@@ -179,24 +179,21 @@ class Data3
 public:
     using TypeName = double;
 public:
-    Data3(int dimensions, int size)
-        :m_dimensions(dimensions), m_size(size)
-    {
-        m_data.resize(dimensions * size);
-    }
-    std::vector<double> get(int index)
+    Data3(uint16_t dimensions, unsigned int size)
+        :m_data((dimensions ? dimensions : 1) * (size ? size : 1), 0), m_dimensions(dimensions ? dimensions : 1), m_size(size ? size : 1) {}
+    std::vector<double> get(int row)
     {
         std::vector<double> toReturn(m_size);
         for (int i = 0; i < m_size; i++)
-            toReturn[i] = m_data[index * m_size + i];
+            toReturn[i] = m_data[row * m_size + i];
 
         return toReturn;
 
     }
-    void set(std::vector<double> newValues, int index)
+    void set(std::vector<double> newValues, int row)
     {
         for (int i = 0; i < m_size; i++)
-            m_data[index * m_size + i] = newValues[i];
+            m_data[row * m_size + i] = newValues[i];
     };
 
 
@@ -205,12 +202,71 @@ public:
         for (auto& it : m_data) { std::cout << it << " "; }
     }
 private:
-    int m_dimensions;
-public:
+    uint16_t m_dimensions;
     int m_size;
+
     std::vector<double> m_data{};
 public:
-    Data3Iterator begin() { return Data3Iterator(m_dimensions, m_size, &m_data[0]); };
-    Data3Iterator end() { return Data3Iterator(m_dimensions, m_size, &m_data.at(m_size)); }
+    class ColumnIterator {
+    public:
+        using iterator_category = std::forward_iterator_tag;
+        using difference_type = std::ptrdiff_t;
+        using value_type = double;
+        using pointer = value_type*;
+        using reference = value_type&;
+
+        explicit ColumnIterator(int column, int col_size, double* ptr) : m_column{ column }, 
+                                                                m_col_size{ col_size },
+                                                                m_val_ptr{ ptr } { }
+        ColumnIterator operator++(int) {
+            ColumnIterator c = *this;
+            m_val_ptr++;
+            m_column++;
+            return c;
+        }
+        ColumnIterator& operator++() {
+            m_val_ptr++;
+            m_column++;
+            return *this;
+        }
+
+        ColumnIterator operator--(int) {
+            ColumnIterator c = *this;
+            m_val_ptr--;
+            m_column--;
+            return c;
+        }
+        ColumnIterator& operator--() {
+            m_val_ptr--;
+            m_column--;
+            return *this;
+        }
+
+        double& operator*() {
+            return *m_val_ptr;
+        }
+
+        double& operator[](int index) {
+            return *(m_val_ptr + index * m_col_size);
+        }
+
+        bool operator==(const ColumnIterator& other) {
+            return m_val_ptr == other.m_val_ptr;
+        }
+
+        bool operator!=(const ColumnIterator& other) {
+            return m_val_ptr != other.m_val_ptr;
+        }
+
+
+
+    private:
+        int m_col_size{ 0 };
+        int m_column{ 0 };
+        double* m_val_ptr { nullptr };
+    };
+
+    ColumnIterator begin() { return ColumnIterator(0, m_dimensions, &m_data[0]); };
+    ColumnIterator end() { return ColumnIterator(0, m_dimensions, &m_data[m_size]); }
 
 };
