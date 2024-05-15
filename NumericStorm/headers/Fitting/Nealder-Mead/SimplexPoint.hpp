@@ -16,28 +16,28 @@ public:
 
 	SimplexPoint() = default;
 	SimplexPoint(std::shared_ptr<Data> ref_data, const std::array<double, parameter_size>& parameters)
-		: m_parameters{ parameters }, m_referenceData{ ref_data }, m_data { *ref_data } {};
-		SimplexPoint(const SimplexPoint<parameter_size>&) = default;
-		SimplexPoint(SimplexPoint<parameter_size>&&) = default;
-		SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>&) = default;
-		SimplexPoint<parameter_size>& operator=(SimplexPoint<parameter_size>&&) = default;
+		: m_parameters{ parameters }, m_referenceData{ ref_data }, m_data{ *ref_data } {};
+	SimplexPoint(const SimplexPoint<parameter_size>&) = default;
+	SimplexPoint(SimplexPoint<parameter_size>&&) = default;
+	SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>&) = default;
+	SimplexPoint<parameter_size>& operator=(SimplexPoint<parameter_size>&&) = default;
 
-		virtual ~SimplexPoint() = default;
-		double getError() const { return m_error; }
+	virtual ~SimplexPoint() = default;
+	double getError() const { return m_error; }
 
-		template<class AuxParameters>
-		void evaluatePoint(const Model<parameter_size, AuxParameters>& model, const ErrorModel& errorModel, const AuxParameters& auxParams) {
-			m_calculateData(model, auxParams);
-			m_error = errorModel(*m_referenceData, m_data);
-		}
+	template<class AuxParameters>
+	void evaluatePoint(const Model<parameter_size, AuxParameters>& model, const ErrorModel& errorModel, const AuxParameters& auxParams) {
+		m_calculateData(model, auxParams);
+		m_error = errorModel(*m_referenceData, m_data);
+	}
 
-		void evaluatePoint() {
-			if(m_evalCallback) m_evalCallback(*this);
-		}
+	void evaluatePoint() {
+		if (m_evalCallback) m_evalCallback(*this);
+	}
 
-		void onEvaluate(const CallbackType& cb) {
-			m_evalCallback = cb;
-		}
+	void onEvaluate(const CallbackType& cb) {
+		m_evalCallback = cb;
+	}
 
 
 protected:
@@ -45,7 +45,7 @@ protected:
 
 	double m_error{ -1 };
 	std::shared_ptr<Data> m_referenceData{ nullptr };
-	
+
 	Data m_data{};
 
 	CallbackType m_evalCallback{};
@@ -56,8 +56,10 @@ protected:
 	}
 
 public:
-	
 
+	std::array<double, parameter_size> getParameters() const {
+		return m_parameters.getParameters();
+	}
 
 	bool operator ==(const SimplexPoint<parameter_size>& other) const
 	{
@@ -77,7 +79,7 @@ public:
 		return m_parameters[index];
 	}
 
-	virtual const double& operator[](int index) const 
+	virtual const double& operator[](int index) const
 	{
 		return m_parameters[index];
 	}
