@@ -15,7 +15,8 @@ class SimplexFitter : public Fitter<parameter_size, DerivedSettings>
 {
 
 public:
-	SimplexFitter() = default;
+	explicit SimplexFitter(DerivedSettings settings, bool calculateUncertainty = false)
+		:Fitter<parameter_size, DerivedSettings>{ settings,calculateUncertainty } {}
 	SimplexFitter(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
 	SimplexFitter(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
 	SimplexFitter<parameter_size, DerivedSettings>& operator=(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
