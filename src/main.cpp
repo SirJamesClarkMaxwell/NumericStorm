@@ -18,26 +18,25 @@ void myOwnFunction(Data2& datum, const Parameters<4>& parameters, const Addition
 };
 void myOwnFunction2(Data3& datum, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters)
 {
-	 auto& [A, mu, sigma, c] = parameters.getParameters();
-	// auto x = datum.get(0);  // Get x-values
-	 auto f = datum.get(1);  // Get f-values
-	 int i = 0;
-	//for (Data3Iterator item = datum.begin();item!=datum.end();item++)
-	 for (Data3Iterator item = datum.begin();item!=datum.end();item++)
+	auto& [A, mu, sigma, c] = parameters.getParameters();
+	
+	for (Data3Iterator item = datum.begin();item != datum.end();item++)
 	{
-		*item[1] = 2 * (*item[0]);
-		//bool b = item.m_ptr == datum.end().m_ptr;
-		//std::cout << item.m_ptr <<" " << datum.end().m_ptr <<" " << b << std::endl;
-
-		std::cout << "x: "<< *item[0] << " y: " << *item[1] << std::endl;
-		int j = i + datum.m_size;
-		std::cout << "dx: " << datum.m_data.at(i) << " y: "<< datum.m_data.at(j)<<std::endl<<std::endl;
-		i += 1;
-		//std::cout
-		 /*double updatedX = (*item[0] - mu);
-		 *item[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;*/
+		double updatedX = (*item[0] - mu);
+		*item[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
 	}
-	 //datum.set(f, 1);
+	//for (const auto& item : datum)
+	//{
+	   // *item[1] = 2 * (*item[0]);
+	   // //bool b = item.m_ptr == datum.end().m_ptr;
+	   // //std::cout << item.m_ptr <<" " << datum.end().m_ptr <<" " << b << std::endl;
+
+	   // std::cout << "x: " << *item[0] << " y: " << *item[1] << std::endl;
+	   // int j = i + datum.m_size;
+	   // std::cout << "dx: " << datum.m_data.at(i) << " y: " << datum.m_data.at(j) << std::endl << std::endl;
+	   // i += 1;
+	//}
+	//datum.set(f, 1);
 };
 int main()
 {
@@ -45,7 +44,7 @@ int main()
 	int size = 501;
 	double firstTime, secondTime, thirdTime;
 	//testingParameters();
-#if 0
+#if 1
 	{
 		std::cout << "First Data implementation as vector of vectors";
 		Timer timer;
@@ -75,6 +74,7 @@ int main()
 		secondTime = timer.stop();
 	}
 #endif
+	std::unique_ptr<Data3> data3_copy = std::make_unique<Data3>(2,size);
 	{
 		std::cout << "Third Data implementation pre allocated block of memory, with iterators and returning the memory addresses ";
 		std::cout << std::endl << std::endl;
@@ -82,28 +82,22 @@ int main()
 		for (int i = 0; i < size; i++)
 			arguments[i] = i;
 
-		Parameters<4> parameters{ {3,1,2,-1} }; // a,mu,sigma,shift 
+		Parameters<4> parameters{ {3,5,2,-1} }; // a,mu,sigma,shift 
 		AdditionalParameters additionalParameters;
 		Timer timer;
-		//for (int c = 0; c < iteartionCount; c++)
-		//{
+		for (int c = 0; c < iteartionCount; c++)
+		{
 
-			Data3 data3(2, 10);
-			for (int i = 0; i < 2; i++)
-				data3.set(arguments, i);
-			myOwnFunction2(data3, parameters, additionalParameters);
-			data3.presentData();
-		//for (Data3Iterator it = data3.begin(); it != data3.end();it++) 
-		//{
-		//	*it[1] = 2 * (*it[0]);
-		//	//std::cout << "x: " << *it[0] << " y: " << *it[1] << std::endl;
-		//}
-		//data3.presentData();
-		//}
-		//thirdTime = timer.stop();
+		Data3 data3(2, size);
+		for (int i = 0; i < 2; i++)
+			data3.set(arguments, i);
+		myOwnFunction2(data3, parameters, additionalParameters);
+		}
+		thirdTime = timer.stop();
+
 	}
 
-	#if 0 
+#if 1
 	std::cout << "First implementation: time per iteration " << firstTime / iteartionCount << std::endl;
 	std::cout << "Second implementation: time per iteration " << secondTime / iteartionCount << std::endl;
 	std::cout << "Third implementation: time per iteration " << thirdTime / iteartionCount << std::endl;

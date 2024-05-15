@@ -202,7 +202,7 @@ public:
 
     void presentData()
     {
-        for (auto& it : m_data) { std::cout << it; }
+        for (auto& it : m_data) { std::cout << it << " "; }
     }
 private:
     int m_dimensions;
