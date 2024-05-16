@@ -6,19 +6,22 @@
 #include "SimplexOperationsHeader.hpp"
 #include "SimplexCreatorFactory.hpp"
 #include "StrategyManager.hpp"
-
+#include "BasicSimplexCreator.hpp"
 
 //todo manage includes!
 //todo make a nspch.h file
 namespace NumericStorm::Fitting
 {
-template <size_t parameter_size, class DerivedSettings = BasicSimplexFitterSettings<parameter_size>>
-class BasicSimplexFitter : public SimplexFitter<parameter_size, DerivedSettings>
+template <size_t parameter_size, class AxularyParameters = AdditionalParameters, class DerivedSettings = BasicSimplexFitterSettings<parameter_size>>
+class BasicSimplexFitter : public SimplexFitter<parameter_size, AxularyParameters, DerivedSettings>
 {
 public:
 	BasicSimplexFitter() = delete; //todo set default configuration here
 	BasicSimplexFitter(const DerivedSettings& settings, bool calculateUncertainty = false)
-		:SimplexFitter{ settings, calculateUncertainty } {};
+		:SimplexFitter<parameter_size, AxularyParameters, DerivedSettings>{ settings, calculateUncertainty }
+	{
+
+	};
 	/*
 	BasicSimplexFitter(const BasicSimplexFitter<parameter_size, DerivedSettings>&) = default;
 	BasicSimplexFitter(BasicSimplexFitter<parameter_size, DerivedSettings>&&) = default;
@@ -31,10 +34,17 @@ public:
 	BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
 		: SimplexFitter<parameter_size>{ simplexFigure } {}
 
-	virtual void setUp() override 
+	virtual void setUp() override
 	{
-		std::vector<CreatorSetUpInfo<SimplexOperationSettings>> operationSettings;
-		//m_simplexOperationFactory.registerCreators<Reflection, Expansion, Contraction, Shrinking>(operationSettings);
+		//* operations
+		std::vector<CreatorSetUpInfo<SimplexOperationSettings>> operationSettings = this->m_settings->operationSetUpInfo;
+		this->m_simplexOperationFactory.registerCreators<Reflection, Expansion, Contraction, Shrinking>(operationSettings);
+
+		//* creators
+		this->m_simplexCreatorFactory.registerCreators<BasicSimplexCreator<parameter_size, >>(this->m_settings->creatorSettings);
+
+		//* strategy
+		this->m_strategyManager.registerStrategy<BasicSimplexStrategy<parameter_size, >>(this->m_settings->strategySettings);
 	};
 	virtual FittingResults<parameter_size> fit() override {
 		// The fit method will be in a wrapper of this class written by the user

@@ -42,7 +42,7 @@ public:
 	*/
 
 	virtual ~Fitter() = default;
-public:
+protected:
 	DerivedSettings m_settings;
 	bool m_calculateUncertainty{ true };
 };

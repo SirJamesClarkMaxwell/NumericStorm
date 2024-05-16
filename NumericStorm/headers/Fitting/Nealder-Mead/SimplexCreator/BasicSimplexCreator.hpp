@@ -5,6 +5,7 @@
 #include "IFigureCreator.hpp"
 #include "SimplexPoint.hpp"
 #include "SimplexFigure.hpp"
+#include "SimplexCreatorSettings.hpp"
 
 
 namespace NumericStorm::Fitting {
@@ -12,29 +13,28 @@ template <size_t parameter_size>
 class BasicSimplexCreator : public IFigureCreator<parameter_size>
 {
 public:
-	BasicSimplexCreator() = default;
+	using Float() = Random::Float;
+	explicit BasicSimplexCreator(const SimplexCreatorSettigns& settings)
+		: IFigureCreator<parameter_size>{ settings } {}
+	/*
 	BasicSimplexCreator(const BasicSimplexCreator<parameter_size>&) = default;
 	BasicSimplexCreator(BasicSimplexCreator<parameter_size>&&) = default;
 	BasicSimplexCreator<parameter_size>& operator=(const BasicSimplexCreator<parameter_size>&) = default;
 	BasicSimplexCreator<parameter_size>& operator=(BasicSimplexCreator<parameter_size>&&) = default;
+	*/
 
 	virtual ~BasicSimplexCreator() = default;
 
-	BasicSimplexCreator(const SimplexCreatorSettigns& settings)
-		: IFigureCreator<parameter_size>{ settings } {}
-
-
-	virtual SimplexFigure<parameter_size> operator()(const SimplexPoint<parameter_size>& point) override {
+	virtual SimplexFigure<parameter_size> operator()(const CreatorInput<parameter_size>& input) override {
 		std::array<SimplexPoint<parameter_size>, parameter_size + 1> points{};
-		points.fill(point);
+		points.fill(input.initialPoint);
 
-		for (int i = 1; i < parameter_size + 1; i++) {
-			points[i][i] += this->getSettings().getMu();
-		}
+		for (int i = 1; i < parameter_size + 1; i++)
+			points[i][i] += Float(input.min, input.max);
 
 		SimplexFigure<parameter_size> figure{ points };
-
 		return figure;
+		//todo modify this to be more abstract, in terns of generating sets of random SimplexPoints
 	}
 };
 }
