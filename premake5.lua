@@ -8,7 +8,7 @@ workspace "NumericStorm-App"
     project "App"
         kind "ConsoleApp"
         language "C++"
-        cppdialect "C++20"
+        cppdialect "c++latest"
         location "%{wks.location}"
     
         libdirs {"./vendor/googletest-main/bin/Debug/"}
