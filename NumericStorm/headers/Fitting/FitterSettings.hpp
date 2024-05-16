@@ -30,7 +30,7 @@ public:
 	virtual double getMinError() const { return m_minError; }
 	virtual long int getMaxIteration() const { return m_maxIteration; }
 	//todo implement builderPattern 
-protected:
+public:
 	Model<parameter_size, AuxilaryParameters> m_functionModel;
 	ErrorModel m_errorModel;
 
