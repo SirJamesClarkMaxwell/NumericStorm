@@ -65,24 +65,29 @@ public:
 		: m_data((dimensions ? dimensions : 1)* (size ? size : 1), 0),
 		m_dimensions(dimensions ? dimensions : 1),
 		m_size(size ? size : 1) {}
-	std::vector<double> get(int row)
+	std::vector<double> get(int column)
 	{
 		std::vector<double> toReturn(m_size);
 		for (int i = 0; i < m_size; i++)
-			toReturn[i] = m_data[row * m_size + i];
+			toReturn[i] = m_data[i * m_dimensions + column];
 
 		return toReturn;
 
 	}
-	void set(const std::vector<double>& newValues, int row)
+	void set(std::vector<double> newValues, int column)
 	{
 		for (int i = 0; i < m_size; i++)
-			m_data[row * m_size + i] = newValues[i];
+			m_data[i * m_dimensions + column] = newValues[i];
 	};
 
 	void presentData()
 	{
-		for (auto& it : m_data) { std::cout << it << " "; }
+		for (auto row : rowOrder()) {
+			for (int i = 0; i < m_size; i++) {
+				std::cout << row[i] << std::endl;
+			}
+			std::cout << std::endl;
+		}
 	}
 private:
 	//TODO change to size_t everywhere
@@ -91,55 +96,15 @@ private:
 
 	std::vector<double> m_data{};
 public:
-	template<class T>
-	class Iterator;
+	class RowIterator;
 
-	struct Column {
-		explicit Column(int column_size, int row_size, double* ptr) :
-			m_column_size{ column_size },
-			m_row_size{ row_size },
-			m_val_ptr{ ptr } { }
-
-		friend class Iterator<Column>;
-
-		double& operator[](int index) {
-			if (index < 0 || index >= m_column_size) return *m_val_ptr;
-			return *(m_val_ptr + index * m_row_size);
-		}
-	private:
-		int m_column_size{ 0 };
-		int m_row_size{ 0 };
-		double* m_val_ptr{ nullptr };
-
-	private:
-		Column operator++(int) {
-			Column c = *this;
-			m_val_ptr++;
-			return c;
-		}
-
-		Column operator--(int) {
-			Column c = *this;
-			m_val_ptr--;
-			return c;
-		}
-
-		bool operator==(const Column& other) {
-			return m_val_ptr == other.m_val_ptr;
-		}
-
-		bool operator!=(const Column& other) {
-			return m_val_ptr != other.m_val_ptr;
-		}
-
-	};
 	struct Row {
 		explicit Row(int column_size, int row_size, double* ptr) :
 			m_column_size{ column_size },
 			m_row_size{ row_size },
 			m_val_ptr{ ptr } { }
 
-		friend class Iterator<Row>;
+		friend class RowIterator;
 
 		double& operator[](int index) {
 			if (index < 0 || index >= m_row_size) return *m_val_ptr;
@@ -152,16 +117,12 @@ public:
 		double* m_val_ptr{ nullptr };
 
 	private:
-		Row operator++(int) {
-			Row copy = *this;
-			m_val_ptr += m_row_size;
-			return copy;
+		void operator++(int) {
+			m_val_ptr++;
 		}
 
-		Row operator--(int) {
-			Row copy = *this;
-			m_val_ptr -= m_row_size;
-			return copy;
+		void operator--(int) {
+			m_val_ptr--;
 		}
 
 		bool operator==(const Row& other) {
@@ -173,61 +134,126 @@ public:
 		}
 
 	};
-	template<class T>
-	class Iterator {
+
+	class ColumnIterator {
 	public:
 		using iterator_category = std::forward_iterator_tag;
 		using difference_type = std::ptrdiff_t;
-		using value_type = T;
+		using value_type = double;
 		using pointer = value_type*;
 		using reference = value_type&;
 
-		explicit Iterator(int column_size, int row_size, double* ptr) : m_vector{ column_size, row_size, ptr } { }
-		Iterator<T> operator++(int) {
-			Iterator<T> copy = *this;
-			m_vector++;
+		explicit ColumnIterator(int column_size, int row_size, double* ptr) :
+			m_column_size{ column_size },
+			m_row_size{ row_size },
+			m_val_ptr{ ptr } { }
+
+
+		ColumnIterator operator++(int) {
+			ColumnIterator copy = *this;
+			m_val_ptr += m_column_size;
 			return copy;
 		}
 
-		Iterator<T>& operator++() {
-			m_vector++;
+		ColumnIterator& operator++() {
+			m_val_ptr += m_column_size;
 			return *this;
 		}
 
-		Iterator<T> operator--(int) {
-			Iterator<T> copy = *this;
-			m_vector--;
+		ColumnIterator operator--(int) {
+			ColumnIterator copy = *this;
+			m_val_ptr -= m_column_size;
 			return copy;
 		}
-		Iterator<T>& operator--() {
-			m_vector--;
+		ColumnIterator& operator--() {
+			m_val_ptr -= m_column_size;
 			return *this;
 		}
 
-		T& operator*() {
-			return m_vector;
+		double* operator*() {
+			return m_val_ptr;
 		}
 
-		bool operator==(const Iterator<T>& other) {
-			return m_vector == other.m_vector;
+		double& operator[](int index) {
+			if (index < 0 || index >= m_column_size) return *m_val_ptr;
+			return *(m_val_ptr + index);
 		}
 
-		bool operator!=(const Iterator<T>& other) {
-			return m_vector != other.m_vector;
+		bool operator==(const ColumnIterator& other) {
+			return m_val_ptr == other.m_val_ptr;
+		}
+
+		bool operator!=(const ColumnIterator& other) {
+			return m_val_ptr != other.m_val_ptr;
 		}
 
 	private:
-		T m_vector{ 0, 0, nullptr };
+		int m_column_size{ 0 };
+		int m_row_size{ 0 };
+		double* m_val_ptr{ nullptr };
+	};
+
+	class RowIterator {
+	public:
+		using iterator_category = std::forward_iterator_tag;
+		using difference_type = std::ptrdiff_t;
+		using value_type = double;
+		using pointer = value_type*;
+		using reference = value_type&;
+
+		explicit RowIterator(int column_size, int row_size, double* ptr) :
+			m_row{ column_size, row_size, ptr },
+			m_column_size{ column_size },
+			m_row_size{ row_size } { }
+
+
+		RowIterator operator++(int) {
+			RowIterator copy = *this;
+			m_row++;
+			return copy;
+		}
+
+		RowIterator& operator++() {
+			m_row++;
+			return *this;
+		}
+
+		RowIterator operator--(int) {
+			RowIterator copy = *this;
+			m_row--;
+			return copy;
+		}
+		RowIterator& operator--() {
+			m_row--;
+			return *this;
+		}
+
+		Row& operator*() {
+			return m_row;
+		}
+
+		bool operator==(const RowIterator& other) {
+			return m_row == other.m_row;
+		}
+
+		bool operator!=(const RowIterator& other) {
+			return m_row != other.m_row;
+		}
+
+	private:
+		int m_column_size{ 0 };
+		int m_row_size{ 0 };
+		Row m_row{ 0, 0, nullptr };
 	};
 
 	struct RowOrder {
 		friend class IteratedData;
-		Iterator<Row> begin() { return Iterator<Row>(m_column_size, m_row_size, m_val_ptr); };
-		Iterator<Row> end() { return Iterator<Row>(m_column_size, m_row_size, m_val_ptr + m_row_size); }
+		RowIterator begin() { return RowIterator(m_column_size, m_row_size, m_val_ptr); };
+		RowIterator end() { return RowIterator(m_column_size, m_row_size, m_val_ptr + m_column_size); }
 
 	private:
-		explicit RowOrder(int column_size, int row_size, double* val_ptr)
-			: m_column_size{ column_size },
+		explicit RowOrder(int column_size, int row_size, double* val_ptr) : 
+			m_column_size{ column_size },
 			m_row_size{ row_size },
 			m_val_ptr{ val_ptr } { }
 
@@ -238,12 +264,12 @@ public:
 
 	struct ColumnOrder {
 		friend class IteratedData;
-		Iterator<Column> begin() { return Iterator<Column>(m_column_size, m_row_size, m_val_ptr); };
-		Iterator<Column> end() { return Iterator<Column>(m_column_size, m_row_size, m_val_ptr + m_row_size); }
+		ColumnIterator begin() { return ColumnIterator(m_column_size, m_row_size, m_val_ptr); };
+		ColumnIterator end() { return ColumnIterator(m_column_size, m_row_size, m_val_ptr + m_column_size * m_row_size); }
 
 	private:
-		explicit ColumnOrder(int column_size, int row_size, double* val_ptr)
-			: m_column_size{ column_size },
+		explicit ColumnOrder(int column_size, int row_size, double* val_ptr) : 
+			m_column_size{ column_size },
 			m_row_size{ row_size },
 			m_val_ptr{ val_ptr } { }
 

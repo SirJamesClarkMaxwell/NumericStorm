@@ -20,17 +20,14 @@ using namespace NumericStorm::Fitting;
 //
 //};
 
+extern int iterationCount;
+extern int pointCount;
 
-int main()
-{
-	int iterationCount = 1000;
-
+void tester() {
+	std::cout << "First Data implementation as vector of vectors";
 	double firstTime, secondTime;
 	{
-		std::cout << "First Data implementation as vector of vectors";
 		Timer timer;
-
-
 		testingDataClass();
 		firstTime = timer.stop();
 	}
@@ -42,7 +39,6 @@ int main()
 
 	{
 		Timer timer;
-
 		testingIteratedDataClass();
 		secondTime = timer.stop();
 	}
@@ -52,6 +48,14 @@ int main()
 	std::cout << "Second implementation: time per iteration " << secondTime / iterationCount << std::endl;
 	std::cout << std::endl << std::endl;
 	std::cout << "firstTime / secondTime " << firstTime / secondTime << " times faster" << std::endl;
+}
+
+int main()
+{
+	for (int i = 0; i < 10; i++) {
+		tester();
+	}
+	
 
 	return 0;
 }

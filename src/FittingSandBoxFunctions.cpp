@@ -15,6 +15,8 @@ void modelFunctionIteratedData(IteratedData& data, const Parameters<4>& paramete
 	for (auto col : data.columnOrder()) {
 		double updatedX = (col[0] - mu);
 		col[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
+
+		//std::cout << col[0] << " " << col[1] << std::endl;
 	}
 
 	
@@ -45,12 +47,13 @@ double errorFunctionIteratedData(IteratedData& d1, IteratedData& d2) {
 	return chi2;
 }
 
-int iterationCount = 10000;
+int iterationCount = 1000;
+int pointCount = 32;
 
 void testingIteratedDataClass() {
 	std::vector<double> arguments;
-	arguments.resize(500);
-	for (int i = 0; i < 500; i++)
+	arguments.resize(pointCount);
+	for (int i = 0; i < pointCount; i++)
 		arguments[i] = i;
 
 	AdditionalParameters additionalParameters;
@@ -59,26 +62,33 @@ void testingIteratedDataClass() {
 	Parameters<4> parameters2{ {3,1,2,-1} }; // a,mu,sigma,shift 
 
 
-	IteratedData data1{ 2, 500 }, data2{ 2, 500 };
+	IteratedData data1{ 2, pointCount }, data2{ 2, pointCount };
 	data1.set(arguments, 0);
 	data1.set(arguments, 1);
 	data2.set(arguments, 0);
 	data2.set(arguments, 1);
+
 
 	auto iter1 = data1.columnOrder().begin();
 	auto iter2 = data2.columnOrder().begin();
 	auto end1 = data1.columnOrder().end();
 	auto end2 = data2.columnOrder().end();
 
-	
 
 	for (int i = 0; i < iterationCount; i++) {
 		modelFunctionIteratedData(data1, parameters, additionalParameters);
-		modelFunctionIteratedData(data2, parameters, additionalParameters);
+		modelFunctionIteratedData(data2, parameters2, additionalParameters);
+
+		double error = errorFunctionIteratedData(data1, data2);
 	}
+	
+	//std::cout << std::endl << std::endl;
+	//data1.presentData();
+	//std::cout << std::endl << std::endl;
+	//data2.presentData();
+	//std::cout << std::endl << std::endl;
 
-
-	double error = errorFunctionIteratedData(data1, data2);
+	
 
 }
 
@@ -86,8 +96,8 @@ void testingDataClass()
 {
 
 	std::vector<double> arguments;
-	arguments.resize(500);
-	for (int i = 0; i < 500; i++)
+	arguments.resize(pointCount);
+	for (int i = 0; i < pointCount; i++)
 		arguments[i] = i;
 
 	AdditionalParameters additionalParameters;
@@ -107,8 +117,25 @@ void testingDataClass()
 	for (int i = 0; i < iterationCount; i++) {
 		model(data1, parameters, additionalParameters);
 		model(data2, parameters2, additionalParameters);
-	}
 
-	double error = errorFunctionData(data1, data2);
+		double error = errorFunctionData(data1, data2);
+	}
+	
+	//int two = 1;
+	//for (int i = 0; i < 2; i++) {
+	//	for (auto item : data1[i]) {
+	//		//std::cout << item << ((two++ % 2 == 0) ? "\n" : " ");
+	//	}
+	//}
+
+	//std::cout << std::endl << std::endl;
+	//two = 1;
+	//for (int i = 0; i < 2; i++) {
+	//	for (auto item : data2[i]) {
+	//		//std::cout << item << ((two++ % 2 == 0) ? "\n" : " ");
+	//	}
+	//}
+
+	
 };
 
