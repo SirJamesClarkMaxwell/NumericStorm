@@ -3,109 +3,55 @@
 #include "../headers/FittingSandBoxFunctions.hpp"
 #include <execution>
 using namespace NumericStorm::Fitting;
-void myOwnFunction(Data2& datum, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters)
-{
-	auto& [A, mu, sigma, c] = parameters.getParameters();
-	auto x = datum.get(0);  // Get x-values
-	auto f = datum.get(1);  // Get f-values
 
-	for (int i = 0; i < x.size() - 1; i++)
-	{
-		double updatedX = (x[i] - mu);
-		f[i] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
-	}
-	datum.set(f, 1);
-};
-void myOwnFunction2(Data3& datum, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters)
-{
-	auto& [A, mu, sigma, c] = parameters.getParameters();
-	
-	for (auto item : datum.columnOrder())
-	{
-		double updatedX = (item[0] - mu);
-		item[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
-	}
-	//for (const auto& item : datum)
-	//{
-	   // *item[1] = 2 * (*item[0]);
-	   // //bool b = item.m_ptr == datum.end().m_ptr;
-	   // //std::cout << item.m_ptr <<" " << datum.end().m_ptr <<" " << b << std::endl;
+//void myOwnFunction2(Data3& datum, const Parameters<4>& parameters, const AdditionalParameters& additionalParameters)
+//{
+//	auto& [A, mu, sigma, c] = parameters.getParameters();
+//
+//	/*for (auto item : datum.columnOrder())
+//	{
+//		double updatedX = (item[0] - mu);
+//		item[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
+//	}*/
+//	std::for_each(datum.columnOrder().begin(), datum.columnOrder().end(), [&](Data3::Column col) {
+//		double updatedX = (col[0] - mu);
+//		col[1] = A * exp(-pow(updatedX, 2) / (2 * sigma)) + c;
+//		});
+//
+//};
 
-	   // std::cout << "x: " << *item[0] << " y: " << *item[1] << std::endl;
-	   // int j = i + datum.m_size;
-	   // std::cout << "dx: " << datum.m_data.at(i) << " y: " << datum.m_data.at(j) << std::endl << std::endl;
-	   // i += 1;
-	//}
-	//datum.set(f, 1);
-};
+
 int main()
 {
-	int iteartionCount = 1000; // 1000 M
-	int size = 501;
-	double firstTime, secondTime, thirdTime;
-	//testingParameters();
-#if 1
+	int iterationCount = 1000;
+
+	double firstTime, secondTime;
 	{
 		std::cout << "First Data implementation as vector of vectors";
 		Timer timer;
 
-		for (int i = 0; i < iteartionCount; i++)
-			testingModelAndErrorModel();
+
+		testingDataClass();
 		firstTime = timer.stop();
 	}
-	std::cout << std::endl << std::endl;
-	{
-		std::cout << "Second Data implementation pre allocated block of memory, without iterators and returning the memory addresses ";
-		std::vector<double> arguments(size);
 
-		for (int i = 0; i < size; i++)
-			arguments[i] = i;
-		AdditionalParameters additionalParameters;
-		Parameters<4> parameters{ {3,1,2,-1} }; // a,mu,sigma,shift 
+
+
+	std::cout << "Second Data implementation pre allocated block of memory, with iterators and returning the memory addresses ";
+	std::cout << std::endl << std::endl;
+
+	{
 		Timer timer;
-		for (int c = 0; c < iteartionCount; c++)
-		{
-			Data2 data2(2, 501);
-			for (int i = 0; i < 2; i++)
-				data2.set(arguments, i);
-			std::vector<double> values = data2.get(1);
-			myOwnFunction(data2, parameters, additionalParameters);
-		}
+
+		testingIteratedDataClass();
 		secondTime = timer.stop();
 	}
-#endif
-	std::unique_ptr<Data3> data3_copy = std::make_unique<Data3>(2,size);
-	{
-		std::cout << "Third Data implementation pre allocated block of memory, with iterators and returning the memory addresses ";
-		std::cout << std::endl << std::endl;
-		std::vector<double> arguments(size);
-		for (int i = 0; i < size; i++)
-			arguments[i] = i;
 
-		Parameters<4> parameters{ {3,5,2,-1} }; // a,mu,sigma,shift 
-		AdditionalParameters additionalParameters;
-		Timer timer;
-		for (int c = 0; c < iteartionCount; c++)
-		{
 
-		Data3 data3(2, size);
-		for (int i = 0; i < 2; i++)
-			data3.set(arguments, i);
-		myOwnFunction2(data3, parameters, additionalParameters);
-		}
-		thirdTime = timer.stop();
-
-	}
-
-#if 1
-	std::cout << "First implementation: time per iteration " << firstTime / iteartionCount << std::endl;
-	std::cout << "Second implementation: time per iteration " << secondTime / iteartionCount << std::endl;
-	std::cout << "Third implementation: time per iteration " << thirdTime / iteartionCount << std::endl;
+	std::cout << "First implementation: time per iteration " << firstTime / iterationCount << std::endl;
+	std::cout << "Second implementation: time per iteration " << secondTime / iterationCount << std::endl;
 	std::cout << std::endl << std::endl;
 	std::cout << "firstTime / secondTime " << firstTime / secondTime << " times faster" << std::endl;
-	std::cout << "secondTime / thirdTime " << secondTime / thirdTime << " times faster" << std::endl;
-	std::cout << "firstTime / thirdTime " << firstTime / thirdTime << " times faster" << std::endl;
-#endif
-	//std::cin.get();
+
 	return 0;
 }
