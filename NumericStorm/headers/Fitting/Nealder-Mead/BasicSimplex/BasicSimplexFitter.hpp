@@ -18,33 +18,34 @@ class BasicSimplexFitter : public SimplexFitter<parameter_size, DerivedSettings>
 public:
 	BasicSimplexFitter() = delete; //todo set default configuration here
 	BasicSimplexFitter(const DerivedSettings& settings, bool calculateUncertainty = false)
-		:SimplexFitter{ settings, calculateUncertainty } {}
+		:SimplexFitter{ settings, calculateUncertainty } {};
+	/*
 	BasicSimplexFitter(const BasicSimplexFitter<parameter_size, DerivedSettings>&) = default;
 	BasicSimplexFitter(BasicSimplexFitter<parameter_size, DerivedSettings>&&) = default;
 	BasicSimplexFitter<parameter_size, DerivedSettings>& operator=(const BasicSimplexFitter<parameter_size, DerivedSettings>&) = default;
 	BasicSimplexFitter<parameter_size, DerivedSettings>& operator=(BasicSimplexFitter<parameter_size, DerivedSettings>&&) = default;
+	*/
 
 	virtual ~BasicSimplexFitter() = default;
 
 	BasicSimplexFitter(SimplexFigure<parameter_size> simplexFigure)
 		: SimplexFitter<parameter_size>{ simplexFigure } {}
 
-	virtual void setUp() override {
-		//todo move definition of setUp method below the class
-		//NOTE more things should be there
-		/*
-		because this is the class that user will use and we know the exact type of things
-		we could fix some things and
-		*/
-	}
+	virtual void setUp() override 
+	{
+		std::vector<CreatorSetUpInfo<SimplexOperationSettings>> operationSettings;
+		//m_simplexOperationFactory.registerCreators<Reflection, Expansion, Contraction, Shrinking>(operationSettings);
+	};
 	virtual FittingResults<parameter_size> fit() override {
 		// The fit method will be in a wrapper of this class written by the user
 		//todo move definition of minimize method below the class
 		int iterationCount = 0;
 		//NOTE ohhh this long invoking things aren't good, I would store this in local variables
+
 		//todo divide this into sections
 		//todo extract methods
 		//todo clean the naming convention 
+
 		SimplexIntermediatePoints simplexIntermediatePoints;
 		while (checkFittingConditions(iterationCount)) {
 			this->m_simplexFigure.sort();
@@ -53,11 +54,11 @@ public:
 
 			} while (true);
 		}
+
 		SimplexPoint<parameter_size> bestPoint = simplexIntermediatePoints[bestPoint];
-
-		return FittingResults<parameter_size>{bestPoint.getParameters(), iterationCount, bestPoint.getError() };
-	}
-
+		FittingResults<parameter_size> fittingResult{ bestPoint.getParameters(), iterationCount, bestPoint.getError() };
+		return fittingResult;
+	};
 
 private:
 	const bool checkFittingConditions(int& iter)
@@ -68,6 +69,11 @@ private:
 	}
 	//auto setUpFittingsProcedure() {};
 	//todo add oneStep method and call it in minimize it, make it public in the debug configuration
+
+
+
+
+
 };
 
 
@@ -76,4 +82,6 @@ private:
 	//todo initialize settings of the creators, fill the settings
 	//todo initialize factories
 	//todo register the creators
+
+
 }

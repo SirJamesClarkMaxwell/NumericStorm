@@ -28,7 +28,7 @@ public:
 	SimplexSettings<parameter_size, AuxilaryParameters>& operator=(SimplexSettings<parameter_size, AuxilaryParameters>&&) = default;
 	virtual ~SimplexSettings() = default;
 
-protected:
+public:
 	template<class SettingsType>
 	using CreatorInfoVector = typename std::vector<CreatorSetUpInfo<SettingsType>>;
 

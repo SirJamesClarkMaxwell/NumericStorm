@@ -27,21 +27,22 @@ class Fitter
 	static_assert(std::derived_from<DerivedSettings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 
 public:
-
 	explicit Fitter(const DerivedSettings& settings, bool calculateUncertainty = true)
 		: m_settings{ settings }, m_calculateUncertainty{ calculateUncertainty } {};
-	Fitter(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
-	Fitter(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
-	Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
-	Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
-
-	virtual ~Fitter() = default;
 	virtual FittingResults<parameter_size> fit(
 		const Parameters<parameter_size>& initialParameters,
 		const AuxilaryParameters& additionalParameters) = 0;
-	void updateSettings(const DerivedSettings& newSettings) { m_settings = newSettings; };
 	virtual void setUp() = 0;
-protected:
+	void updateSettings(const DerivedSettings& newSettings) { m_settings = newSettings; };
+	/*
+		Fitter(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
+		Fitter(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
+		Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
+		Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
+	*/
+
+	virtual ~Fitter() = default;
+public:
 	DerivedSettings m_settings;
 	bool m_calculateUncertainty{ true };
 };

@@ -15,18 +15,17 @@ class SimplexFitter : public Fitter<parameter_size, DerivedSettings>
 {
 
 public:
-	explicit SimplexFitter(DerivedSettings settings, bool calculateUncertainty = false)
-		:Fitter<parameter_size, DerivedSettings>{ settings,calculateUncertainty } {}
-	SimplexFitter(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
-	SimplexFitter(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
-	SimplexFitter<parameter_size, DerivedSettings>& operator=(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
-	SimplexFitter<parameter_size, DerivedSettings>& operator=(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
+	explicit SimplexFitter(DerivedSettings settings)
+		:Fitter<parameter_size, DerivedSettings>{ settings,false } {}
+	/*
+		SimplexFitter(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
+		SimplexFitter(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
+		SimplexFitter<parameter_size, DerivedSettings>& operator=(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
+		SimplexFitter<parameter_size, DerivedSettings>& operator=(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
+	*/
 
 	virtual ~SimplexFitter() = default;
-	SimplexFitter(const SimplexSettings<parameter_size>& simplexSettings)
-		: Fitter<parameter_size, DerivedSettings>{ simplexSettings } {};
-
-protected:
+public:
 	SimplexOperationFactory<parameter_size> m_simplexOperationFactory{};
 	SimplexCreatorFactory<parameter_size> m_simplexCreatorFactory{};
 	StrategyManager<parameter_size> m_strategyManager{};
