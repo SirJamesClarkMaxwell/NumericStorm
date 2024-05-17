@@ -1,12 +1,17 @@
 #pragma once
 
-#include "SimplexFigure.hpp"
 #include "SimplexFitter.hpp"
 #include "BasicSimplexFitterSettings.hpp"
+
+#include "SimplexFigure.hpp"
+
 #include "SimplexOperationsHeader.hpp"
-#include "SimplexCreatorFactory.hpp"
-#include "StrategyManager.hpp"
+
 #include "BasicSimplexCreator.hpp"
+#include "SimplexCreatorFactory.hpp"
+
+#include "StrategyManager.hpp"
+#include "BasicSimplexStrategy.hpp"
 
 //todo manage includes!
 //todo make a nspch.h file
@@ -41,10 +46,10 @@ public:
 		this->m_simplexOperationFactory.registerCreators<Reflection, Expansion, Contraction, Shrinking>(operationSettings);
 
 		//* creators
-		this->m_simplexCreatorFactory.registerCreators<BasicSimplexCreator<parameter_size, >>(this->m_settings->creatorSettings);
+		this->m_simplexCreatorFactory.registerCreators<BasicSimplexCreator<parameter_size>>(this->m_settings->creatorSettings);
 
 		//* strategy
-		this->m_strategyManager.registerStrategy<BasicSimplexStrategy<parameter_size, >>(this->m_settings->strategySettings);
+		this->m_strategyManager.registerStrategy<BasicSimplexDecision<parameter_size>>(this->m_settings->strategySettings);
 	};
 	virtual FittingResults<parameter_size> fit() override {
 		// The fit method will be in a wrapper of this class written by the user

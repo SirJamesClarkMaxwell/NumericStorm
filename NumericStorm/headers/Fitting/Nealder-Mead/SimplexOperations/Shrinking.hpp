@@ -37,7 +37,7 @@ public:
         {
             //todo refactor to work with iterators of simplexFigure
             simplexIntPoints.m_simplexFigure[i] = bestPoint + (simplexIntPoints.m_simplexFigure[i] - bestPoint) * delta;
-            point.evaluatePoint();
+            simplexIntPoints.m_simplexFigure[i].evaluatePoint();
         }
 #endif
 

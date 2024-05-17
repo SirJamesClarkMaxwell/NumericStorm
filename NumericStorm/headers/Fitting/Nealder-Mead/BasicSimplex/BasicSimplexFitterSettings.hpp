@@ -35,7 +35,8 @@ public:
 	SimplexCreatorSettings creatorSettings{ "basic", 0.0 };
 
 	//* simplex strategies
-	StrategySettings strategySettings{ "basic", 0.0 };
+	StrategySettings strategySettings{};
+
 private:
 	//* operations
 	std::vector<double> m_operationFactors{};
