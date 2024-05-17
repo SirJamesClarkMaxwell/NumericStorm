@@ -34,12 +34,6 @@ public:
 		const AuxilaryParameters& additionalParameters) = 0;
 	virtual void setUp() = 0;
 	void updateSettings(const DerivedSettings& newSettings) { m_settings = newSettings; };
-	/*
-		Fitter(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
-		Fitter(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
-		Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(const Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&) = default;
-		Fitter<parameter_size, AuxilaryParameters, DerivedSettings>& operator=(Fitter<parameter_size, AuxilaryParameters, DerivedSettings>&&) = default;
-	*/
 
 	virtual ~Fitter() = default;
 protected:

@@ -25,16 +25,17 @@ public:
 
 	virtual ~BasicSimplexCreator() = default;
 
+	//todo modify this to be more abstract, in terns of generating sets of random SimplexPoints
 	virtual SimplexFigure<parameter_size> operator()(const CreatorInput<parameter_size>& input) override {
 		std::array<SimplexPoint<parameter_size>, parameter_size + 1> points{};
 		points.fill(input.initialPoint);
 
 		for (int i = 1; i < parameter_size + 1; i++)
-			points[i][i] += Float(input.min, input.max);
+			for (int j = 1; j < parameter_size; j++)
+				points[i][j] += Float(input.minBounds[j], input.maxBounds[j]);
 
 		SimplexFigure<parameter_size> figure{ points };
 		return figure;
-		//todo modify this to be more abstract, in terns of generating sets of random SimplexPoints
 	}
 };
 }

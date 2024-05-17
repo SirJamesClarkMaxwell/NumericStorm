@@ -21,13 +21,6 @@ class Factory {
 	static_assert(std::derived_from<Creator, CreatorInterface<typename Creator::In, typename Creator::Out, typename Creator::Settings>> == true);
 public:
 	Factory() = default;
-	/*
-	Factory(const Factory<Creator>&) = default;
-	Factory(Factory<Creator>&&) = default;
-	Factory<Creator>& operator=(const Factory<Creator>&) = default;
-	Factory<Creator>& operator=(Factory<Creator>&&) = default;
-	*/
-
 	virtual ~Factory() = default;
 
 	void deleteCreator(const std::string& creatorName);

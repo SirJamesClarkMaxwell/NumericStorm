@@ -17,22 +17,17 @@
 //todo make a nspch.h file
 namespace NumericStorm::Fitting
 {
-template <size_t parameter_size, class AxularyParameters = AdditionalParameters, class DerivedSettings = BasicSimplexFitterSettings<parameter_size>>
-class BasicSimplexFitter : public SimplexFitter<parameter_size, AxularyParameters, DerivedSettings>
+template <size_t parameter_size, class AuxilaryParameters = AdditionalParameters, class DerivedSettings = BasicSimplexFitterSettings<parameter_size>>
+class BasicSimplexFitter : public SimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>
 {
 public:
+
 	BasicSimplexFitter() = delete; //todo set default configuration here
 	BasicSimplexFitter(const DerivedSettings& settings, bool calculateUncertainty = false)
-		:SimplexFitter<parameter_size, AxularyParameters, DerivedSettings>{ settings, calculateUncertainty }
+		:SimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>{ settings, calculateUncertainty }
 	{
 
 	};
-	/*
-	BasicSimplexFitter(const BasicSimplexFitter<parameter_size, DerivedSettings>&) = default;
-	BasicSimplexFitter(BasicSimplexFitter<parameter_size, DerivedSettings>&&) = default;
-	BasicSimplexFitter<parameter_size, DerivedSettings>& operator=(const BasicSimplexFitter<parameter_size, DerivedSettings>&) = default;
-	BasicSimplexFitter<parameter_size, DerivedSettings>& operator=(BasicSimplexFitter<parameter_size, DerivedSettings>&&) = default;
-	*/
 
 	virtual ~BasicSimplexFitter() = default;
 
@@ -50,24 +45,19 @@ public:
 
 		//* strategy
 		this->m_strategyManager.registerStrategy<BasicSimplexDecision<parameter_size>>(this->m_settings->strategySettings);
+
 	};
-	virtual FittingResults<parameter_size> fit() override {
-		// The fit method will be in a wrapper of this class written by the user
-		//todo move definition of minimize method below the class
+	virtual FittingResults<parameter_size> fit(const Parameters<parameter_size>& initialParameters, const AuxilaryParameters& additionalParameters) override {
+
 		int iterationCount = 0;
-		//NOTE ohhh this long invoking things aren't good, I would store this in local variables
+		setUpFittingsProcedure(initialParameters);
+		SimplexIntermediatePoints simplexIntermediatePoints{ this->m_simplexFigure,PIndices::PointCount };
+		this->m_simplexFigure.sort();
 
-		//todo divide this into sections
-		//todo extract methods
-		//todo clean the naming convention 
+		while (checkFittingConditions(iterationCount))
+		{
 
-		SimplexIntermediatePoints simplexIntermediatePoints;
-		while (checkFittingConditions(iterationCount)) {
-			this->m_simplexFigure.sort();
 
-			do {
-
-			} while (true);
 		}
 
 		SimplexPoint<parameter_size> bestPoint = simplexIntermediatePoints[bestPoint];
@@ -76,27 +66,45 @@ public:
 	};
 
 private:
-	const bool checkFittingConditions(int& iter)
+	const bool checkFittingConditions(int& iter, const SimplexPoint<parameter_size>& bestPoint)
 	{
 		bool iterationCondition = iter++ <= this->m_settings->getMaxIteration();
-		bool errorCondition = this->m_simplexFigure[parameter_size] <= this->m_settings->getMinError();
+		bool errorCondition = bestPoint.getError() <= this->m_settings->getMinError();
 		return iterationCondition && errorCondition;
 	}
-	//auto setUpFittingsProcedure() {};
-	//todo add oneStep method and call it in minimize it, make it public in the debug configuration
+	void setUpFittingsProcedure(const Parameters& parameters)
+	{
+		SimplexPoint<parameter_size> initialPoint = SimplexPoint<parameter_size>{ this->m_settings.getReferenceData(), parameters.getParameters() };
+		initialPoint.onEvaluate(simplexPointEvaluationFunction);
+		initialPoint.evaluatePoint();
+		CreatorInput<parameter_size> creatorInput{ {initialPoint, parametersMinBounds, parametersMaxBounds} };
+		this->m_simplexFigure = this->m_simplexCreatorFactory.invoke("basic", creatorInput);
+		this->m_simplexFigure.sort();
 
+	};
+	void simplexPointEvaluationFunction(SimplexPoint<parameter_size>& point, const AuxilaryParameters& additionalParameters)
+	{
+		point.evaluatePoint(this->m_settings->m_functionModel, this->m_settings->m_errorModel, additionalParameters);
+	}
+#if DEBUG
+public:
+#endif
+	void oneAlgorithmStep(SimplexIntermediatePoints& intermediatePoints)
+	{
+		this->m_strategyManager.invoke("basic", intermediatePoints);
+		this->m_simplexOperationFactory.invoke(intermediatePoints.m_currentOperation, intermediatePoints);
+		this->intermediatePoints.m_simplexFigure.sort();
+	};
 
+private:
 
+	//FIXME  this is probably wrong, could you fix logic here, i am not sure that this is correct 
+	std::function<void(SimplexPoint<parameter_size>&)> evaluationFunction = std::bind(&BasicSimplexFitter::simplexPointEvaluationFunction, SimplexPoint<parameter_size>, AuxilaryParameters std::placeholders::_2);
 
 
 };
 
 
-//todo implement the setUp function based on the Fitter settings
-	//* setUp function
-	//todo initialize settings of the creators, fill the settings
-	//todo initialize factories
-	//todo register the creators
 
 
 }

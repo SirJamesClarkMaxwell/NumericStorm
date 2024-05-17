@@ -17,10 +17,6 @@ public:
 	SimplexPoint() = default;
 	SimplexPoint(std::shared_ptr<Data> ref_data, const std::array<double, parameter_size>& parameters)
 		: m_parameters{ parameters }, m_referenceData{ ref_data }, m_data{ *ref_data } {};
-	SimplexPoint(const SimplexPoint<parameter_size>&) = default;
-	SimplexPoint(SimplexPoint<parameter_size>&&) = default;
-	SimplexPoint<parameter_size>& operator=(const SimplexPoint<parameter_size>&) = default;
-	SimplexPoint<parameter_size>& operator=(SimplexPoint<parameter_size>&&) = default;
 
 	virtual ~SimplexPoint() = default;
 	double getError() const { return m_error; }
