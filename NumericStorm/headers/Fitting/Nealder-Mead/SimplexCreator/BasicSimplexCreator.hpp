@@ -13,8 +13,8 @@ template <size_t parameter_size>
 class BasicSimplexCreator : public IFigureCreator<parameter_size>
 {
 public:
-	using Float() = Random::Float;
-	explicit BasicSimplexCreator(const SimplexCreatorSettigns& settings)
+	using Random;
+	explicit BasicSimplexCreator(const SimplexCreatorSettings& settings)
 		: IFigureCreator<parameter_size>{ settings } {}
 	/*
 	BasicSimplexCreator(const BasicSimplexCreator<parameter_size>&) = default;

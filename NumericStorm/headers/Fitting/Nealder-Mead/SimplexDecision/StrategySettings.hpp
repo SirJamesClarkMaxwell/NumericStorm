@@ -4,8 +4,8 @@ namespace NumericStorm::Fitting {
 
 class StrategySettings {
 
-
-
+public:
+    StrategySettings() {};
 private:
 
 };
