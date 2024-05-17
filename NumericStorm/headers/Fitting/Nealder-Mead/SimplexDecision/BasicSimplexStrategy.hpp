@@ -28,19 +28,14 @@ class BasicSimplexDecision : public IDecision<parameter_size>
 {
 
 public:
-    BasicSimplexDecision() = default;
-    BasicSimplexDecision(const BasicSimplexDecision<parameter_size>&) = default;
-    BasicSimplexDecision(BasicSimplexDecision<parameter_size>&&) = default;
-    BasicSimplexDecision<parameter_size>& operator=(const BasicSimplexDecision<parameter_size>&) = default;
-    BasicSimplexDecision<parameter_size>& operator=(BasicSimplexDecision<parameter_size>&&) = default;
-
     BasicSimplexDecision(const StrategySettings& settings) : IDecision<parameter_size>{ settings } {}
+    BasicSimplexDecision() = default;
+
     using enum Stage;
 
     virtual ~BasicSimplexDecision() = default;
     virtual bool operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
     {
-        //todo add ternary operator
         //todo add alias for the simplexIntPoints.simplexFigure
         //!!! switch supports only int and int like stuff that is comparable during compilation
         //! will switch to enum

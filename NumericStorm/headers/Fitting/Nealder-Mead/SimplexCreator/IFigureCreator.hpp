@@ -43,12 +43,11 @@ template<size_t parameter_size>
 struct CreatorInput
 {
 public:
-	explicit CreatorInput(std::initializer_list<std::variant<SimplexPoint<parameter_size>, double>> arguments)
-		//: initialPoint{ std::get<0>(arguments) }, min{ std::get<1>(arguments) }, max{ std::get<2>(arguments) } {}
-		: initialPoint{ arguments[0] }, min{ arguments[1] }, max{ arguments[2] } {};
+	explicit CreatorInput(std::initializer_list < std::variant<SimplexPoint<parameter_size>, Parameters<paramter_size>> arguments)
+		: initialPoint{ arguments[0] }, minBounds{ arguments[1] }, maxBounds{ arguments[2] } {};
 	SimplexPoint<parameter_size> initialPoint;
-	double min;
-	double max;
+	Parameters<parameter_size> minBounds;
+	Parameters<parameter_size> maxBounds;
 
 };
 template<size_t parameter_size>
@@ -63,13 +62,6 @@ public:
 	//todo same story with default constructor in InterfaceType
 	explicit IFigureCreator(const SimplexCreatorSettings& settings)
 		: CreatorInterface<In, Out, Settings>{} { this->m_settings = settings; }
-	/*
-		IFigureCreator() = default;
-		IFigureCreator(const IFigureCreator<parameter_size>&) = default;
-		IFigureCreator(IFigureCreator<parameter_size>&&) = default;
-		IFigureCreator<parameter_size>& operator=(const IFigureCreator<parameter_size>&) = default;
-		IFigureCreator<parameter_size>& operator=(IFigureCreator<parameter_size>&&) = default;
-	*/
 	virtual ~IFigureCreator() = default;
 };
 }

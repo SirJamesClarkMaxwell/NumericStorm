@@ -10,20 +10,13 @@ namespace NumericStorm
 {
 namespace Fitting
 {
-template<size_t parameter_size,class AxularyParameters=AdditionalParameters, class DerivedSettings = SimplexSettings<parameter_size>>
-class SimplexFitter : public Fitter<parameter_size, AxularyParameters,DerivedSettings>
+template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters, class DerivedSettings = SimplexSettings<parameter_size>>
+class SimplexFitter : public Fitter<parameter_size, AuxilaryParameters, DerivedSettings>
 {
 
 public:
 	explicit SimplexFitter(DerivedSettings settings)
-		:Fitter<parameter_size, AxularyParameters, DerivedSettings>{ settings,false } {}
-	/*
-		SimplexFitter(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
-		SimplexFitter(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
-		SimplexFitter<parameter_size, DerivedSettings>& operator=(const SimplexFitter<parameter_size, DerivedSettings>&) = default;
-		SimplexFitter<parameter_size, DerivedSettings>& operator=(SimplexFitter<parameter_size, DerivedSettings>&&) = default;
-	*/
-
+		:Fitter<parameter_size, AuxilaryParameters, DerivedSettings>{ settings,false } {}
 	virtual ~SimplexFitter() = default;
 protected:
 	SimplexOperationFactory<parameter_size> m_simplexOperationFactory{};

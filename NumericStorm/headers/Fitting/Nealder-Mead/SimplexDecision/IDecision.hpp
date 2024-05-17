@@ -20,14 +20,9 @@ public:
 	using enum PIndices;
 	using enum SimplexFigureIndicies;
 	static const int bestPoint = SimplexFigure<parameter_size>::bestPoint;
+	IDecision(const StrategySettings& settings) : CreatorInterface<In, Out, Settings>{ settings } {}
 
 	IDecision() = default;
-	IDecision(const IDecision<parameter_size>&) = default;
-	IDecision(IDecision<parameter_size>&&) = default;
-	IDecision<parameter_size>& operator=(const IDecision<parameter_size>&) = default;
-	IDecision<parameter_size>& operator=(IDecision<parameter_size>&&) = default;
-
-	IDecision(const StrategySettings& settings) : CreatorInterface<In, Out, Settings>{ settings } {}
 
 	virtual ~IDecision() = default;
 };

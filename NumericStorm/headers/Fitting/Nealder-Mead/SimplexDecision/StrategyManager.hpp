@@ -12,10 +12,6 @@ class StrategyManager : public Factory<IDecision<parameter_size>>
 
 public:
 	StrategyManager() = default;
-	StrategyManager(const StrategyManager<parameter_size>&) = default;
-	StrategyManager(StrategyManager<parameter_size>&&) = default;
-	StrategyManager<parameter_size>& operator=(const StrategyManager<parameter_size>&) = default;
-	StrategyManager<parameter_size>& operator=(StrategyManager<parameter_size>&&) = default;
 
 	virtual ~StrategyManager() = default;
 

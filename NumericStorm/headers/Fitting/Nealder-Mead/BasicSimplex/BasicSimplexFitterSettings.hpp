@@ -28,11 +28,16 @@ public:
 	virtual ~BasicSimplexFitterSettings() = default;
 	void constructObjects();
 public:
+
+
 	//* operations
 	std::vector<CreatorSetUpInfo<SimplexOperationSettings>> operationSetUpInfo{};
 
 	//* simplex creators
+	//todo write method for setting this in builder pattern!
 	SimplexCreatorSettings creatorSettings{ "basic", 0.0 };
+	Parameters<parameter_size> parametersMinBounds{  };
+	Parameters<parameter_size> parametersMaxBounds{  };
 
 	//* simplex strategies
 	StrategySettings strategySettings{};
@@ -56,6 +61,7 @@ void BasicSimplexFitterSettings<parameter_size>::constructObjects()
 	using std::views::zip;
 	for (std::tuple<std::string&, double&> item : zip(m_operationNames, m_operationFactors))
 		operationSetUpInfo.emplace_back(CreatorSetUpInfo(std::get<0>(item), std::get<1>(item)));
+
 
 
 }
