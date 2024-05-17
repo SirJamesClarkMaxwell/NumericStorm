@@ -19,7 +19,7 @@ void modelFunctionIteratedData(IteratedData& data, const Parameters<4>& paramete
 		//std::cout << col[0] << " " << col[1] << std::endl;
 	}
 
-	
+
 }
 
 double errorFunctionData(const Data& d1, const Data& d2) {
@@ -50,7 +50,7 @@ double errorFunctionIteratedData(IteratedData& d1, IteratedData& d2) {
 int iterationCount = 1000;
 int pointCount = 32;
 
-void testingIteratedDataClass() {
+double testingIteratedDataClass() {
 	std::vector<double> arguments;
 	arguments.resize(pointCount);
 	for (int i = 0; i < pointCount; i++)
@@ -74,25 +74,33 @@ void testingIteratedDataClass() {
 	auto end1 = data1.columnOrder().end();
 	auto end2 = data2.columnOrder().end();
 
-
-	for (int i = 0; i < iterationCount; i++) {
+	double totalTime = 0;
+	for (int i = 0; i < iterationCount; i++)
+	{
+		for (int j = 0; j < 4;j++)
+		{
+			parameters[j]+=1;
+			parameters2[j]+=1;
+		}
+		Timer timer;
 		modelFunctionIteratedData(data1, parameters, additionalParameters);
 		modelFunctionIteratedData(data2, parameters2, additionalParameters);
 
 		double error = errorFunctionIteratedData(data1, data2);
+		totalTime += timer.stop();
 	}
-	
+	return totalTime;// / iterationCount;
 	//std::cout << std::endl << std::endl;
 	//data1.presentData();
 	//std::cout << std::endl << std::endl;
 	//data2.presentData();
 	//std::cout << std::endl << std::endl;
 
-	
+
 
 }
 
-void testingDataClass()
+double testingDataClass()
 {
 
 	std::vector<double> arguments;
@@ -113,14 +121,24 @@ void testingDataClass()
 	data2[1] = arguments;
 
 	GaussianModel model{};
-
-	for (int i = 0; i < iterationCount; i++) {
+	double totalTime = 0.0;
+	for (int i = 0; i < iterationCount; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			parameters[j]+=1;
+			parameters2[j]+=1;
+		}
+		Timer dataTimer;;
 		model(data1, parameters, additionalParameters);
-		model(data2, parameters2, additionalParameters);
+		//model(data2, parameters2, additionalParameters);
 
 		double error = errorFunctionData(data1, data2);
+		totalTime += dataTimer.stop();
 	}
-	
+
+
+	return totalTime;// / iterationCount;
 	//int two = 1;
 	//for (int i = 0; i < 2; i++) {
 	//	for (auto item : data1[i]) {
@@ -136,6 +154,6 @@ void testingDataClass()
 	//	}
 	//}
 
-	
+
 };
 

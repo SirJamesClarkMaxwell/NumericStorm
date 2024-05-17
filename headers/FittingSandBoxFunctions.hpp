@@ -22,7 +22,7 @@ public:
 
 		auto duration = stop - start;
 		double ms = duration * 0.001;
-		std::cout << duration << "us (" << ms << "ms)" << std::endl;
+		//std::cout << duration << "us (" << ms << "ms)" << std::endl;
 		return ms;
 	};
 private:
@@ -30,8 +30,8 @@ private:
 
 
 };
-void testingDataClass();
-void testingIteratedDataClass();
+double testingDataClass();
+double testingIteratedDataClass();
 
 using namespace NumericStorm::Fitting;
 
@@ -252,7 +252,7 @@ public:
 		RowIterator end() { return RowIterator(m_column_size, m_row_size, m_val_ptr + m_column_size); }
 
 	private:
-		explicit RowOrder(int column_size, int row_size, double* val_ptr) : 
+		explicit RowOrder(int column_size, int row_size, double* val_ptr) :
 			m_column_size{ column_size },
 			m_row_size{ row_size },
 			m_val_ptr{ val_ptr } { }
@@ -268,7 +268,7 @@ public:
 		ColumnIterator end() { return ColumnIterator(m_column_size, m_row_size, m_val_ptr + m_column_size * m_row_size); }
 
 	private:
-		explicit ColumnOrder(int column_size, int row_size, double* val_ptr) : 
+		explicit ColumnOrder(int column_size, int row_size, double* val_ptr) :
 			m_column_size{ column_size },
 			m_row_size{ row_size },
 			m_val_ptr{ val_ptr } { }
