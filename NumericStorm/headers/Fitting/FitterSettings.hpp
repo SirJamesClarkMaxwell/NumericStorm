@@ -15,8 +15,8 @@ template <size_t parameter_size, class AuxilaryParameters = AdditionalParameters
 class FitterSettings
 {
 public:
-	FitterSettings(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel, long int maxIteration, double minError, bool useBounds)
-		: m_functionModel{ model }, m_errorModel{ errorModel }, m_maxIteration{ maxIteration }, m_minError{ minError }, m_useBounds(useBounds) {}
+	FitterSettings(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel)
+		: m_functionModel{ model }, m_errorModel{ errorModel } {}
 	FitterSettings() = delete;
 
 	virtual ~FitterSettings() = default;
@@ -36,5 +36,50 @@ public:
 	double m_minError{ 0.1 };
 	bool m_useBounds{ false };
 
+protected:
+
+
+	template<class B, class Settings>
+	class FitterSettingsBuilderBase {
+		static_assert(std::derived_from<Settings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
+	public:
+		FitterSettingsBuilderBase() = delete;
+		FitterSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
+			m_settingsObject{ model, errorModel } {}
+
+		virtual B& returnSelf() { return *this; }
+
+		virtual B& maxIteration(long int iterations) {
+			m_settingsObject.m_maxIteration = iterations;
+			return returnSelf();
+		}
+
+		virtual B& minError(double error) {
+			m_settingsObject.m_minError = error;
+			return returnSelf();
+		}
+
+		virtual B& useBounds(bool useBounds) {
+			m_settingsObject.m_useBounds = useBounds;
+			return returnSelf();
+		}
+
+		virtual Settings build() { return m_settingsObject; }
+
+	protected:
+		Settings m_settingsObject;
+	};
+
+
+
+public:
+	class FitterSettingsBuilder : public FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>> {
+	public:
+		FitterSettingsBuilder() = delete;
+		FitterSettingsBuilder(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
+			FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>>{ model, errorModel } {}
+	};
+
+	friend class FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>>;
 };
 }

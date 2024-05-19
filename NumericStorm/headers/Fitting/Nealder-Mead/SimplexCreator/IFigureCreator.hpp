@@ -43,7 +43,7 @@ template<size_t parameter_size>
 struct CreatorInput
 {
 public:
-	explicit CreatorInput(std::initializer_list < std::variant<SimplexPoint<parameter_size>, Parameters<paramter_size>> arguments)
+	explicit CreatorInput(std::initializer_list<std::variant<SimplexPoint<parameter_size>, Parameters<parameter_size>>> arguments)
 		: initialPoint{ arguments[0] }, minBounds{ arguments[1] }, maxBounds{ arguments[2] } {};
 	SimplexPoint<parameter_size> initialPoint;
 	Parameters<parameter_size> minBounds;

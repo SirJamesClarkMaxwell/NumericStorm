@@ -10,13 +10,13 @@
 
 namespace NumericStorm::Fitting
 {
-template<size_t parameter_size>
-class BasicSimplexFitterSettings : private SimplexSettings<parameter_size>
+template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
+class BasicSimplexFitterSettings : private SimplexSettings<parameter_size, AuxilaryParameters>
 {
 public:
 
-	explicit BasicSimplexFitterSettings(const Model<parameter_size>& model, const ErrorModel& errorModel, long int maxIteration, double minError, std::initializer_list<double>& operationFactors)
-		: SimplexSettings<parameter_size>{ model, errorModel, maxIteration, minError }, m_operationFactors{ operationFactors }{}
+	explicit BasicSimplexFitterSettings(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel)
+		: SimplexSettings<parameter_size>{ model, errorModel } {}
 
 	/*
 	BasicSimplexFitterSettings(const BasicSimplexFitterSettings<parameter_size>&) = default;
@@ -26,61 +26,48 @@ public:
 	*/
 
 	virtual ~BasicSimplexFitterSettings() = default;
-	void constructObjects();
 public:
-
-
-	//* operations
-	std::vector<CreatorSetUpInfo<SimplexOperationSettings>> operationSetUpInfo{};
-
-	//* simplex creators
-	//todo write method for setting this in builder pattern!
-	SimplexCreatorSettings creatorSettings{ "basic", 0.0 };
 	Parameters<parameter_size> parametersMinBounds{  };
 	Parameters<parameter_size> parametersMaxBounds{  };
 
-	//* simplex strategies
-	StrategySettings strategySettings{};
 
-private:
-	//* operations
-	std::vector<double> m_operationFactors{};
-	std::vector<std::string> m_operationNames{ "reflection","expansion","contraction","shrinking" };
+protected:
+	using BaseType = typename SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase;
+
+	template<class B, class Settings>
+	class BasicSimplexSettingsBuilderBase : public SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<B, Settings> {
+	public:
+		BasicSimplexSettingsBuilderBase() = delete;
+		BasicSimplexSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
+			BaseType{ model, errorModel } {}
 
 
-	// todo think about the all possible settings of basic simplex fitter and set them manually
-	//NOTE here we definitely need a builder pattern 
+		virtual B& minParameters(const Parameters<parameter_size>& bounds) {
+			parametersMinBounds = bounds;
+			return this->returnSelf();
+		}
+
+		virtual B& maxParameters(const Parameters<parameter_size>& bounds) {
+			parametersMaxBounds = bounds;
+			return this->returnSelf();
+		}
+	};
+
+public:
+
+	class BasicSimplexSettingsBuilder : public BasicSimplexSettingsBuilderBase<BasicSimplexSettingsBuilder, BasicSimplexFitterSettings<parameter_size, AuxilaryParameters>> {
+	public:
+		BasicSimplexSettingsBuilder() = delete;
+		BasicSimplexSettingsBuilder(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
+			BasicSimplexSettingsBuilderBase<BasicSimplexSettingsBuilder, BasicSimplexFitterSettings<parameter_size, AuxilaryParameters>>{ model, errorModel } {}
+	};
+
+	friend class BasicSimplexSettingsBuilderBase<BasicSimplexSettingsBuilder, BasicSimplexFitterSettings<parameter_size, AuxilaryParameters>>;
 
 
 };
 
-template<size_t parameter_size>
-void BasicSimplexFitterSettings<parameter_size>::constructObjects()
-{
-	operationSetUpInfo.resize(m_operationNames.size());
-	using std::views::zip;
-	for (std::tuple<std::string&, double&> item : zip(m_operationNames, m_operationFactors))
-		operationSetUpInfo.emplace_back(CreatorSetUpInfo(std::get<0>(item), std::get<1>(item)));
-
-
-
 }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
