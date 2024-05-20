@@ -58,12 +58,12 @@ public:
 		this->m_simplexFigure.sort();
 
 
-		while (checkFittingConditions(iterationCount, simplexIntermediatePoints[bestPoint]))
+		while (checkFittingConditions(iterationCount, simplexIntermediatePoints.m_simplexFigure[bestPoint]))
 		{
 			oneAlgorithmStep(simplexIntermediatePoints);
 		}
 
-		SimplexPoint<parameter_size> bestPointRes = simplexIntermediatePoints[bestPoint];
+		SimplexPoint<parameter_size> bestPointRes = simplexIntermediatePoints.m_simplexFigure[bestPoint];
 		FittingResults<parameter_size> fittingResult{ bestPointRes.getParameters(), iterationCount, bestPointRes.getError() };
 		return fittingResult;
 	};
