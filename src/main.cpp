@@ -136,7 +136,7 @@ int main()
 	SettingsAlias fitterSettings = builder.build();
 	FitterAlias fitter(fitterSettings);
 	fitter.setUp();
-	fitter.fit(testingParameters, additionalParameters);
+	auto results = fitter.fit(testingParameters, additionalParameters);
 
 	return 0;
 }
