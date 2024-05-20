@@ -24,10 +24,9 @@ public:
 
 	BasicSimplexFitter() = delete; //todo set default configuration here
 	BasicSimplexFitter(const DerivedSettings& settings, bool calculateUncertainty = false)
-		:SimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>{ settings, calculateUncertainty }
-	{
+		:SimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>{ settings, calculateUncertainty } {};
 
-	};
+	const int bestPoint = SimplexFigure<parameter_size>::bestPoint;
 
 	virtual ~BasicSimplexFitter() = default;
 
@@ -37,14 +36,16 @@ public:
 	virtual void setUp() override
 	{
 		//* operations
-		std::vector<CreatorSetUpInfo<SimplexOperationSettings>> operationSettings = this->m_settings->m_simplexOperationSetUpInfo;
-		this->m_simplexOperationFactory.registerCreators<Reflection, Expansion, Contraction, Shrinking>(operationSettings);
+		this->m_simplexOperationFactory.registerCreators<Reflection<parameter_size>,
+			Expansion<parameter_size>,
+			Contraction<parameter_size>,
+			Shrinking<parameter_size>>(this->m_settings.m_simplexOperationSetUpInfo);
 
 		//* creators
-		this->m_simplexCreatorFactory.registerCreators<BasicSimplexCreator<parameter_size>>(this->m_settings->m_simplexCreatorSetUpInfo);
+		this->m_simplexCreatorFactory.registerCreators<BasicSimplexCreator<parameter_size>>(this->m_settings.m_simplexCreatorSetUpInfo);
 
 		//* strategy
-		this->m_strategyManager.registerCreators<BasicSimplexDecision<parameter_size>>(this->m_settings->m_simplexStrategySetUpInfo);
+		this->m_strategyManager.registerCreators<BasicSimplexDecision<parameter_size>>(this->m_settings.m_simplexStrategySetUpInfo);
 
 	};
 
@@ -53,16 +54,17 @@ public:
 
 		int iterationCount = 0;
 		setUpFittingsProcedure(initialParameters, additionalParameters);
-		SimplexIntermediatePoints simplexIntermediatePoints{ this->m_simplexFigure,PIndices::PointCount };
+		SimplexIntermediatePoints<parameter_size> simplexIntermediatePoints{ this->m_simplexFigure,PIndices::PointCount };
 		this->m_simplexFigure.sort();
 
-		while (checkFittingConditions(iterationCount))
+
+		while (checkFittingConditions(iterationCount, simplexIntermediatePoints[bestPoint]))
 		{
 			oneAlgorithmStep(simplexIntermediatePoints);
 		}
 
-		SimplexPoint<parameter_size> bestPoint = simplexIntermediatePoints[bestPoint];
-		FittingResults<parameter_size> fittingResult{ bestPoint.getParameters(), iterationCount, bestPoint.getError() };
+		SimplexPoint<parameter_size> bestPointRes = simplexIntermediatePoints[bestPoint];
+		FittingResults<parameter_size> fittingResult{ bestPointRes.getParameters(), iterationCount, bestPointRes.getError() };
 		return fittingResult;
 	};
 
@@ -70,22 +72,24 @@ public:
 private:
 	const bool checkFittingConditions(int& iter, const SimplexPoint<parameter_size>& bestPoint)
 	{
-		bool iterationCondition = iter++ <= this->m_settings->getMaxIteration();
-		bool errorCondition = bestPoint.getError() <= this->m_settings->getMinError();
+		bool iterationCondition = iter++ <= this->m_settings.getMaxIteration();
+		bool errorCondition = bestPoint.getError() <= this->m_settings.getMinError();
 		return iterationCondition && errorCondition;
 	}
 
 
 	void setUpFittingsProcedure(const Parameters<parameter_size>& parameters, const AuxilaryParameters& additionalParameters)
 	{
-		SimplexPoint<parameter_size> initialPoint = SimplexPoint<parameter_size>{ this->m_settings.getReferenceData(), parameters.getParameters() };
+		SimplexPoint<parameter_size> initialPoint{ this->m_settings.getReferencedData(), parameters.getParameters() };
 
 		//https://stackoverflow.com/questions/6610046/stdfunction-and-stdbind-what-are-they-and-when-should-they-be-used
-		auto evalCallback = std::bind(&simplexPointEvaluationFunction, std::placeholders::_1, additionalParameters);
+		auto evalCallback = std::bind(&BasicSimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>::simplexPointEvaluationFunction,this, 
+			std::placeholders::_1, 
+			additionalParameters);
 
 		initialPoint.onEvaluate(evalCallback);
 		initialPoint.evaluatePoint();
-		CreatorInput<parameter_size> creatorInput{ {initialPoint, this->m_settings->parametersMinBounds, this->m_settings->parametersMaxBounds} };
+		CreatorInput<parameter_size> creatorInput{ initialPoint, this->m_settings.parametersMinBounds, this->m_settings.parametersMaxBounds };
 		this->m_simplexFigure = this->m_simplexCreatorFactory.invoke("basic", creatorInput);
 		this->m_simplexFigure.sort();
 	};
@@ -93,7 +97,7 @@ private:
 
 	void simplexPointEvaluationFunction(SimplexPoint<parameter_size>& point, const AuxilaryParameters& additionalParameters)
 	{
-		point.evaluatePoint(this->m_settings->m_functionModel, this->m_settings->m_errorModel, additionalParameters);
+		point.evaluatePoint(this->m_settings.m_functionModel, this->m_settings.m_errorModel, additionalParameters);
 	}
 #if DEBUG
 public:
@@ -102,7 +106,7 @@ public:
 	{
 		this->m_strategyManager.invoke("basic", intermediatePoints);
 		this->m_simplexOperationFactory.invoke(intermediatePoints.m_currentOperation, intermediatePoints);
-		this->intermediatePoints.m_simplexFigure.sort();
+		intermediatePoints.m_simplexFigure.sort();
 	};
 
 private:

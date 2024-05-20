@@ -1,17 +1,17 @@
 #pragma once
 
+//#include <ranges>
 #include "SimplexSettings.hpp"
 #include "Model.hpp"
 #include "ErrorModel.hpp"
 #include "SimplexOperationsHeader.hpp"
-#include <ranges>
 //todo we need to discus bout how we gonna implement the actual basic fitter
 
 
 namespace NumericStorm::Fitting
 {
 template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
-class BasicSimplexFitterSettings : private SimplexSettings<parameter_size, AuxilaryParameters>
+class BasicSimplexFitterSettings : public SimplexSettings<parameter_size, AuxilaryParameters>
 {
 public:
 
@@ -32,23 +32,25 @@ public:
 
 
 protected:
-	using BaseType = typename SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase;
+	template<class B, class Settings>
+	using BaseType = typename SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<B, Settings>;
 
 	template<class B, class Settings>
 	class BasicSimplexSettingsBuilderBase : public SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<B, Settings> {
+		static_assert(std::derived_from<Settings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 	public:
 		BasicSimplexSettingsBuilderBase() = delete;
 		BasicSimplexSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			BaseType{ model, errorModel } {}
+			BaseType<B, Settings>{ model, errorModel } {}
 
 
 		virtual B& minParameters(const Parameters<parameter_size>& bounds) {
-			parametersMinBounds = bounds;
+			this->m_settingsObject.parametersMinBounds = bounds;
 			return this->returnSelf();
 		}
 
 		virtual B& maxParameters(const Parameters<parameter_size>& bounds) {
-			parametersMaxBounds = bounds;
+			this->m_settingsObject.parametersMaxBounds = bounds;
 			return this->returnSelf();
 		}
 	};

@@ -12,13 +12,15 @@ namespace NumericStorm::Fitting {
 template<class SettingType>
 struct CreatorSetUpInfo
 {
+	CreatorSetUpInfo(const std::string& name, const SettingType& settings) :
+		name{ name }, settings{ settings } {}
 	std::string name;
 	SettingType settings;
 };
 template<class Creator>
 class Factory {
 
-	static_assert(std::derived_from<Creator, CreatorInterface<typename Creator::In, typename Creator::Out, typename Creator::Settings>> == true);
+	//static_assert(std::derived_from<Creator, CreatorInterface<typename Creator::In, typename Creator::Out, typename Creator::Settings>> == true);
 public:
 	Factory() = default;
 	virtual ~Factory() = default;

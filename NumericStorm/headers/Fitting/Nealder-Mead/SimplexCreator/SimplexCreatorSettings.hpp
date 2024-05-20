@@ -8,8 +8,9 @@ class SimplexCreatorSettings
 public:
 	explicit SimplexCreatorSettings(std::string operationName, double expectedValue)
 		: m_name{ operationName }, m_expectedValue{ expectedValue } {}
-	/*
+	
 	SimplexCreatorSettings() = default;
+	/*
 	SimplexCreatorSettings(const SimplexCreatorSettings&) = default;
 	SimplexCreatorSettings(SimplexCreatorSettings&&) = default;
 	SimplexCreatorSettings& operator=(const SimplexCreatorSettings&) = default;
@@ -23,6 +24,6 @@ public:
 private:
 	std::string m_name{};
 	double m_expectedValue{};
-	//todo add more distribubion function to choose, not only gauss
+	//todo add more distribution function to choose, not only gauss
 };
 }

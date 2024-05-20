@@ -25,13 +25,13 @@ public:
 	virtual const ErrorModel& getErrorModel() const { return m_errorModel; }
 	virtual double getMinError() const { return m_minError; }
 	virtual long int getMaxIteration() const { return m_maxIteration; }
-	virtual std::shared_ptr<const Data> getReferencedData()	const { return m_ref_data; }
+	virtual std::shared_ptr<Data> getReferencedData()	const { return m_ref_data; }
 	//todo implement builderPattern 
 public:
 	Model<parameter_size, AuxilaryParameters> m_functionModel;
 	ErrorModel m_errorModel;
 
-	std::shared_ptr<const Data> m_ref_data{ nullptr };
+	std::shared_ptr<Data> m_ref_data{ nullptr };
 	long int m_maxIteration{ 1000 };
 	double m_minError{ 0.1 };
 	bool m_useBounds{ false };
@@ -47,20 +47,25 @@ protected:
 		FitterSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
 			m_settingsObject{ model, errorModel } {}
 
-		virtual B& returnSelf() { return *this; }
+		virtual B& returnSelf() { return static_cast<B&>(*this); }
 
 		virtual B& maxIteration(long int iterations) {
-			m_settingsObject.m_maxIteration = iterations;
+			this->m_settingsObject.m_maxIteration = iterations;
 			return returnSelf();
 		}
 
 		virtual B& minError(double error) {
-			m_settingsObject.m_minError = error;
+			this->m_settingsObject.m_minError = error;
 			return returnSelf();
 		}
 
 		virtual B& useBounds(bool useBounds) {
-			m_settingsObject.m_useBounds = useBounds;
+			this->m_settingsObject.m_useBounds = useBounds;
+			return returnSelf();
+		}
+
+		virtual B& refData(const std::shared_ptr<Data>& data) {
+			this->m_settingsObject.m_ref_data = data;
 			return returnSelf();
 		}
 
