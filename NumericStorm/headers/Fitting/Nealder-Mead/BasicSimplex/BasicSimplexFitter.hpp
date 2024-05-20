@@ -61,6 +61,12 @@ public:
 		while (checkFittingConditions(iterationCount, simplexIntermediatePoints.m_simplexFigure[bestPoint]))
 		{
 			oneAlgorithmStep(simplexIntermediatePoints);
+			auto params = simplexIntermediatePoints.m_simplexFigure[bestPoint].getParameters();
+			double error = simplexIntermediatePoints.m_simplexFigure[bestPoint].getError();
+			//std::cout << "iteration: ";
+			//for (auto& item : params)
+			//	std::cout << item<<" ";
+			//std::cout<<" error "<<error << std::endl;
 		}
 
 		SimplexPoint<parameter_size> bestPointRes = simplexIntermediatePoints.m_simplexFigure[bestPoint];
@@ -72,9 +78,9 @@ public:
 private:
 	const bool checkFittingConditions(int& iter, const SimplexPoint<parameter_size>& bestPoint)
 	{
-		bool iterationCondition = iter++ <= this->m_settings.getMaxIteration();
-		bool errorCondition = bestPoint.getError() <= this->m_settings.getMinError();
-		return iterationCondition && errorCondition;
+		bool iterationCondition = iter++ >= this->m_settings.getMaxIteration();
+		bool errorCondition = bestPoint.getError() >= this->m_settings.getMinError();
+		return iterationCondition or errorCondition;
 	}
 
 
