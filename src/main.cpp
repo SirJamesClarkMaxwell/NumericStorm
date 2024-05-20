@@ -6,6 +6,13 @@ using namespace NumericStorm::Fitting;
 
 int main()
 {
+	bool b1, b2, b3, b4;
+	b1 = true or false;
+	b2 = true and false;
+
+	std::cout << "true or false: " << b1<< std::endl;
+	std::cout << "true and false: " << b2<< std::endl;
+
 	//testingParameters();
 	//testingModelAndErrorModel();
 	static_assert(std::derived_from<FitterSettings<4, AdditionalParameters>, FitterSettings<4, AdditionalParameters>> == true);
