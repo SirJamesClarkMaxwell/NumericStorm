@@ -66,63 +66,40 @@ Times tester()
 /*
 int main()
 {
-	int repeatCount = 10000;
-	std::vector<Times>times(repeatCount);
-	for (int i = 0; i <repeatCount; i++) {
-		Times t = tester();
-		times[i] = t;
-	}
-	double firstTime=0, dataClassTime=0, secondTime=0, dataClassIteratorTime=0;
-	for (auto& item : times)
+	//testingParameters();
+	//testingModelAndErrorModel();
+	Parameters<4> trueParameters({ 1,1,1,1 });
+	Parameters<4> testingParameters({ 2,2,2,2 });
+
+	AdditionalParameters additionalParameters{};
+
+	Model model = GaussianModel();
+	ErrorModel errorModel = Chi2ErrorModel();
+
+	Data data1{ 2 };
+	std::array<double, 100> arguments;
+	int i = -50;
+	for (int it = 0;it < 100;it++)
 	{
-		firstTime += item.firstImplementation;
-		dataClassTime += item.firstImplementationDeep;
-		secondTime += item.secondImplementation;
-		dataClassIteratorTime += item.secondImplementationDeep;
+		data1[0][it] = i++;
+		data1[1][it] = i++;
 	}
-	firstTime /= repeatCount;
-	dataClassTime /= repeatCount;
-	secondTime /= repeatCount;
-	dataClassIteratorTime /= repeatCount;
+	Data data2 = Data(data1);
+	model(data1, trueParameters, additionalParameters);
 
-	std::cout << "firstTime / dataClassTime " << firstTime / secondTime << " times faster" << std::endl;
-	std::cout << "dataClassIteratorTime / dataClassTime " << dataClassIteratorTime / dataClassTime << " times faster" << std::endl;
-}
-*/
-int main() {
-	int repeatCount = 1000;
-	std::vector<Times> times(repeatCount);
 
-	// Ensure the entire vector is filled
-	for (int i = 0; i < repeatCount; i++) 
-	{
-		Timer repTimer;
+	using Builder = BasicSimplexFitterSettings<4, AdditionalParameters>::BasicSimplexSettingsBuilder;
+	using Settings = BasicSimplexFitterSettings<4, AdditionalParameters>;
+	using Fitter = BasicSimplexFitter<4, AdditionalParameters, Settings>;
 
-		Times t = tester();
-		times[i] = t;
-		std::cout << "Iteration " << i << " takes " << repTimer.stop() << " ms" << std::endl;
-	}
+	Builder builer = Builder(model, errorModel);
+	builer.maxIteration(1000).minError(0.1).maxParameters(Parameters<4>({ 5,5,5,5 })).minParameters(Parameters<4>({ 0,0,0,0 }));
 
-	// Initialize sums to 0
-	double firstTime = 0, dataClassTime = 0, secondTime = 0, dataClassIteratorTime = 0;
 
-	// Sum up the times
-	for (const auto& item : times) {
-		firstTime += item.firstImplementation;
-		dataClassTime += item.firstImplementationDeep;
-		secondTime += item.secondImplementation;
-		dataClassIteratorTime += item.secondImplementationDeep;
-	}
-
-	// Calculate averages
-	//firstTime /= repeatCount;
-	//dataClassTime /= repeatCount;
-	//secondTime /= repeatCount;
-	//dataClassIteratorTime /= repeatCount;
-
-	// Print results
-	std::cout << "firstTime / secondTime: " << firstTime / secondTime << " times faster" << std::endl;
-	std::cout << "dataClassTime/dataClassIteratorTime : " << dataClassTime/dataClassIteratorTime   << " times faster" << std::endl;
+	Settings fitterSettings = builer.build();
+	Fitter fitter(fitterSettings);
+	fitter.setUp();
+	fitter.fit(testingParameters, additionalParameters);
 
 	return 0;
 }
