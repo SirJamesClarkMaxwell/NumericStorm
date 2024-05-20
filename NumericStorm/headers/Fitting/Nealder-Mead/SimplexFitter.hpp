@@ -15,13 +15,15 @@ class SimplexFitter : public Fitter<parameter_size, AuxilaryParameters, DerivedS
 {
 
 public:
-	explicit SimplexFitter(DerivedSettings settings)
-		:Fitter<parameter_size, AuxilaryParameters, DerivedSettings>{ settings,false } {}
+	explicit SimplexFitter(DerivedSettings settings, bool calculateUncertainty = false)
+		:Fitter<parameter_size, AuxilaryParameters, DerivedSettings>{ settings,calculateUncertainty } {}
 	virtual ~SimplexFitter() = default;
 protected:
 	SimplexOperationFactory<parameter_size> m_simplexOperationFactory{};
 	SimplexCreatorFactory<parameter_size> m_simplexCreatorFactory{};
 	StrategyManager<parameter_size> m_strategyManager{};
+
+	SimplexFigure<parameter_size> m_simplexFigure{};
 
 };
 

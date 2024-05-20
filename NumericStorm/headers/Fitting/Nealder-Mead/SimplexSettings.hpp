@@ -38,27 +38,29 @@ public:
 
 
 protected:
-	using BaseType = typename FitterSettings<parameter_size, AuxilaryParameters>::FitterSettingsBuilderBase;
+	template<class B, class Settings>
+	using BaseType = typename FitterSettings<parameter_size, AuxilaryParameters>::FitterSettingsBuilderBase<B, Settings>;
 
 	template<class B, class Settings>
 	class SimplexSettingsBuilderBase : public FitterSettings<parameter_size, AuxilaryParameters>::FitterSettingsBuilderBase<B, Settings> {
+		static_assert(std::derived_from<Settings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 	public:
 		SimplexSettingsBuilderBase() = delete;
 		SimplexSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			BaseType{ model, errorModel } {}
+			BaseType<B, Settings>{ model, errorModel } {}
 
 
-		virtual B& addOperationSettings(const SimplexOperationSettings& settings) {
+		virtual B& addOperationSettings(const CreatorSetUpInfo<SimplexOperationSettings>& settings) {
 			this->m_settingsObject.m_simplexOperationSetUpInfo.push_back(settings);
 			return this->returnSelf();
 		}
 
-		virtual B& addCreatorSettings(const SimplexCreatorSettings& settings) {
+		virtual B& addCreatorSettings(const CreatorSetUpInfo<SimplexCreatorSettings>& settings) {
 			this->m_settingsObject.m_simplexCreatorSetUpInfo.push_back(settings);
 			return this->returnSelf();
 		}
 
-		virtual B& addStrategySettings(const StrategySettings& settings) {
+		virtual B& addStrategySettings(const CreatorSetUpInfo<StrategySettings>& settings) {
 			this->m_settingsObject.m_simplexStrategySetUpInfo.push_back(settings);
 			return this->returnSelf();
 		}
