@@ -25,10 +25,12 @@ public:
 	void evaluatePoint(const Model<parameter_size, AuxParameters>& model, const ErrorModel& errorModel, const AuxParameters& auxParams) {
 		m_calculateData(model, auxParams);
 		m_error = errorModel(*m_referenceData, m_data);
+		std::cout << "point evaluated" << std::endl;
 	}
 
 	void evaluatePoint() {
 		if (m_evalCallback) m_evalCallback(*this);
+		std::cout << "point evaluated" << std::endl;
 	}
 
 	void onEvaluate(const CallbackType& cb) {

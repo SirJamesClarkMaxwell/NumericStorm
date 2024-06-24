@@ -61,19 +61,23 @@ public:
 protected:
 	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points;
 	SimplexPoint<parameter_size> m_centroid{};
-	bool m_centroid_valid{ false };
-	bool m_sorted{ false };
+	bool m_centroid_valid{ true };
+	bool m_sorted{ true};
 
-private:
+public:
 	SimplexPoint<parameter_size> calculateCentroid() {
 		m_centroid_valid = true;
 		if (!m_sorted) sort();
-#if DEBUG
-		SimplexPoint<parameter_size> sum = std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>{});
-		sum /= (parameter_size + 1);
-		return sum;
-#endif
-		return std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>()) / (parameter_size + 1);
+		SimplexPoint<parameter_size> centroid = m_points[1];
+
+		for (int i = 2;i < parameter_size;i++) 
+		{
+			centroid += m_points[i];
+		}
+		//SimplexPoint<parameter_size> sum = std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>{});
+		centroid /= (parameter_size + 1);
+		return centroid;
+
 	}
 
 };

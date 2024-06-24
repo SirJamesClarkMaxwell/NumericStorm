@@ -55,7 +55,7 @@ public:
 		int iterationCount = 0;
 		setUpFittingsProcedure(initialParameters, additionalParameters);
 		SimplexIntermediatePoints<parameter_size> simplexIntermediatePoints{ this->m_simplexFigure,PIndices::PointCount };
-		this->m_simplexFigure.sort();
+		simplexIntermediatePoints.m_simplexFigure.sort();
 
 
 		while (checkFittingConditions(iterationCount, simplexIntermediatePoints.m_simplexFigure[bestPoint]))
@@ -63,10 +63,11 @@ public:
 			oneAlgorithmStep(simplexIntermediatePoints);
 			auto params = simplexIntermediatePoints.m_simplexFigure[bestPoint].getParameters();
 			double error = simplexIntermediatePoints.m_simplexFigure[bestPoint].getError();
-			//std::cout << "iteration: ";
-			//for (auto& item : params)
-			//	std::cout << item<<" ";
-			//std::cout<<" error "<<error << std::endl;
+			std::cout << "iteration: "<< iterationCount << " ";
+			for (auto& item : params)
+				std::cout << item << " ";
+			std::cout << " error " << error << std::endl;
+			std::cout << std::endl;
 		}
 
 		SimplexPoint<parameter_size> bestPointRes = simplexIntermediatePoints.m_simplexFigure[bestPoint];
@@ -89,12 +90,19 @@ private:
 		SimplexPoint<parameter_size> initialPoint{ this->m_settings.getReferencedData(), parameters.getParameters() };
 
 		//https://stackoverflow.com/questions/6610046/stdfunction-and-stdbind-what-are-they-and-when-should-they-be-used
-		auto evalCallback = std::bind(&BasicSimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>::simplexPointEvaluationFunction,this, 
-			std::placeholders::_1, 
+		auto evalCallback = std::bind(&BasicSimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>::simplexPointEvaluationFunction, this,
+			std::placeholders::_1,
 			additionalParameters);
 
 		initialPoint.onEvaluate(evalCallback);
 		initialPoint.evaluatePoint();
+#if DEBUG
+		std::cout << "initial point: ";
+		for (auto& item : initialPoint.getParameters())
+			std::cout << item << " ";
+		std::cout << " error " << initialPoint.getError() << std::endl;
+
+#endif
 		CreatorInput<parameter_size> creatorInput{ initialPoint, this->m_settings.parametersMinBounds, this->m_settings.parametersMaxBounds };
 		this->m_simplexFigure = this->m_simplexCreatorFactory.invoke("basic", creatorInput);
 		this->m_simplexFigure.sort();
@@ -113,6 +121,7 @@ public:
 		this->m_strategyManager.invoke("basic", intermediatePoints);
 		this->m_simplexOperationFactory.invoke(intermediatePoints.m_currentOperation, intermediatePoints);
 		intermediatePoints.m_simplexFigure.sort();
+		intermediatePoints.m_simplexFigure.calculateCentroid();
 	};
 
 private:

@@ -10,8 +10,8 @@ int main()
 	b1 = true or false;
 	b2 = true and false;
 
-	std::cout << "true or false: " << b1<< std::endl;
-	std::cout << "true and false: " << b2<< std::endl;
+	std::cout << "true or false: " << b1 << std::endl;
+	std::cout << "true and false: " << b2 << std::endl;
 
 	//testingParameters();
 	//testingModelAndErrorModel();
@@ -45,8 +45,9 @@ int main()
 	int i = -50;
 	for (int it = 0;it < 100;it++)
 	{
-		data1[0].push_back(i++);
-		data1[1].push_back(i++);
+		data1[0].push_back(i);
+		data1[1].push_back(i);
+		i++;
 	}
 	Data data2 = Data(data1);
 	model(data1, trueParameters, additionalParameters);
