@@ -54,6 +54,8 @@ Times tester()
 		secondTime = timer.stop();
 	}
 
+	std::cout << "true or false: " << b1 << std::endl;
+	std::cout << "true and false: " << b2 << std::endl;
 
 	// std::cout << "First implementation: time per iteration " << firstTime / iterationCount << std::endl;
 	// std::cout << "Second implementation: time per iteration " << secondTime / iterationCount << std::endl;
@@ -84,8 +86,9 @@ int main()
 	double i = -2.0;
 	for (int it = 0;it < 100;it++)
 	{
-		data1[0].push_back(i += 0.04);
+		data1[0].push_back(i);
 		data1[1].push_back(i);
+		i++;
 	}
 
 	model(data1, trueParameters, additionalParameters);

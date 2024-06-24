@@ -61,10 +61,10 @@ public:
 protected:
 	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points;
 	SimplexPoint<parameter_size> m_centroid{};
-	bool m_centroid_valid{ false };
-	bool m_sorted{ false };
+	bool m_centroid_valid{ true };
+	bool m_sorted{ true};
 
-private:
+public:
 	SimplexPoint<parameter_size> calculateCentroid() {
 		m_centroid_valid = true;
 		if (!m_sorted) sort();

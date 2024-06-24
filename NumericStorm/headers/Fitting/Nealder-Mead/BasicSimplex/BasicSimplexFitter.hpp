@@ -95,6 +95,13 @@ private:
 
 		initialPoint.onEvaluate(evalCallback);
 		initialPoint.evaluatePoint();
+#if DEBUG
+		std::cout << "initial point: ";
+		for (auto& item : initialPoint.getParameters())
+			std::cout << item << " ";
+		std::cout << " error " << initialPoint.getError() << std::endl;
+
+#endif
 		CreatorInput<parameter_size> creatorInput{ initialPoint, this->m_settings.parametersMinBounds, this->m_settings.parametersMaxBounds };
 		this->m_simplexFigure = this->m_simplexCreatorFactory.invoke("basic", creatorInput);
 		this->m_simplexFigure.sort();
