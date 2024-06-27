@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include "FitterSettings.hpp"
+#include "OptimizerSettings.hpp"
 #include "Model.hpp"
 #include "ErrorModel.hpp"
 #include "Factory.hpp"
@@ -14,7 +14,7 @@ namespace NumericStorm::Fitting
 {
 
 template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
-class SimplexSettings : public FitterSettings<parameter_size, AuxilaryParameters>
+class SimplexSettings : public OptimizerSettings<parameter_size, AuxilaryParameters>
 {
 
 public:

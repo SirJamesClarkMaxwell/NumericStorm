@@ -15,9 +15,9 @@ int main()
 
 	//testingParameters();
 	//testingModelAndErrorModel();
-	static_assert(std::derived_from<FitterSettings<4, AdditionalParameters>, FitterSettings<4, AdditionalParameters>> == true);
-	static_assert(std::derived_from<SimplexSettings<4, AdditionalParameters>, FitterSettings<4, AdditionalParameters>> == true);
-	static_assert(std::derived_from<BasicSimplexFitterSettings<4, AdditionalParameters>, FitterSettings<4, AdditionalParameters>> == true);
+	static_assert(std::derived_from<OptimizerSettings<4, AdditionalParameters>, OptimizerSettings<4, AdditionalParameters>> == true);
+	static_assert(std::derived_from<SimplexSettings<4, AdditionalParameters>, OptimizerSettings<4, AdditionalParameters>> == true);
+	static_assert(std::derived_from<BasicSimplexOptimizerSettings<4, AdditionalParameters>, OptimizerSettings<4, AdditionalParameters>> == true);
 
 	static_assert(std::derived_from<IDecision<4>, CreatorInterface<SimplexIntermediatePoints<4>&, bool, StrategySettings>> == true);
 	static_assert(std::derived_from<ISimplexOperation<4>, CreatorInterface<SimplexIntermediatePoints<4>&, void, SimplexOperationSettings>> == true);
@@ -53,9 +53,9 @@ int main()
 	model(data1, trueParameters, additionalParameters);
 
 
-	using BuilderAlias = BasicSimplexFitterSettings<4, AdditionalParameters>::BasicSimplexSettingsBuilder;
-	using SettingsAlias = BasicSimplexFitterSettings<4, AdditionalParameters>;
-	using FitterAlias = BasicSimplexFitter<4, AdditionalParameters, BasicSimplexFitterSettings<4, AdditionalParameters>>;
+	using BuilderAlias = BasicSimplexOptimizerSettings<4, AdditionalParameters>::BasicSimplexSettingsBuilder;
+	using SettingsAlias = BasicSimplexOptimizerSettings<4, AdditionalParameters>;
+	using FitterAlias = BasicSimplexOptimizer<4, AdditionalParameters, BasicSimplexOptimizerSettings<4, AdditionalParameters>>;
 
 	BuilderAlias builder{ model, errorModel };
 	CreatorSetUpInfo<SimplexCreatorSettings> sCreatorInfo{ "basic", SimplexCreatorSettings("basic", 0.0) };

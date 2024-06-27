@@ -13,7 +13,7 @@
 #include "./Fitting/Model.hpp"
 #include "./Fitting/AdditionalParameters.hpp"
 #include "./Fitting/ErrorModel.hpp"
-#include "./Fitting/FitterSettings.hpp"
+#include "./Fitting/OptimizerSettings.hpp"
 #include "./Fitting/Nealder-Mead/SimplexIntermediatePoints.hpp"
 
 #include "./Fitting/Exceptions/NoSetErrorModelExeption.hpp"
@@ -21,15 +21,15 @@
 #include "./Fitting/Exceptions/NoAvailableFactoryException.hpp"
 #include "./Fitting/Exceptions/WrongTemplateArgument.hpp"
 
-#include "./Fitting/Nealder-Mead/SimplexFitter.hpp"
+#include "./Fitting/Nealder-Mead/SimplexOptimizer.hpp"
 #include "./Fitting/Nealder-Mead/SimplexFigure.hpp"
 #include "./Fitting/Nealder-Mead/SimplexPoint.hpp"
 #include "./Fitting/Nealder-Mead/SimplexSettings.hpp"
 #include "./Fitting/Nealder-Mead/PIndices.hpp"
 
 
-#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitter.hpp"
-#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexFitterSettings.hpp"
+#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexOptimizer.hpp"
+#include "./Fitting/Nealder-Mead/BasicSimplex/BasicSimplexOptimizerSettings.hpp"
 
 #include "./Fitting/Nealder-Mead/SimplexCreator/IFigureCreator.hpp"
 #include "./Fitting/Nealder-Mead/SimplexCreator/SimplexCreatorFactory.hpp"

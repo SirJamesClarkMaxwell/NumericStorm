@@ -3,22 +3,23 @@
 #include <concepts>
 
 #include "AdditionalParameters.hpp"
-#include "FitterSettings.hpp"
+#include "OptimizerSettings.hpp"
 #include "Parameters.hpp"
 #include "FittingResults.hpp"
 
 namespace NumericStorm::Fitting {
 
-template<class DecoratedOptimizer, class InitialParameters, size_t parameter_size>
+template<class DecoratedOptimizer, class InitialParameters, size_t parameter_size, class SetUpOutput>
 concept Optimizer = requires (
 	DecoratedOptimizer optimizer, InitialParameters & initialParameters,
 	Data & fittingData,
-	AdditionalParameters additionalParameters, FittingResults<parameter_size> result
+	AdditionalParameters additionalParameters, FittingResults<parameter_size> result,
+	SetUpOutput output
 	)
 {
-	{ optimizer.setUpFittingProcedure(initialParameters, fittingData, additionalParameters) }-> std::convertible_to<void>;
+	{ optimizer.setUpFittingProcedure(initialParameters, fittingData, additionalParameters) }-> std::convertible_to<SetUpOutput>;
 	{ optimizer.checkStopConditions() }-> std::convertible_to<bool>;
-	{ optimizer.oneStepAlgorithm() }-> std::convertible_to<void>;
+	{ optimizer.oneStepAlgorithm(output) }-> std::convertible_to<void>;
 	{ optimizer.calculateUncertainty() }-> std::convertible_to<void>;
 	{ optimizer.getResult() }-> std::convertible_to < FittingResults<parameter_size>>;
 
@@ -26,36 +27,32 @@ concept Optimizer = requires (
 };
 
 
-template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters, class DerivedSettings >
+template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters >
 class Fitter
 {
 public:
-	explicit Fitter(const DerivedSettings& settings, bool calculateUncertainty = true, const Optimizer& optimizer)
-		: m_settings{ settings }, m_calculateUncertainty{ calculateUncertainty }, m_optimizer{ optimizer } {};
+	explicit Fitter(const Optimizer& optimizer, bool calculateUncertainty = true)
+		: m_optimizer{ optimizer }, m_calculateUncertainty{ calculateUncertainty } {};
 
 	FittingResults<parameter_size> fit(const Parameters<parameter_size>& initialParameters, const Data& fittingData,
 		const AuxilaryParameters& additionalParameters);
 
-
-	void updateSettings(const DerivedSettings& newSettings) { m_settings = newSettings; };
-
 	virtual ~Fitter() = default;
 private:
-	DerivedSettings m_settings;
-	bool m_calculateUncertainty{ true };
+
 	Optimizer m_optimizer;
 };
 
 
 
-template<size_t parameter_size, class AuxilaryParameters, class DerivedSettings >
-FittingResults<parameter_size> Fitter<parameter_size, AuxilaryParameters, DerivedSettings>::fit(
+template<size_t parameter_size, class AuxilaryParameters>
+FittingResults<parameter_size> Fitter<parameter_size, AuxilaryParameters>::fit(
 	const Parameters<parameter_size>& initialParameters, const Data& fittingData, const  AuxilaryParameters& additionalParameters)
 {
-
-	m_optimizer.setUpFittingProcedure(initialParameters, fittingData, additionalParameters);
+	typedef SetUpOutput = Optimizer::SetUpOutput; //! we need to fix this, i don't know how (right now)
+	SetUpOutput output = m_optimizer.setUpFittingProcedure(initialParameters, fittingData, additionalParameters);
 	while (m_optimizer.checkStopCondition())
-		m_optimizer.oneStepOfAlgorithm();
+		m_optimizer.oneStepOfAlgorithm(output);
 
 	if m_calculateUncertainty
 		m_optimizer.calculateUncertainty();
