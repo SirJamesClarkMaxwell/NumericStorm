@@ -69,11 +69,11 @@ private:
 		m_centroid_valid = true;
 		if (!m_sorted) sort();
 #if DEBUG
-		SimplexPoint<parameter_size> sum = std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>{});
+		SimplexPoint<parameter_size> sum = std::accumulate(++++m_points.begin(), m_points.end(), *(++m_points.begin()));
 		sum /= (parameter_size + 1);
 		return sum;
 #endif
-		return std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>()) / (parameter_size + 1);
+		return std::accumulate(++++m_points.begin(), m_points.end(), *(++m_points.begin())) / (parameter_size + 1);
 	}
 
 };

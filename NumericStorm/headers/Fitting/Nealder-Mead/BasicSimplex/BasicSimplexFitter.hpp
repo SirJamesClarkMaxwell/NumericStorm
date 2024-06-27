@@ -55,7 +55,7 @@ public:
 		int iterationCount = 0;
 		setUpFittingsProcedure(initialParameters, additionalParameters);
 		SimplexIntermediatePoints<parameter_size> simplexIntermediatePoints{ this->m_simplexFigure,PIndices::PointCount };
-		this->m_simplexFigure.sort();
+
 
 
 		while (checkFittingConditions(iterationCount, simplexIntermediatePoints.m_simplexFigure[bestPoint]))
@@ -63,10 +63,10 @@ public:
 			oneAlgorithmStep(simplexIntermediatePoints);
 			auto params = simplexIntermediatePoints.m_simplexFigure[bestPoint].getParameters();
 			double error = simplexIntermediatePoints.m_simplexFigure[bestPoint].getError();
-			//std::cout << "iteration: ";
-			//for (auto& item : params)
-			//	std::cout << item<<" ";
-			//std::cout<<" error "<<error << std::endl;
+			std::cout << "iteration: ";
+			for (auto& item : params)
+				std::cout << item << " ";
+			std::cout << " error " << error << std::endl;
 		}
 
 		SimplexPoint<parameter_size> bestPointRes = simplexIntermediatePoints.m_simplexFigure[bestPoint];
@@ -78,9 +78,9 @@ public:
 private:
 	const bool checkFittingConditions(int& iter, const SimplexPoint<parameter_size>& bestPoint)
 	{
-		bool iterationCondition = iter++ >= this->m_settings.getMaxIteration();
+		bool iterationCondition = iter++ <= this->m_settings.getMaxIteration();
 		bool errorCondition = bestPoint.getError() >= this->m_settings.getMinError();
-		return iterationCondition or errorCondition;
+		return iterationCondition and errorCondition;
 	}
 
 
@@ -89,8 +89,8 @@ private:
 		SimplexPoint<parameter_size> initialPoint{ this->m_settings.getReferencedData(), parameters.getParameters() };
 
 		//https://stackoverflow.com/questions/6610046/stdfunction-and-stdbind-what-are-they-and-when-should-they-be-used
-		auto evalCallback = std::bind(&BasicSimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>::simplexPointEvaluationFunction,this, 
-			std::placeholders::_1, 
+		auto evalCallback = std::bind(&BasicSimplexFitter<parameter_size, AuxilaryParameters, DerivedSettings>::simplexPointEvaluationFunction, this,
+			std::placeholders::_1,
 			additionalParameters);
 
 		initialPoint.onEvaluate(evalCallback);
@@ -110,9 +110,10 @@ public:
 #endif
 	void oneAlgorithmStep(SimplexIntermediatePoints<parameter_size>& intermediatePoints)
 	{
-		this->m_strategyManager.invoke("basic", intermediatePoints);
-		this->m_simplexOperationFactory.invoke(intermediatePoints.m_currentOperation, intermediatePoints);
-		intermediatePoints.m_simplexFigure.sort();
+		do {
+			this->m_simplexOperationFactory.invoke(intermediatePoints.m_currentOperation, intermediatePoints);
+			intermediatePoints.m_simplexFigure.sort();
+		} while (this->m_strategyManager.invoke("basic", intermediatePoints));
 	};
 
 private:

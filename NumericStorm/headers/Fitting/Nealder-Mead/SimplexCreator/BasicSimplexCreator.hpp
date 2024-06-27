@@ -31,9 +31,13 @@ public:
 		std::array<SimplexPoint<parameter_size>, parameter_size + 1> points{};
 		points.fill(input.initialPoint);
 
-		for (int i = 1; i < parameter_size + 1; i++)
+		for (int i = 1; i < parameter_size + 1; i++){
 			for (int j = 1; j < parameter_size; j++)
 				points[i][j] += Random::Float(input.minBounds[j], input.maxBounds[j]);
+
+			points[i].evaluatePoint();
+		}
+			
 
 		SimplexFigure<parameter_size> figure{ points };
 		return figure;
