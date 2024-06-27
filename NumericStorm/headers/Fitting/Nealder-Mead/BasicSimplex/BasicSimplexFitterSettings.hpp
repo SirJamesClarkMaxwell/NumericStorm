@@ -17,14 +17,6 @@ public:
 
 	explicit BasicSimplexFitterSettings(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel)
 		: SimplexSettings<parameter_size>{ model, errorModel } {}
-
-	/*
-	BasicSimplexFitterSettings(const BasicSimplexFitterSettings<parameter_size>&) = default;
-	BasicSimplexFitterSettings(BasicSimplexFitterSettings<parameter_size>&&) = default;
-	BasicSimplexFitterSettings<parameter_size>& operator=(const BasicSimplexFitterSettings<parameter_size>&) = default;
-	BasicSimplexFitterSettings<parameter_size>& operator=(BasicSimplexFitterSettings<parameter_size>&&) = default;
-	*/
-
 	virtual ~BasicSimplexFitterSettings() = default;
 public:
 	Parameters<parameter_size> parametersMinBounds{  };
@@ -32,27 +24,17 @@ public:
 
 
 protected:
-	template<class B, class Settings>
-	using BaseType = typename SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<B, Settings>;
+	template<class BuildingType, class Settings>
+	using BaseType = typename SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<BuildingType, Settings>;
 
-	template<class B, class Settings>
-	class BasicSimplexSettingsBuilderBase : public SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<B, Settings> {
+	template<class BuildingType, class Settings>
+	class BasicSimplexSettingsBuilderBase : public SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<BuildingType, Settings> {
 		static_assert(std::derived_from<Settings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 	public:
 		BasicSimplexSettingsBuilderBase() = delete;
 		BasicSimplexSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			BaseType<B, Settings>{ model, errorModel } {}
+			BaseType<BuildingType, Settings>{ model, errorModel } {}
 
-
-		virtual B& minParameters(const Parameters<parameter_size>& bounds) {
-			this->m_settingsObject.parametersMinBounds = bounds;
-			return this->returnSelf();
-		}
-
-		virtual B& maxParameters(const Parameters<parameter_size>& bounds) {
-			this->m_settingsObject.parametersMaxBounds = bounds;
-			return this->returnSelf();
-		}
 	};
 
 public:

@@ -39,7 +39,7 @@ public:
 protected:
 
 
-	template<class B, class Settings>
+	template<class BuildingType, class Settings>
 	class FitterSettingsBuilderBase {
 		static_assert(std::derived_from<Settings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 	public:
@@ -47,44 +47,54 @@ protected:
 		FitterSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
 			m_settingsObject{ model, errorModel } {}
 
-		virtual B& returnSelf() { return static_cast<B&>(*this); }
+		Settings build() { return m_settingsObject; }
+		BuildingType& returnSelf() { return static_cast<BuildingType&>(*this); }
 
-		virtual B& maxIteration(long int iterations) {
+		BuildingType& maxIteration(long int iterations)
+		{
 			this->m_settingsObject.m_maxIteration = iterations;
 			return returnSelf();
 		}
-
-		virtual B& minError(double error) {
+		BuildingType& minError(double error)
+		{
 			this->m_settingsObject.m_minError = error;
 			return returnSelf();
 		}
-
-		virtual B& useBounds(bool useBounds) {
+		BuildingType& useBounds(bool useBounds)
+		{
 			this->m_settingsObject.m_useBounds = useBounds;
 			return returnSelf();
 		}
-
-		virtual B& refData(const std::shared_ptr<Data>& data) {
+		BuildingType& refData(const std::shared_ptr<Data>& data)
+		{
 			this->m_settingsObject.m_ref_data = data;
 			return returnSelf();
 		}
-
-		virtual Settings build() { return m_settingsObject; }
-
+		BuildingType& minParameters(const Parameters<parameter_size>& bounds)
+		{
+			this->m_settingsObject.parametersMinBounds = bounds;
+			return returnSelf();
+		}
+		BuildingType& maxParameters(const Parameters<parameter_size>& bounds)
+		{
+			this->m_settingsObject.parametersMaxBounds = bounds;
+			return returnSelf();
+		}
 	protected:
 		Settings m_settingsObject;
 	};
+	/*
 
 
-
-public:
-	class FitterSettingsBuilder : public FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>> {
 	public:
-		FitterSettingsBuilder() = delete;
-		FitterSettingsBuilder(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>>{ model, errorModel } {}
-	};
+		class FitterSettingsBuilder : public FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>> {
+		public:
+			FitterSettingsBuilder() = delete;
+			FitterSettingsBuilder(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
+				FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>>{ model, errorModel } {}
+		};
 
-	friend class FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>>;
+		friend class FitterSettingsBuilderBase<FitterSettingsBuilder, FitterSettings<parameter_size, AuxilaryParameters>>;
+	*/
 };
 }

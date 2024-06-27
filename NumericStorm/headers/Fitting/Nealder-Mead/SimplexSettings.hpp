@@ -22,10 +22,6 @@ public:
 	SimplexSettings(const Model<parameter_size>& model, const ErrorModel& errorModel)
 		: FitterSettings<parameter_size, AuxilaryParameters>{ model, errorModel } {}
 	SimplexSettings() = delete;
-	SimplexSettings(const SimplexSettings<parameter_size, AuxilaryParameters>&) = default;
-	SimplexSettings(SimplexSettings<parameter_size, AuxilaryParameters>&&) = default;
-	SimplexSettings<parameter_size, AuxilaryParameters>& operator=(const SimplexSettings<parameter_size, AuxilaryParameters>&) = default;
-	SimplexSettings<parameter_size, AuxilaryParameters>& operator=(SimplexSettings<parameter_size, AuxilaryParameters>&&) = default;
 	virtual ~SimplexSettings() = default;
 
 public:
@@ -38,43 +34,44 @@ public:
 
 
 protected:
-	template<class B, class Settings>
-	using BaseType = typename FitterSettings<parameter_size, AuxilaryParameters>::FitterSettingsBuilderBase<B, Settings>;
+	template<class BuildingType, class Settings>
+	using BaseType = typename FitterSettings<parameter_size, AuxilaryParameters>::FitterSettingsBuilderBase<BuildingType, Settings>;
 
-	template<class B, class Settings>
-	class SimplexSettingsBuilderBase : public FitterSettings<parameter_size, AuxilaryParameters>::FitterSettingsBuilderBase<B, Settings> {
+	template<class BuildingType, class Settings>
+	class SimplexSettingsBuilderBase : public FitterSettings<parameter_size, AuxilaryParameters>::FitterSettingsBuilderBase<BuildingType, Settings> {
 		static_assert(std::derived_from<Settings, FitterSettings<parameter_size, AuxilaryParameters>> == true);
 	public:
 		SimplexSettingsBuilderBase() = delete;
 		SimplexSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			BaseType<B, Settings>{ model, errorModel } {}
+			BaseType<BuildingType, Settings>{ model, errorModel } {}
 
-
-		virtual B& addOperationSettings(const CreatorSetUpInfo<SimplexOperationSettings>& settings) {
+		BuildingType& addOperationSettings(const CreatorSetUpInfo<SimplexOperationSettings>& settings)
+		{
 			this->m_settingsObject.m_simplexOperationSetUpInfo.push_back(settings);
 			return this->returnSelf();
 		}
-
-		virtual B& addCreatorSettings(const CreatorSetUpInfo<SimplexCreatorSettings>& settings) {
+		BuildingType& addCreatorSettings(const CreatorSetUpInfo<SimplexCreatorSettings>& settings)
+		{
 			this->m_settingsObject.m_simplexCreatorSetUpInfo.push_back(settings);
 			return this->returnSelf();
 		}
-
-		virtual B& addStrategySettings(const CreatorSetUpInfo<StrategySettings>& settings) {
+		BuildingType& addStrategySettings(const CreatorSetUpInfo<StrategySettings>& settings)
+		{
 			this->m_settingsObject.m_simplexStrategySetUpInfo.push_back(settings);
 			return this->returnSelf();
 		}
 	};
-
-public:
-
-	class SimplexSettingsBuilder : public SimplexSettingsBuilderBase<SimplexSettingsBuilder, SimplexSettings<parameter_size, AuxilaryParameters>> {
+	/*
 	public:
-		SimplexSettingsBuilder() = delete;
-		SimplexSettingsBuilder(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			SimplexSettingsBuilderBase<SimplexSettingsBuilder, SimplexSettings<parameter_size, AuxilaryParameters>>{ model, errorModel } {}
-	};
 
-	friend class SimplexSettingsBuilderBase<SimplexSettingsBuilder, SimplexSettings<parameter_size, AuxilaryParameters>>;
+		class SimplexSettingsBuilder : public SimplexSettingsBuilderBase<SimplexSettingsBuilder, SimplexSettings<parameter_size, AuxilaryParameters>> {
+		public:
+			SimplexSettingsBuilder() = delete;
+			SimplexSettingsBuilder(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
+				SimplexSettingsBuilderBase<SimplexSettingsBuilder, SimplexSettings<parameter_size, AuxilaryParameters>>{ model, errorModel } {}
+		};
+
+		friend class SimplexSettingsBuilderBase<SimplexSettingsBuilder, SimplexSettings<parameter_size, AuxilaryParameters>>;
+	*/
 };
 }
