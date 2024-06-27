@@ -1,4 +1,4 @@
-<mxfile host="Electron" modified="2024-03-20T16:51:44.678Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.0.2 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="mlKYc15x-uGFYAlreCXd" version="23.0.2" type="device" pages="4">
+<mxfile host="Electron" modified="2024-06-27T18:11:05.193Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.6.1 Chrome/124.0.6367.207 Electron/30.0.6 Safari/537.36" etag="CHgoFc7ZOmimqEOlnF3j" version="24.6.1" type="device" pages="4">
   <diagram name="Fitting module and simulated annealing" id="4ttOccu7J3zMKC5cVIyK">
     <mxGraphModel dx="3179" dy="497" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
@@ -1030,10 +1030,57 @@
     </mxGraphModel>
   </diagram>
   <diagram id="cTUDoqbYJ1XG3rxKsuXF" name="Simulated Annealing SimpelxFitter">
-    <mxGraphModel dx="1050" dy="621" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="978" dy="1747" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="3cUqxDO8sWKHgP7Gdzsx-1" target="3cUqxDO8sWKHgP7Gdzsx-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-1" value="generatePoint" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="80" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-2" value="calculateProbability" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="160" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-17" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3cUqxDO8sWKHgP7Gdzsx-26" target="3cUqxDO8sWKHgP7Gdzsx-12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="280" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="3cUqxDO8sWKHgP7Gdzsx-9" target="3cUqxDO8sWKHgP7Gdzsx-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-9" value="Aneal" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;labelPosition=center;align=center;fillColor=#1ba1e2;fontColor=#ffffff;strokeColor=#006EAF;" vertex="1" parent="1">
+          <mxGeometry x="240" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-12" value="returnPointAndProbability" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="215" y="320" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-21" value="SimmulatedAnnealingFactory" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="480" y="10" width="230" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-22" value="- m_temperature: double&lt;div&gt;- m_coolingRate: double&lt;/div&gt;&lt;div&gt;- m_noiseFactor: double&lt;/div&gt;&lt;div&gt;- m_numerbOfAnnealingPoints&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#x9;&lt;/span&gt;&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="3cUqxDO8sWKHgP7Gdzsx-21">
+          <mxGeometry y="26" width="230" height="84" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-23" value="" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" vertex="1" parent="3cUqxDO8sWKHgP7Gdzsx-21">
+          <mxGeometry y="110" width="230" height="8" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-24" value="+ aneal(Input): Output&lt;div&gt;- calculateProbability(): double&lt;/div&gt;&lt;div&gt;- updateTemperature(): void&lt;/div&gt;" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" vertex="1" parent="3cUqxDO8sWKHgP7Gdzsx-21">
+          <mxGeometry y="118" width="230" height="62" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-25" value="template&amp;lt;class Input,class Output&amp;gt;" style="rounded=1;whiteSpace=wrap;html=1;absoluteArcSize=1;arcSize=14;strokeWidth=2;dashed=1;opacity=40;" vertex="1" parent="1">
+          <mxGeometry x="640" y="-20" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-27" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="3cUqxDO8sWKHgP7Gdzsx-2" target="3cUqxDO8sWKHgP7Gdzsx-26">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="320" y="230" as="sourcePoint" />
+            <mxPoint x="320" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="3cUqxDO8sWKHgP7Gdzsx-26" value="updateTemperature" style="verticalLabelPosition=middle;verticalAlign=middle;html=1;shape=process;whiteSpace=wrap;rounded=1;size=0.14;arcSize=6;labelPosition=center;align=center;" vertex="1" parent="1">
+          <mxGeometry x="240" y="240" width="160" height="40" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
