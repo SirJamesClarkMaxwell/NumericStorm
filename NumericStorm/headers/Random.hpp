@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace NumericStorm::Fitting {
+namespace NumericStorm {
 class Random
 {
 public:
