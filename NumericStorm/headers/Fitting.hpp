@@ -16,6 +16,8 @@
 #include "./Fitting/OptimizerSettings.hpp"
 #include "./Fitting/Nealder-Mead/SimplexIntermediatePoints.hpp"
 
+#include "./SimulatedAnnealig/SimulatedAnnealingFactory.hpp"
+
 #include "./Fitting/Exceptions/NoSetErrorModelExeption.hpp"
 #include "./Fitting/Exceptions/NoSetModelExeption.hpp"
 #include "./Fitting/Exceptions/NoAvailableFactoryException.hpp"
@@ -46,3 +48,6 @@
 #include "./Fitting/Nealder-Mead//SimplexDecision/BasicSimplexStrategy.hpp"
 #include "./Fitting/Nealder-Mead//SimplexDecision/IDecision.hpp"
 #include "./Fitting/Nealder-Mead//SimplexDecision/StrategyManager.hpp"
+
+
+#include "./Fitting/Nealder-Mead/SimulatedAnnealingSimplexOptimizer/SimulatedAnnealingSimplexOptimizer.hpp"
