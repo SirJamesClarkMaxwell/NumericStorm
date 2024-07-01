@@ -61,7 +61,7 @@ template<class Input>
 std::vector<Input> SimulatedAnnealingFactory::anneal(const Input& input)
 {
     std::array<Input, numerOfPointsToAnneal> annealedPoints;
-    for (std::tuple<> item : std::views::zip())
+    for (std::tuple<> item : std::ranges::views::zip())
         annealedPoints[i] = generatePoints<Input>(input);
 
     return std::views::zip_transform(calculateProbability<Input>, annealedPoints);

@@ -3,9 +3,33 @@
 #include "NumericStorm.hpp"
 #include "../headers/FittingSandBoxFunctions.hpp"
 using namespace NumericStorm::Fitting;
+using namespace NumericStorm::SimulatedAnnealing;
+double sum(const std::array<double, 4>& obj)
+{
+	return std::accumulate(obj.begin(), obj.end(), 0.0);
+};
+class SimplexPointWrapper
+{
+public:
+	SimplexPointWrapper(SimplexPoint<4> referencePoint)
+		:m_referencePoint{ referencePoint } {};
+	double getEnergy(const SimplexPoint<4>& object) { return sum(object.getParameters()) / 4; };
+	std::array<double, 4> doSerialize(const SimplexPoint<4>& point) { return point.getParameters(); };
+	std::unique_ptr<SimplexPoint<4>> createObject(std::vector<double> inputData)
+	{
+		SimplexPoint<4> toReturn{ m_referencePoint };
+		for (int i = 0; i < 4;i++)
+			toReturn[i] = inputData[i];
 
+		return std::make_unique<SimplexPoint<4>>(toReturn);
+	};
+private:
+	SimplexPoint<4> m_referencePoint;
+
+};
 int main()
 {
+#if 0
 	bool b1, b2, b3, b4;
 	b1 = true or false;
 	b2 = true and false;
@@ -84,6 +108,33 @@ int main()
 	FitterAlias fitter(fitterSettings);
 	fitter.setUp();
 	auto results = fitter.fit(testingParameters, additionalParameters);
+#endif
 
+
+	{
+
+
+		std::cout << "Testing SimulatedAnnealing" << std::endl;
+		Parameters<4> trueParameters({ 1,1,1,1 });
+		AdditionalParameters additionalParameters{};
+		Model model = GaussianModel();
+		ErrorModel errorModel = Chi2ErrorModel();
+		Data data1{ 2 };
+		std::array<double, 100> arguments;
+		int i = -50;
+		for (int it = 0;it < 100;it++)
+		{
+			data1[0].push_back(i);
+			i++;
+		}
+		model(data1, trueParameters, additionalParameters);
+		std::shared_ptr<Data> ptrData = std::make_shared<Data>(data1);
+		SimplexPoint<4> point{ ptrData,{ 1,1,1,1 } };
+		point.evaluatePoint(model, errorModel, additionalParameters);
+
+		SimplexPointWrapper pointWrapper(point);
+		SimulatedAnnealingFactoryTypeEnsure annealingFactory{ pointWrapper };
+
+	}
 	return 0;
 }

@@ -17,6 +17,7 @@
 #include "./Fitting/Nealder-Mead/SimplexIntermediatePoints.hpp"
 
 #include "./SimulatedAnnealig/SimulatedAnnealingFactory.hpp"
+#include "./SimulatedAnnealig/TypeEnsureSimulatedAnnealing.hpp"
 
 #include "./Fitting/Exceptions/NoSetErrorModelExeption.hpp"
 #include "./Fitting/Exceptions/NoSetModelExeption.hpp"
@@ -51,3 +52,4 @@
 
 
 #include "./Fitting/Nealder-Mead/SimulatedAnnealingSimplexOptimizer/SimulatedAnnealingSimplexOptimizer.hpp"
+
