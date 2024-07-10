@@ -32,7 +32,7 @@ public:
         :numerOfSimulation{ numerOfSimulation } {};
 public:
     size_t numerOfSimulation;
-    ExecutionPolicy executionPolicy;
+    ExecutionPolicy executionPolicy = ExecutionPolicy::MultiThread;
 
 };
 

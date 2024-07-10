@@ -6,15 +6,16 @@ namespace NumericStorm::SimulatedAnnealing
 
 
 
-template<class AnnealingInput>
-concept  Input = requires(AnnealingInput input, std::vector<double> numbers)
+template<class Input>
+concept  AnnealingInput = requires(Input input, std::vector<double> numbers)
 {
     //TODO we need an adapter between input and AnnealingInput to require some common interface
     { input.getEnergy() } -> std::convertible_to<double>;
     { input.getNumbersToGenerate() } -> std::convertible_to<std::vector<double>>;
-    { input.createObject(numbers) } ->std::convertible_to<AnnealingInput>;
+    { input.createObject(numbers) } ->std::convertible_to<Input>;
 };
-template<class AnnealingInput>
+template<class Input>
+    requires AnnealingInput<Input>
 struct AnnealingOutput
 {
 public:
@@ -27,7 +28,6 @@ public:
     double probability{ -1 };
 };
 
-
 class SimulatedAnnealingFactory
 {
 public:
@@ -35,7 +35,7 @@ public:
     ~SimulatedAnnealingFactory() = default;
 
     template<class Input>
-    std::vector<Input> anneal(const Input& input);
+    std::vector<AnnealingOutput<Input>> anneal(const Input& input);
 private:
     double m_temperature{ -1 };
     double m_coolingRate{ 5 };
@@ -54,27 +54,32 @@ private:
     void updateTemperature(double probability);
 };
 
-
-
-
 template<class Input>
-std::vector<Input> SimulatedAnnealingFactory::anneal(const Input& input)
+std::vector<AnnealingOutput<Input>> SimulatedAnnealingFactory::anneal(const Input& annealingInput)
 {
-    std::array<Input, numerOfPointsToAnneal> annealedPoints;
-    for (std::tuple<> item : std::ranges::views::zip())
-        annealedPoints[i] = generatePoints<Input>(input);
-
+    std::vector<AnnealingOutput<Input>> annealedPoints;
+    annealedPoints.resize(numerOfPointsToAnneal);
+    for (auto& item : annealedPoints)
+        item = generatePoints<Input>(annealingInput);
     return std::views::zip_transform(calculateProbability<Input>, annealedPoints);
-
 }
-template<class AnnealingInput>
-AnnealingOutput<AnnealingInput> SimulatedAnnealingFactory::generatePoint(AnnealingInput& input)
+template<class Input>
+AnnealingOutput<Input> SimulatedAnnealingFactory::generatePoint(Input& input)
 {
     using std::views;
     //NOTE how zip_transform is working https://en.cppreference.com/w/cpp/ranges/zip_transform_view
-    auto generateRandomNumber = [](double number) {Random::Float(number * (1 - m_noiseFactor), number * (1 + m_noiseFactor))};
-    std::vector<double> generatedValues = zip_transform(input.getNumbersToGenerate());
-    return AnnealingOutput(input, AnnealingInput().createObject(generatedValues));
+    auto generateRandomNumber = [](double number) {return Random::Float(number * (1 - m_noiseFactor), number * (1 + m_noiseFactor))};
+    std::vector<double> generatedValues;
+    std::vector<double> baseNumbers = input.getNumbersToGenerate();
+    generatedValues.resize(baseNumbers.size());
+    generatedValues = zip_transform(generateRandomNumber, baseNumbers);
+#if DEBUG
+    auto annealingOutput = Input().createObject(generatedValues);
+    auto toReturn = AnnealingOutput(input, annealingOutput);
+    return toReturn;
+#else
+    return AnnealingOutput(input, Input().createObject(generatedValues));
+#endif
 };
 template<class Input>
 void SimulatedAnnealingFactory::calculateProbability(AnnealingOutput<Input>& input)
