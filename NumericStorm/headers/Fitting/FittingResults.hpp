@@ -26,6 +26,6 @@ public:
     int iterationCounts{ 0 };
     double minimum_error{ -1 };
     std::vector<std::vector<double>> covarianceMatrix{};
-
+    Input& getResults() { return fittingResults; };
 };
 }

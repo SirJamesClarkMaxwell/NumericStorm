@@ -22,7 +22,7 @@ public:
     UncertaintyCalculator() = delete;
     UncertaintyCalculator(UncertaintyStrategyWrapper wrapper)
         :m_wrapper{ wrapper } {};
-    vector<vector<double>> operator()(Input input) { m_wrapper.calculateUncertainty(); };
+    vector<vector<double>> operator()(Input& input) { m_wrapper.calculateUncertainty(input); };
 private:
     using vector = std::vector;
     UncertaintyStrategyWrapper m_wrapper;

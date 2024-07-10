@@ -6,14 +6,14 @@
 #include "OptimizerSettings.hpp"
 #include "Parameters.hpp"
 #include "FittingResults.hpp"
-
+#include "UncertaintyCalculator.hpp"
 namespace NumericStorm::Fitting {
 
-template<class DecoratedOptimizer, class InitialParameters, size_t parameter_size, class SetUpOutput>
+template<class DecoratedOptimizer, class OptimizingType, class SetUpOutput>
 concept Optimizer = requires (
-	DecoratedOptimizer optimizer, InitialParameters & initialParameters,
+	DecoratedOptimizer optimizer, OptimizingType & initialParameters,
 	Data & fittingData,
-	AdditionalParameters additionalParameters, FittingResults<parameter_size> result,
+	AdditionalParameters additionalParameters, FittingResults<OptimizingType> result,
 	SetUpOutput output
 	)
 {
@@ -21,62 +21,46 @@ concept Optimizer = requires (
 	{ optimizer.checkStopConditions() }-> std::convertible_to<bool>;
 	{ optimizer.oneStepAlgorithm(output) }-> std::convertible_to<void>;
 	{ optimizer.calculateUncertainty() }-> std::convertible_to<void>;
-	{ optimizer.getResult() }-> std::convertible_to < FittingResults<parameter_size>>;
-
-
+	{ optimizer.getResult() }-> std::convertible_to<OptimizingType&>;
 };
 
 
-template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters >
+
+template<class DecoratedOptimizer, class OptimizingType, class SetUpOutput, class AuxilaryParameters>
+	requires Optimizer<DecoratedOptimizer, OptimizingType, SetUpOutput>&&
+UncertaintyStrategyWrapper<OptimizingType>
+
 class Fitter
 {
 public:
-	explicit Fitter(const Optimizer& optimizer, bool calculateUncertainty = true)
+	explicit Fitter(const Optimizer& optimizer, bool calculateUncertainty = false)
 		: m_optimizer{ optimizer }, m_calculateUncertainty{ calculateUncertainty } {};
 
-	FittingResults<parameter_size> fit(const Parameters<parameter_size>& initialParameters, const Data& fittingData,
+	FittingResults<OptimizingType> fit(const OptimizingType& initialParameters, const Data& fittingData,
 		const AuxilaryParameters& additionalParameters);
+	void setUncertaintyCalculator(UncertaintyStrategyWrapper uncertaintyCalculator) { m_uncertaintyCalculator = uncertaintyCalculator; };
 
 	virtual ~Fitter() = default;
 private:
-
 	Optimizer m_optimizer;
+	UncertaintyCalculator m_uncertaintyCalculator;
 };
 
 
-
-template<size_t parameter_size, class AuxilaryParameters>
-FittingResults<parameter_size> Fitter<parameter_size, AuxilaryParameters>::fit(
-	const Parameters<parameter_size>& initialParameters, const Data& fittingData, const  AuxilaryParameters& additionalParameters)
+template<class DecoratedOptimizer, class OptimizingType, class SetUpOutput, class AuxilaryParameters>
+FittingResults<OptimizingType> Fitter<DecoratedOptimizer, OptimizingType, SetUpOutput, AuxilaryParameters>::fit(
+	const OptimizingType& initialParameters, const Data& fittingData, const  AuxilaryParameters& additionalParameters)
 {
 	typedef SetUpOutput = Optimizer::SetUpOutput; //! we need to fix this, i don't know how (right now)
 	SetUpOutput output = m_optimizer.setUpFittingProcedure(initialParameters, fittingData, additionalParameters);
 	while (m_optimizer.checkStopCondition())
 		m_optimizer.oneStepOfAlgorithm(output);
 
-	if m_calculateUncertainty
-		m_optimizer.calculateUncertainty();
-#if DEBUG
-	FittingResults<parameter_size> results = m_optimizer.getResults();
-	return results
-#else
-	return m_optimizer.getResults();
-#endif
-
+	if (m_calculateUncertainty)
+		std::vector<std::vector<double>> uncertainty = m_uncertaintyCalculator(m_optimizer.getResults());
 };
+
 }
-//! STEPS of refactoring
 
-//NOTE Optimizer has to have a tables of 
-
-//TODO add concepts
-	//TODO oneStepOfAlgorithm
-	//TODO checkStopCondition
-	//TODO setUp
-	//TODO setUpFittingProcedure
-
-//TODO change the name of Fitting -> Optimizer
-//TODO add Fitting class and the most general fitting algorithm
-//TODO remove inheritance 
 
 
