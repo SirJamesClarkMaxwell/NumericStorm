@@ -16,12 +16,16 @@ template<class Input>
 struct FittingResults
 {
 public:
-    FittingResults(const Input fittingResults, int iterationCounts, double minimalError)
-        :fittingResults{ fittingResults }, iterationCounts{ iterationCounts }, minimum_error{ fittingResults.getError() } {};
+    FittingResults(const Input fittingResults, int iterationCounts, std::vector<std::vector<double>> covarianceMatrix)
+        :
+        fittingResults{ fittingResults },
+        iterationCounts{ iterationCounts },
+        minimum_error{ fittingResults.getError() },
+        covarianceMatrix{ covarianceMatrix } {};
     Input fittingResults{};
     int iterationCounts{ 0 };
     double minimum_error{ -1 };
-    std::vector<std::vector<double>> m_covariance_matrix{};
+    std::vector<std::vector<double>> covarianceMatrix{};
 
 };
 }
