@@ -1,18 +1,27 @@
 #pragma once
 #include <array>
-
+#include <concepts>
+#include <vector>
 
 namespace NumericStorm::Fitting {
-template<size_t parameters_size>
+template<class Input>
+concept FittingInput = requires(Input input)
+{
+    { input.getNumbers() } -> std::convertible_to<std::vector<double>>;
+    //TODO: change the name of this method to be more accurate
+    { input.getError() } ->std::convertible_to<double>;
+};
+template<class Input>
+    requires FittingInput<Input>
 struct FittingResults
 {
 public:
-    FittingResults(const Parameters<parameters_size> parameters, int iterationCounts, double minimalError)
-        :m_parameters{ parameters }, m_iterationCounts{ iterationCounts }, m_minimum_error{ minimalError } {}
-    Parameters<parameters_size> m_parameters{};
-    int m_iterationCounts{ 0 };
-    double m_minimum_error{ -1 };
-    std::array<std::array<double, parameters_size>, parameters_size> m_covariance_matrix{};
+    FittingResults(const Input fittingResults, int iterationCounts, double minimalError)
+        :fittingResults{ fittingResults }, iterationCounts{ iterationCounts }, minimum_error{ fittingResults.getError() } {};
+    Input fittingResults{};
+    int iterationCounts{ 0 };
+    double minimum_error{ -1 };
+    std::vector<std::vector<double>> m_covariance_matrix{};
 
 };
 }
