@@ -39,7 +39,7 @@ namespace NumericStorm::Fitting
             return -1.0;
         }
 
-        void setCallback(const std::function<double(std::vector<double>&)>& callback) {
+        void setCallback(const std::function<double(const std::vector<double>&)>& callback) {
             m_energyCallback = callback;
         }
 
@@ -64,7 +64,7 @@ namespace NumericStorm::Fitting
     private:
         std::vector<double*> m_energies{};
         std::vector<std::vector<double*>> m_configurations{};
-        std::function<double(std::vector<double>&)> m_energyCallback{};
+        std::function<double(const std::vector<double>&)> m_energyCallback{};
 
         std::vector<std::vector<double>> m_annealedConfigurations{};
         std::vector<double> m_AnnealedEnergies{};

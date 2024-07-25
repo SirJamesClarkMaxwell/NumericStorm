@@ -18,29 +18,29 @@ namespace NumericStorm::Fitting
             : m_simplexFigure{ simplexFigure }, m_intermediatePoints{ pCount, simplexFigure[parameter_size] } {}
     
         
-        SimplexFigure& getSimplexFigure() { return m_simplexFigure; }
+        auto& getSimplexFigure() { return m_simplexFigure; }
 
-        std::vector<SimplexPoint>& getAdditionalPoints() { return m_intermediatePoints;}
+        std::vector<SimplexPoint<parameter_size>>& getAdditionalPoints() { return m_intermediatePoints;}
 
         const OperationEnum& getCurrentOperation() const { return m_operation; }
 
         OperationEnum& getCurrentOperation() { return m_operation; }
 
-        const SimplexPoint& getWorstPoint() const { return m_simplexFigure[0]; }
+        const auto& getWorstPoint() const { return m_simplexFigure[0]; }
 
-        const SimplexPoint&  getSecondWorstPoint() const { return m_simplexFigure[1]; }
+        const auto&  getSecondWorstPoint() const { return m_simplexFigure[1]; }
 
-        const SimplexPoint& getBestPoint() const { return m_simplexFigure[parameter_size]; }
+        const auto& getBestPoint() const { return m_simplexFigure[parameter_size]; }
 
-        SimplexPoint& getWorstPoint() { return m_simplexFigure[0]; }
+        auto& getWorstPoint() { return m_simplexFigure[0]; }
 
-        SimplexPoint& getSecondWorstPoint() { return m_simplexFigure[1]; }
+        auto& getSecondWorstPoint() { return m_simplexFigure[1]; }
 
-        SimplexPoint& getBestPoint() { return m_simplexFigure[parameter_size]; }
+        auto& getBestPoint() { return m_simplexFigure[parameter_size]; }
 
-        SimplexPoint& operator[](IndeciesEnum index) { return m_intermediatePoints[index]; }
+        auto& operator[](IndeciesEnum index) { return m_intermediatePoints[index]; }
 
-        const SimplexPoint& operator[](IndeciesEnum index) const { return m_intermediatePoints[index]; }
+        const auto& operator[](IndeciesEnum index) const { return m_intermediatePoints[index]; }
 
         long int& getIteration() { return m_iteration; }
 

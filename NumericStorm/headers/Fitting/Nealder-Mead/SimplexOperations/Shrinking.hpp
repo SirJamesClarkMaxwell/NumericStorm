@@ -10,7 +10,7 @@ namespace NumericStorm::Fitting
     class Shrinking : public SimplexOperationBase<parameter_size>
     {
     public:
-    
+    	using SettingsT = typename SimplexOperationBase<parameter_size>::SettingsT;
         Shrinking(const SettingsT& settings)
             : SimplexOperationBase<parameter_size>{settings} {}
     
@@ -19,7 +19,7 @@ namespace NumericStorm::Fitting
         {
             
             const SimplexPoint<parameter_size>& bestPoint = state.getBestPoint();
-            double delta = getSettings().getFactor();
+            double delta = this->getSettings().getFactor();
     
 
             std::for_each(state.getSimplexFigure().begin(), state.getSimplexFigure().end() - 1,

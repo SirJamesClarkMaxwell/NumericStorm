@@ -12,19 +12,19 @@ namespace NumericStorm
 namespace Fitting
 {
 template <size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
-class Model
+class ModelBase
 {
 public:
-    using parameter_size = parameter_size;
+    static const size_t parameter_size = parameter_size;
     using AuxParameters = AuxilaryParameters;
     using ModelFunction = std::function<void(Data&, const Parameters<parameter_size>&, const AuxParameters&)>;
     
 
-    Model(const ModelFunction& model)
+    ModelBase(const ModelFunction& model)
         : m_model{ model } {};
 
    
-    virtual ~Model() = default;
+    virtual ~ModelBase() = default;
 
     void operator()(Data& arguments, const Parameters<parameter_size>& parameters, const AuxParameters& additionalParameters) const {
         m_model(arguments, parameters, additionalParameters);

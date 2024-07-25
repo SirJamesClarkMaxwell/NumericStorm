@@ -14,7 +14,7 @@ namespace NumericStorm::Fitting {
 	class BasicSimplexCreator : public VisitorOperationBase<SimplexCreatorSettings<parameter_size>>
 	{
 	public:
-	
+		using SettingsT = VisitorOperationBase<SimplexCreatorSettings<parameter_size>>::SettingsT;
 		explicit BasicSimplexCreator(const SettingsT& settings)
 			: VisitorOperationBase<SettingsT>{ settings } {}
 	
@@ -30,7 +30,7 @@ namespace NumericStorm::Fitting {
 
 				std::transform(point.begin(), point.end(), point.begin(),
 					[&](double value, size_t index) {
-						return value + Random::Float(m_settings.getMinBounds()[index], m_settings.getMaxBounds()[index]);
+						return value + Random::Float(this->m_settings.getMinBounds()[index], this->m_settings.getMaxBounds()[index]);
 					});
 				point.evaluatePoint();
 				});

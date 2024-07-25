@@ -24,7 +24,7 @@ namespace NumericStorm::Fitting
 	class BasicSimplexOptimizerSettings : public SimplexOptimizerSettings<M>
 	{
 	public:
-		using parameter_size = typename M::parameter_size;
+		static const size_t parameter_size = M::parameter_size;
 		using AuxilaryParameters = typename M::AuxilaryParameters;
 		using OptimizerInputT = Parameters<parameter_size>;
 		using OptimizerStateT = SimplexIntermediateState<parameter_size, BasicSimplexIndeciesEnum, BasicOperationsEnum>;
@@ -61,17 +61,17 @@ namespace NumericStorm::Fitting
 		
 	
 		template<class BuildingType, OptimizerSettings Settings>
-		class BasicSimplexOptimizerSettingsBuilderBase : public SimplexOptimizerSettingsBuilderBase<BuildingType, Settings> {
+		class BasicSimplexOptimizerSettingsBuilderBase : public SimplexOptimizerSettings<M>::SimplexOptimizerSettingsBuilderBase<BuildingType, Settings> {
 		public:
 
 			BuildingType& addOperationSettings(const SettingsPair& settings)
 			{
-				m_settingsObject.m_operationSettings[settings.first()] = settings.second();
+				this->m_settingsObject.m_operationSettings[settings.first()] = settings.second();
 				return this->returnSelf();
 			}
 			BuildingType& addOperationSettings(const std::vector<SettingsPair>& settings)
 			{
-				m_settingsObject.m_operationSettings = settings;
+				this->m_settingsObject.m_operationSettings = settings;
 				return this->returnSelf();
 			}
 			BuildingType& addCreatorSettings(const SimplexCreatorSettings<parameter_size>& settings)

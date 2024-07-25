@@ -9,7 +9,7 @@ namespace NumericStorm::Fitting
 {
 using namespace NumericStorm::Concepts;
 
-	template <Model M>
+	template<Model M>
 	class SimplexOptimizerSettings
 	{
 	public:

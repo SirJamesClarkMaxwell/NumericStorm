@@ -10,7 +10,7 @@ namespace Fitting
 	class Expansion : public SimplexOperationBase<parameter_size>
 	{
 	public:
-	
+		using SettingsT = typename SimplexOperationBase<parameter_size>::SettingsT;
 		Expansion(const SettingsT& settings)
 			: SimplexOperationBase<parameter_size>{settings} {}
 	
@@ -20,7 +20,7 @@ namespace Fitting
 			const SimplexPoint<parameter_size>& reflected = state[Reflected];
 			SimplexPoint<parameter_size>& expanded = state[Expanded];
 			
-			double gamma = getSettings().getFactor();
+			double gamma = this->getSettings().getFactor();
 	#if DEBUG
 			auto difference = reflected - centroid;
 			auto scaled = difference * gamma;

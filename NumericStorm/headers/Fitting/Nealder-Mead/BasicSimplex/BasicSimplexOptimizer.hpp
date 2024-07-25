@@ -14,12 +14,12 @@ namespace NumericStorm::Fitting
 {
 using namespace NumericStorm::Concepts;
 
-template <OptimizerSettings Settings, class AdapterT>
+template <OptimizerSettings Settings, class AT>
 class BasicSimplexOptimizer : public SimplexOptimizerBase<Settings>
 {
 public:
 	using SettingsT = Settings;
-	using AdapterT = AdapterT;
+	using AdapterT = AT;
 	BasicSimplexOptimizer(const SettingsT& settings)
 		: SimplexOptimizerBase<SettingsT>{ settings } {}
 
@@ -29,14 +29,14 @@ public:
 
 	void setUp()
 	{
-		m_simplexOperationVisitor.registerOperations(m_settings.getOperationSettings());
-		m_strategy.updateSettings(m_settings.getStrategySettings());
-		m_simplexCreator.updateSettings(m_settings.getCreatorSettings());
+		m_simplexOperationVisitor.registerOperations(this->m_settings.getOperationSettings());
+		m_strategy.updateSettings(this->m_settings.getStrategySettings());
+		m_simplexCreator.updateSettings(this->m_settings.getCreatorSettings());
 	};
 
 	bool checkStop(const typename SettingsT::OptimizerStateT& state) const
 	{
-		return state.getIteration() >= m_settings.getMaxIteration() || state.getBestPoint().getError() <= m_settings.getMinError();
+		return state.getIteration() >= this->m_settings.getMaxIteration() || state.getBestPoint().getError() <= this->m_settings.getMinError();
 	}
 
 	typename SettingsT::OptimizerStateT setUpOptimization(const typename SettingsT::OptimizerInputT& input, const Data& data, const typename SettingsT::AuxParameters& additionalParameters)
@@ -45,8 +45,8 @@ public:
 		SimplexPoint<SettingsT::parameter_size> inputPoint{ input };
 		inputPoint.getData() = data;
 		inputPoint.onEvaluate([&](SimplexPoint<SettingsT::parameter_size>& point) {
-			m_settings.getModel()(point.getData(), point.getParameters(), additionalParameters);
-			point.setError(m_settings.getErrorModel()(point.getData(), data));
+			this->m_settings.getModel()(point.getData(), point.getParameters(), additionalParameters);
+			point.setError(this->m_settings.getErrorModel()(point.getData(), data));
 			});
 
 		auto pointCount = SimplexStrategySettings<SettingsT::parameter_size>::indecies::Count;
@@ -72,13 +72,13 @@ public:
 
 
 private:
-	BasicSimplexStrategy<SettignsT::parameter_size> m_strategy{};
+	BasicSimplexStrategy<SettingsT::parameter_size> m_strategy{};
 	BasicSimplexCreator<SettingsT::parameter_size> m_simplexCreator{};
-	SimplexOperationVisitor<SettingsT::parameter_size, SimplexStrategySettings<parameter_size>::operation_l> m_simplexOperationVisitor{};
+	SimplexOperationVisitor<SettingsT::parameter_size, typename SimplexStrategySettings<SettingsT::parameter_size>::operation_l> m_simplexOperationVisitor{};
 };
 
-template<Model M>
-using BasicSimplexOptimizerM = BasicSimplexOptimizer<BasicSimplexOptimizerSettings<M>>;
+template<Model M, class Adapter>
+using BasicSimplexOptimizerM = BasicSimplexOptimizer<BasicSimplexOptimizerSettings<M>, Adapter>;
 
 
 }

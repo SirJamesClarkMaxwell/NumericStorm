@@ -16,7 +16,7 @@ class BasicSimulatedAnnealing
 public:
 
 	BasicSimulatedAnnealing(const SimulatedAnnealingSettings& settings)
-		: m_settings(settings) {}
+		: m_settings{ settings } {}
 
 	virtual ~BasicSimulatedAnnealing() = default;
 
@@ -24,8 +24,8 @@ public:
 	void anneal(State& state) {
 		
 		std::for_each(state.getConfigurations().cbegin(), state.getConfigurations().cend() - state.getBackOffset(), [&](const std::vector<double*>& config, size_t index) {
-			std::transform(config.cbegin(), config.cend() - state.getBackOffset(), state.getAnnealedConfigurations()[index].begin(), [&](const double const* value) {
-				return fluctuate(*value);
+			std::transform(config.cbegin(), config.cend() - state.getBackOffset(), state.getAnnealedConfigurations()[index].begin(), [&](const double* value) {
+				return this->fluctuate(*value);
 				});
 			});
 
@@ -34,7 +34,7 @@ public:
 			});
 
 		size_t index{ 0 };
-		for( auto& [newEnergy, oldEnergy] : std::views::zip(state.getAnnealedEnergies(), state.getEnergies()) {
+		for( auto& [newEnergy, oldEnergy] : std::views::zip(state.getAnnealedEnergies(), state.getEnergies())) {
 			if(index >= m_settings.getNumberToAnneal()) break;
 
 			if(newEnergy < *oldEnergy) accept(state, index++);
@@ -82,7 +82,7 @@ private:
 			*value = state.getAnnealedConfigurations()[index][i];
 			});
 
-		std::for_each(state.getEnergies().begin(), state.getEnergies().end() - m_back_offset, [&](double* value, size_t i) {
+		std::for_each(state.getEnergies().begin(), state.getEnergies().end() - state.getBackOffset(), [&](double* value, size_t i) {
 			*value = state.getAnnealedEnergies()[i];
 			});
 

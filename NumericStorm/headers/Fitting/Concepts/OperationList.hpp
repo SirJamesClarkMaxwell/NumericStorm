@@ -35,7 +35,7 @@ namespace NumericStorm::Concepts
     struct all_operation<type_list<Types...>> : std::true_type {};
 
     template<typename TypeList>
-    constexpr bool all_operation_v = all_satisfy<TypeList>::value;
+    constexpr bool all_operation_v = all_operation<TypeList>::value;
     
 
     template <typename T>

@@ -2,10 +2,10 @@
 
 namespace NumericStorm::Fitting {
 	enum BasicOperationsEnum {
-		Reflection,
-		Expansion,
-		Contraction,
-		Shrinking,
+		Reflect = 0,
+		Expand,
+		Contract,
+		Shrink,
 		OpCount
 	};
 };

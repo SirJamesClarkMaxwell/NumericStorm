@@ -7,7 +7,7 @@ namespace NumericStorm::Fitting
 	class Reflection : public SimplexOperationBase<parameter_size>
 	{
 	public:
-		
+		using SettingsT = typename SimplexOperationBase<parameter_size>::SettingsT;
 		Reflection(const SettingsT& settings)
 			: SimplexOperationBase<parameter_size>{settings} {};
 	
@@ -18,7 +18,7 @@ namespace NumericStorm::Fitting
 			const SimplexPoint<parameter_size>& wPoint = state.getWorstPoint();
 			SimplexPoint<parameter_size>& reflected = state[Reflected];
 			
-			double alpha = getSettings().getFactor();
+			double alpha = this->getSettings().getFactor();
 	
 	#if DEBUG
 			auto difference = centroid - wPoint;

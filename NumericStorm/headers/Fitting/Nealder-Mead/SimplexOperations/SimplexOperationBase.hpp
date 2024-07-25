@@ -5,18 +5,19 @@
 
 namespace NumericStorm::Fitting
 {
-    
-    template<size_t parameter_size>
-    class SimplexOperationBase : public VisitorOperationBase<SimplexOperationSettings<parameter_size>>
-    {
-    public:
-        using enum BasicSimplexIndeciesEnum;
 
-        SimplexOperationBase(const SettingsT& settings)
-			: VisitorOperationBase<SettingsT>{settings} {}
+template<size_t parameter_size>
+class SimplexOperationBase : public VisitorOperationBase<SimplexOperationSettings<parameter_size>>
+{
+public:
+	using enum BasicSimplexIndeciesEnum;
+	using SettingsT = typename VisitorOperationBase<SimplexOperationSettings<parameter_size>>::SettingsT;
 
-        virtual ~SimplexOperationBase() = default;
+	SimplexOperationBase(const SettingsT& settings)
+		: VisitorOperationBase<SettingsT>{ settings } {}
 
-    };
+	virtual ~SimplexOperationBase() = default;
+
+};
 
 }

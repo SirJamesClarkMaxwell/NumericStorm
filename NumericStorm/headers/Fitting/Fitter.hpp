@@ -13,7 +13,7 @@ using namespace NumericStorm::Concepts;
 	{
 	public:
 		explicit Fitter(const OptimizerT& optimizer, bool calculateUncertainty)
-			: m_optimizer{ optimizer }, m_calculateUncertainty{ calculateUncertainty } {};
+			: m_optimizer{ optimizer } {};
 	
 		typename OptimizerT::SettingsT::OptimizerOutputT fit(const typename OptimizerT::SettingsT::OptimizerInputT& initialParameters, const Data& fittingData,
 			const typename OptimizerT::SettingsT::AuxParameters& additionalParameters) {

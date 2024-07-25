@@ -8,7 +8,7 @@ namespace NumericStorm::Fitting
 	class Contraction : public SimplexOperationBase<parameter_size>
 	{
 	public:
-		
+		using SettingsT = typename SimplexOperationBase<parameter_size>::SettingsT;
 		Contraction(const SettingsT& settings)
 			: SimplexOperationBase<parameter_size>{settings} {}
 	
@@ -19,7 +19,7 @@ namespace NumericStorm::Fitting
 			const SimplexPoint<parameter_size>& centroid = state.getSimplexFigure().getCentroid();
 			const SimplexPoint<parameter_size>& pointToContractAround = decidePointToContractAround(state);
 			SimplexPoint<parameter_size>& contracted = state[Contracted];
-			double beta = getSettings().getFactor();
+			double beta = this->getSettings().getFactor();
 	
 	#if DEBUG
 			auto difference = (pointToContractAround - centroid);

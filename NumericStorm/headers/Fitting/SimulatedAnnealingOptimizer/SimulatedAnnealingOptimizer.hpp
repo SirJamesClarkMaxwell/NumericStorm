@@ -21,7 +21,7 @@ public:
 	using AnnealingT = typename SettingsT::AnnealingT;
 
 	SimulatedAnnealingOptimizer(const SettingsT& settings)
-		: m_settings{ settings }, m_optimizer{ settings.getWrappedSettings() } {}
+		: m_settings{ settings }, m_optimizer{ settings.getWrappedSettings() }, m_annealing{ settings.getAnnealingSettings() } {}
 
 
 	virtual ~SimulatedAnnealingOptimizer() = default;

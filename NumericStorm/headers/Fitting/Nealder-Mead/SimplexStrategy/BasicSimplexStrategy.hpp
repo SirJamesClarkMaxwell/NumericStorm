@@ -16,8 +16,9 @@ class BasicSimplexStrategy : public VisitorOperationBase<SimplexStrategySettings
 {
 
 public:
+    using SettingsT = typename VisitorOperationBase<SimplexStrategySettings<parameter_size>>::SettingsT;
    using Operations = typename SettingsT::operation_l::operations_e;
-
+   
     BasicSimplexStrategy(const SettingsT& settings)
         : VisitorOperationBase<SettingsT>{settings} {}
 
@@ -28,7 +29,7 @@ public:
     {
         switch (state.getCurrentOperation())
         {
-        case Operations::Reflection:
+        case Operations::Reflect:
             if (reflectionDecision(state)) {
                 state.getWorstPoint() = state[Reflected];
 
@@ -36,13 +37,13 @@ public:
             }
 
             if (expansionCondition(state))
-                state.getCurrentOperation() = Operations::Expansion;
+                state.getCurrentOperation() = Operations::Expand;
             else
-                state.getCurrentOperation() = Operations::Contraction;
+                state.getCurrentOperation() = Operations::Contract;
 
             return true;
             break;
-        case OperationE::Expansion:
+        case Operations::Expand:
             if (expansionDecision(state))
                 state.getWorstPopint() = state[Expanded];
             else
@@ -50,17 +51,17 @@ public:
 
             return reset(state);
             break;
-        case OperationE::Contraction:
+        case Operations::Contract:
             if (contractionDecision(state)) {
                 state.getWorstPoint() = state[Contracted];
 
                 return reset(state);
             }
 
-            state.getCurrentOperation() = Operations::Shrinking;
+            state.getCurrentOperation() = Operations::Shrink;
             return true;
             break;
-        case OperationE::Srinking:
+        case Operations::Shrink:
 
             return reset();
             break;
@@ -69,7 +70,7 @@ public:
         }
     }
 
-    bool reset(typename SettingsT::In& state) { state.getCurrentOperation = OperationE::Reflection; return false; }
+    bool reset(typename SettingsT::In& state) { state.getCurrentOperation = Operations::Reflect; return false; }
 private:
 
     bool contractionDecision(const typename SettingsT::In& state) const

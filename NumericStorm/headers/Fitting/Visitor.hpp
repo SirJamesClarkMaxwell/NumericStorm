@@ -33,7 +33,7 @@ namespace NumericStorm::Fitting
 	
 	
 	protected:
-		std::unordered_map<List::operations_e, List::variant_t> m_operationList{};
+		std::unordered_map<typename List::operations_e, typename List::variant_t> m_operationList{};
 	
 	private:
 		template<typename oplist>
@@ -42,7 +42,7 @@ namespace NumericStorm::Fitting
 			if (position >= input.size())
 				return;
 			registerOneOperation<pop_front_o<oplist>>(input[position]);
-			registerOperations<pop_front_t<oplist>>(position + 1, settingsVector);
+			registerOperations<pop_front_t<oplist>>(position + 1, input);
 		};
 	
 		template<class Op>
