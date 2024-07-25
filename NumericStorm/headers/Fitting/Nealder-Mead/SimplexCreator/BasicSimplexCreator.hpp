@@ -2,41 +2,42 @@
 
 #include <array>
 
-#include "IFigureCreator.hpp"
-#include "SimplexPoint.hpp"
-#include "SimplexFigure.hpp"
+#include "VisitorOperationBase.hpp"
 #include "SimplexCreatorSettings.hpp"
 #include "Random.hpp"
 
 
 namespace NumericStorm::Fitting {
-template <size_t parameter_size>
-class BasicSimplexCreator : public IFigureCreator<parameter_size>
-{
-public:
-	//using Random;
-	explicit BasicSimplexCreator(const SimplexCreatorSettings& settings)
-		: IFigureCreator<parameter_size>{ settings } {}
-	/*
-	BasicSimplexCreator(const BasicSimplexCreator<parameter_size>&) = default;
-	BasicSimplexCreator(BasicSimplexCreator<parameter_size>&&) = default;
-	BasicSimplexCreator<parameter_size>& operator=(const BasicSimplexCreator<parameter_size>&) = default;
-	BasicSimplexCreator<parameter_size>& operator=(BasicSimplexCreator<parameter_size>&&) = default;
-	*/
+	using namespace NumericStorm::Utils;
 
-	virtual ~BasicSimplexCreator() = default;
+	template <size_t parameter_size>
+	class BasicSimplexCreator : public VisitorOperationBase<SimplexCreatorSettings<parameter_size>>
+	{
+	public:
+	
+		explicit BasicSimplexCreator(const SettingsT& settings)
+			: VisitorOperationBase<SettingsT>{ settings } {}
+	
+	
+		virtual ~BasicSimplexCreator() = default;
+	
+		typename SettingsT::Out operator()(const typename SettingsT::In& input) override {
+			std::array<typename SettingsT::In, parameter_size + 1> points{};
+			points.fill(input);
+	
+	
+			std::for_each(points.begin() + 1, points.end(), [&](typename SettingsT::In& point) {
 
-	//todo modify this to be more abstract, in terns of generating sets of random SimplexPoints
-	virtual SimplexFigure<parameter_size> operator()(const CreatorInput<parameter_size>& input) override {
-		std::array<SimplexPoint<parameter_size>, parameter_size + 1> points{};
-		points.fill(input.initialPoint);
-
-		for (int i = 1; i < parameter_size + 1; i++)
-			for (int j = 1; j < parameter_size; j++)
-				points[i][j] += Random::Float(input.minBounds[j], input.maxBounds[j]);
-
-		SimplexFigure<parameter_size> figure{ points };
-		return figure;
-	}
-};
+				std::transform(point.begin(), point.end(), point.begin(),
+					[&](double value, size_t index) {
+						return value + Random::Float(m_settings.getMinBounds()[index], m_settings.getMaxBounds()[index]);
+					});
+				point.evaluatePoint();
+				});
+	
+	
+			typename SettingsT::Out figure{ points };
+			return figure;
+		}
+	};
 }

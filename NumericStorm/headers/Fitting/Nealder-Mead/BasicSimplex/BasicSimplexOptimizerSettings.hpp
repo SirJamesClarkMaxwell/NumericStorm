@@ -1,52 +1,99 @@
 #pragma once
 
-//#include <ranges>
-#include "SimplexSettings.hpp"
+#include <vector>
+
 #include "Model.hpp"
-#include "ErrorModel.hpp"
-#include "SimplexOperationsHeader.hpp"
-//todo we need to discus bout how we gonna implement the actual basic fitter
+#include "OptimizerSettings.hpp"
+#include "SimplexOptimizerSettings.hpp"
+#include "Parameters.hpp"
+#include "SimplexIntermediateState.hpp"
+#include "BasicOperationsEnum.hpp"
+#include "BasicSimplexIndeciesEnum.hpp"
+
+#include "SimplexCreatorSettings.hpp"
+#include "SimplexStrategySettings.hpp"
+#include "SimplexOperationSettings.hpp"
+#include "SimplexOptimizationResults.hpp"
 
 
 namespace NumericStorm::Fitting
 {
-template<size_t parameter_size, class AuxilaryParameters = AdditionalParameters>
-class BasicSimplexOptimizerSettings : public SimplexSettings<parameter_size, AuxilaryParameters>
-{
-public:
+	using namespace NumericStorm::Concepts;
 
-	explicit BasicSimplexOptimizerSettings(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel)
-		: SimplexSettings<parameter_size>{ model, errorModel } {}
-	virtual ~BasicSimplexOptimizerSettings() = default;
-
-
-protected:
-	template<class BuildingType, class Settings>
-	using BaseType = typename SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<BuildingType, Settings>;
-
-	template<class BuildingType, class Settings>
-	class BasicSimplexSettingsBuilderBase : public SimplexSettings<parameter_size, AuxilaryParameters>::SimplexSettingsBuilderBase<BuildingType, Settings> {
-		static_assert(std::derived_from<Settings, OptimizerSettings<parameter_size, AuxilaryParameters>> == true);
+	template<Model M>
+	class BasicSimplexOptimizerSettings : public SimplexOptimizerSettings<M>
+	{
 	public:
-		BasicSimplexSettingsBuilderBase() = delete;
-		BasicSimplexSettingsBuilderBase(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			BaseType<BuildingType, Settings>{ model, errorModel } {}
+		using parameter_size = typename M::parameter_size;
+		using AuxilaryParameters = typename M::AuxilaryParameters;
+		using OptimizerInputT = Parameters<parameter_size>;
+		using OptimizerStateT = SimplexIntermediateState<parameter_size, BasicSimplexIndeciesEnum, BasicOperationsEnum>;
+		using OptimizerOutputT = SimplexOptimizationResults<parameter_size>;
+		
+		virtual ~BasicSimplexOptimizerSettings() = default;
+	
+		const auto& getCreatorSettings() const
+		{
+			return m_creatorSettings;
+		}
 
-	};
+		const auto& getStrategySettings() const
+		{
+			return m_strategySettings;
+		}
 
-public:
+		const auto& getOperationSettings() const
+		{
+			return m_operationSettings;
+		}
 
-	class BasicSimplexSettingsBuilder : public BasicSimplexSettingsBuilderBase<BasicSimplexSettingsBuilder, BasicSimplexOptimizerSettings<parameter_size, AuxilaryParameters>> {
+	protected:
+		SimplexCreatorSettings<parameter_size> m_creatorSettings{};
+		SimplexStrategySettings<parameter_size> m_strategySettings{};
+
+		using SettingsPair = std::pair<BasicOperationsEnum, SimplexOperationSettings<parameter_size>>;
+		std::vector<SettingsPair> m_operationSettings{BasicOperationsEnum::OpCount};
+
+		friend class BasicSimplexOptimizerSettingsBuilderBase;
+		friend class BasicSimplexSettingsBuilder;
+	
+	protected:
+		
+	
+		template<class BuildingType, OptimizerSettings Settings>
+		class BasicSimplexOptimizerSettingsBuilderBase : public SimplexOptimizerSettingsBuilderBase<BuildingType, Settings> {
+		public:
+
+			BuildingType& addOperationSettings(const SettingsPair& settings)
+			{
+				m_settingsObject.m_operationSettings[settings.first()] = settings.second();
+				return this->returnSelf();
+			}
+			BuildingType& addOperationSettings(const std::vector<SettingsPair>& settings)
+			{
+				m_settingsObject.m_operationSettings = settings;
+				return this->returnSelf();
+			}
+			BuildingType& addCreatorSettings(const SimplexCreatorSettings<parameter_size>& settings)
+			{
+				this->m_settingsObject.m_creatorSettings = settings;
+				return this->returnSelf();
+			}
+			BuildingType& addStrategySettings(const SimplexStrategySettings<parameter_size>& settings)
+			{
+				this->m_settingsObject.m_strategySettings = settings;
+				return this->returnSelf();
+			}
+		};
+	
 	public:
-		BasicSimplexSettingsBuilder() = delete;
-		BasicSimplexSettingsBuilder(const Model<parameter_size, AuxilaryParameters>& model, const ErrorModel& errorModel) :
-			BasicSimplexSettingsBuilderBase<BasicSimplexSettingsBuilder, BasicSimplexOptimizerSettings<parameter_size, AuxilaryParameters>>{ model, errorModel } {}
+	
+		class BasicSimplexSettingsBuilder : public BasicSimplexOptimizerSettingsBuilderBase<BasicSimplexSettingsBuilder, BasicSimplexOptimizerSettings<M>> {};
+	
+		
+	
+	
 	};
-
-	friend class BasicSimplexSettingsBuilderBase<BasicSimplexSettingsBuilder, BasicSimplexOptimizerSettings<parameter_size, AuxilaryParameters>>;
-
-
-};
 
 }
 

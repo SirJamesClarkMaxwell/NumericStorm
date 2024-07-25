@@ -2,84 +2,84 @@
 
 #include <numeric>
 #include <array>
+#include <algorithm>
 
 #include "SimplexPoint.hpp"
 
 
 namespace NumericStorm::Fitting {
-//using enum outside of the class because it is templated and cpp doesn allow that
-enum SimplexFigureIndicies
-{
-	worstPoint = 0,
-	secondWorstPoint = 1,
-};
-
-template<size_t parameter_size>
-class SimplexFigure {
-public:
-	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points)
-		: m_points{ points }, m_centroid{ calculateCentroid() } {}
-
-	//since we cant have enum in the templated class, for the best point we use static int field
-	static const int bestPoint{ parameter_size };
-
-	SimplexFigure() = default;
-	SimplexFigure(const SimplexFigure<parameter_size>&) = default;
-	SimplexFigure(SimplexFigure<parameter_size>&&) = default;
-	SimplexFigure<parameter_size>& operator=(const SimplexFigure<parameter_size>&) = default;
-	SimplexFigure<parameter_size>& operator=(SimplexFigure<parameter_size>&&) = default;
-	virtual ~SimplexFigure() = default;
-	const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& getPoints() const { return m_points; }
-	SimplexPoint<parameter_size>& operator[](int p_index) {
-		m_centroid_valid = false;
-		m_sorted = false;
-		return m_points.at(p_index);
-	}
-
-	const SimplexPoint<parameter_size>& operator[](int p_index) const {
-		return m_points.at(p_index);
-	}
 
 
-	void sort(bool reverse = true) {
-		m_sorted = true;
-		std::sort(m_points.begin(), m_points.end());
-		if (reverse)
-			std::reverse(m_points.begin(), m_points.end());
-	}
+	template<size_t parameter_size>
+	class SimplexFigure {
+	public:
 
+		SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points)
+			: m_points{ points }, m_centroid{ calculateCentroid() } {}
+	
+	
+		virtual ~SimplexFigure() = default;
 
-	const SimplexPoint<parameter_size>& getCentroid() {
-		if (!m_centroid_valid) m_centroid = calculateCentroid();
-		return m_centroid;
-	}
+		const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& getPoints() const { return m_points; }
+		std::array<SimplexPoint<parameter_size>, parameter_size + 1>& getPoints() { return m_points; }
 
-	bool isCentroidValid() const { return m_centroid_valid; }
-	bool isSorted() const { return m_sorted; }
-
-
-protected:
-	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points;
-	SimplexPoint<parameter_size> m_centroid{};
-	bool m_centroid_valid{ true };
-	bool m_sorted{ true};
-
-public:
-	SimplexPoint<parameter_size> calculateCentroid() {
-		m_centroid_valid = true;
-		if (!m_sorted) sort();
-		SimplexPoint<parameter_size> centroid = m_points[1];
-
-		for (int i = 2;i < parameter_size;i++) 
-		{
-			centroid += m_points[i];
+		SimplexPoint<parameter_size>& operator[](size_t p_index) {
+			m_centroid_valid = false;
+			m_sorted = false;
+			return m_points.at(p_index);
 		}
-		//SimplexPoint<parameter_size> sum = std::accumulate(++m_points.begin(), m_points.end(), SimplexPoint<parameter_size>{});
-		centroid /= (parameter_size + 1);
-		return centroid;
+	
+		const SimplexPoint<parameter_size>& operator[](size_t p_index) const {
+			return m_points.at(p_index);
+		}
 
-	}
+		auto begin() { return m_points.begin(); }
+		auto end() { return m_points.end(); }
+		auto begin() const { return m_points.begin(); }
+		auto end() const { return m_points.end(); }
+		auto cbegin() const { return m_points.cbegin(); }
+		auto cend() const { return m_points.cend(); }
+	
+	
+		void sort(bool reverse = true) {
+			m_sorted = true;
+			std::sort(m_points.begin(), m_points.end(), reverse ? std::greater<double>() : std::less_equal<double>());
+		}
+	
+	
+		const SimplexPoint<parameter_size>& getCentroid() const {
+			if (!m_centroid_valid) return calculateCentroid();
+			return m_centroid;
+		}
+	
+		bool isCentroidValid() const { return m_centroid_valid; }
+		bool isSorted() const { return m_sorted; }
+	
+	
+	protected:
+		std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points;
+		SimplexPoint<parameter_size> m_centroid{};
+		bool m_centroid_valid{ false };
+		bool m_sorted{ false };
+	
+	public:
+		SimplexPoint<parameter_size> calculateCentroid() {
+			m_centroid_valid = true;
+			if (!m_sorted) sort();
 
-};
+			auto start = m_points.begin() + 1;
+			auto end = m_points.end();
+
+			SimplexPoint<parameter_size> base_point{};
+			base_point.onEvaluate(start->getCallback());
+
+			SimplexPoint<parameter_size> centroid = std::accumulate(start, end, base_point);
+			centroid /= parameter_size;
+
+			return centroid;
+	
+		}
+	
+	};
 
 }

@@ -4,28 +4,32 @@
 #include <vector>
 #include <array>
 
+#include "Data.hpp"
+#include "Optimizer.hpp"
+#include "UncertaintyStrategyWrapper.hpp"
 
 namespace NumericStorm::Fitting
 {
+    using namespace NumericStorm::Concepts;
 
-template<class Input>
-concept UncertaintyStrategyWrapper = requires (Input input)
-{
-    { input.calculateUncertainty() } -> std::convertible_to<std::vector<std::vector<double>>>;
-};
-
-template<class Input>
-    requires UncertaintyStrategyWrapper<Input>
-class UncertaintyCalculator
-{
-public:
-    UncertaintyCalculator() = delete;
-    UncertaintyCalculator(UncertaintyStrategyWrapper wrapper)
-        :m_wrapper{ wrapper } {};
-    vector<vector<double>> operator()(Input& input) { m_wrapper.calculateUncertainty(input); };
-private:
-    using vector = std::vector;
-    UncertaintyStrategyWrapper m_wrapper;
-};
+    
+    
+    template<Optimizer O, UncertaintyStrategyWrapper<O> Wrapper>
+    class UncertaintyCalculator
+    {
+    public:
+        UncertaintyCalculator(const Wrapper& wrapper)
+            : m_wrapper{ wrapper } {}
+    
+        void updateWrapper(const Wrapper& wrapper) { m_wrapper = wrapper; }
+        Wrapper& getWrapper() { return m_wrapper; }
+        const Wrapper& getWrapper() const { return m_wrapper; }
+        
+        std::vector<std::vector<double>> operator()(const O& optimizer, const typename O::SettingsT::OptimizerInputT& input, const Data& data, const typename O::SettingsT::AuxParameters& addPar) { 
+            return m_wrapper.calculateUncertainty(optimizer, input, data, addPar); 
+        }
+    private:
+        Wrapper m_wrapper{};
+    };
 
 }

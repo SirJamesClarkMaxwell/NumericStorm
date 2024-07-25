@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace NumericStorm {
+namespace NumericStorm::Utils {
 class Random
 {
 public:
@@ -30,8 +30,8 @@ public:
 		std::mt19937 s_RandomEngine{ s_Device() };
 		std::uniform_int_distribution<std::mt19937::result_type> s_Distribution;
 
-		double factor = (max - min) + min;
-		return (float)factor * s_Distribution(s_RandomEngine) / (float)std::numeric_limits<uint32_t>::max();
+		double factor = max - min;
+		return (float)min + (float)factor * s_Distribution(s_RandomEngine) / (float)std::numeric_limits<uint32_t>::max();
 	}
 
 };

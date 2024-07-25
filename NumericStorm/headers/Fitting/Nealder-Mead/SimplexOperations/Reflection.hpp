@@ -1,36 +1,34 @@
 #pragma once
-#include "ISimplexOperation.hpp"
-#include "SimplexOperationSettings.hpp"
-#include "SimplexFigure.hpp"
+#include "SimplexOperationBase.hpp"
 
 namespace NumericStorm::Fitting
 {
-template <size_t parameter_size>
-class Reflection : public ISimplexOperation<parameter_size>
-{
-public:
-	Reflection()
-		:ISimplexOperation<parameter_size>("reflection", SimplexOperationSettings{ 0.5 }) {};
-	Reflection(const SimplexOperationSettings& settings)
-		: ISimplexOperation<parameter_size>("reflection", settings) {};
-
-	virtual void operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
+	template <size_t parameter_size>
+	class Reflection : public SimplexOperationBase<parameter_size>
 	{
-		double alpha = this->m_settings.getFactor();
-		const SimplexPoint<parameter_size>& centroid = simplexIntPoints.m_simplexFigure.getCentroid();
-		SimplexPoint<parameter_size>& reflectedPoint = simplexIntPoints[Reflected];
-		const SimplexPoint<parameter_size>& wPoint = simplexIntPoints.m_simplexFigure[worstPoint];
-
-#if DEBUG
-		auto difference = centroid - wPoint;
-		auto scaled = difference * alpha;
-		reflectedPoint = centroid + scaled;
-#elif RELEASE
-		reflectedPoint = centroid + (centroid - wPoint) * alpha;
-#endif
-		reflectedPoint.evaluatePoint();
-
-	}
-};
+	public:
+		
+		Reflection(const SettingsT& settings)
+			: SimplexOperationBase<parameter_size>{settings} {};
+	
+		typename SettingsT::Out operator()(typename SettingsT::In& state)
+		{
+			
+			const SimplexPoint<parameter_size>& centroid = state.getSimplexFigure().getCentroid();
+			const SimplexPoint<parameter_size>& wPoint = state.getWorstPoint();
+			SimplexPoint<parameter_size>& reflected = state[Reflected];
+			
+			double alpha = getSettings().getFactor();
+	
+	#if DEBUG
+			auto difference = centroid - wPoint;
+			auto scaled = difference * alpha;
+			reflected = centroid + scaled;
+	#elif RELEASE
+			reflected = centroid + (centroid - wPoint) * alpha;
+	#endif
+			reflected.evaluatePoint();
+		}
+	};
 
 }

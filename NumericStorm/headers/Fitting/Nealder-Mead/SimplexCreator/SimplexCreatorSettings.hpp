@@ -1,29 +1,36 @@
 #pragma once
-#include <string>
-#include <random>
+#include "SimplexPoint.hpp"
+#include "SimplexFigure.hpp"
+
 namespace NumericStorm::Fitting
 {
-class SimplexCreatorSettings
-{
-public:
-	explicit SimplexCreatorSettings(std::string operationName, double expectedValue)
-		: m_name{ operationName }, m_expectedValue{ expectedValue } {}
+	template<size_t parameter_size>
+	class SimplexCreatorSettings
+	{
+	public:
+		using In = SimplexPoint<parameter_size>;
+		using Out = SimplexFigure<parameter_size>;
+
+		
+		SimplexCreatorSettings(const Parameters<parameter_size>& min, const Parameters<parameter_size>& max)
+			: m_minBounds{ min }, m_maxBounds{ max } {};
+		
 	
-	SimplexCreatorSettings() = default;
-	/*
-	SimplexCreatorSettings(const SimplexCreatorSettings&) = default;
-	SimplexCreatorSettings(SimplexCreatorSettings&&) = default;
-	SimplexCreatorSettings& operator=(const SimplexCreatorSettings&) = default;
-	SimplexCreatorSettings& operator=(SimplexCreatorSettings&&) = default;
-	*/
-
-	virtual ~SimplexCreatorSettings() = default;
-
-	const std::string& getName() const { return m_name; }
-	double getExpectedValue() const { return m_expectedValue; } //NU what is this???
-private:
-	std::string m_name{};
-	double m_expectedValue{};
-	//todo add more distribution function to choose, not only gauss
-};
+		virtual ~SimplexCreatorSettings() = default;
+	
+		Parameters<parameter_size>& getMinBounds() const
+		{
+			return m_minBounds;
+		}
+	
+		Parameters<parameter_size>& getMaxBounds() const
+		{
+			return m_maxBounds;
+		}
+	
+	protected:
+		Parameters<parameter_size> m_minBounds{};
+		Parameters<parameter_size> m_maxBounds{};
+		
+	};
 }

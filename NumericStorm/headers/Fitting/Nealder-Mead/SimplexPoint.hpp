@@ -2,6 +2,8 @@
 
 #include <array>
 #include <memory>
+#include <ranges>
+#include <utility>
 
 #include "Parameters.hpp"
 #include "Data.hpp"
@@ -9,125 +11,123 @@
 
 namespace NumericStorm::Fitting
 {
-template <std::size_t parameter_size>
-class SimplexPoint {
-public:
-	using CallbackType = std::function<void(SimplexPoint<parameter_size>&)>;
-
-	SimplexPoint() = default;
-	SimplexPoint(std::shared_ptr<Data> ref_data, const std::array<double, parameter_size>& parameters)
-		: m_parameters{ parameters }, m_referenceData{ ref_data }, m_data{ *ref_data } {};
-
-	virtual ~SimplexPoint() = default;
-	double getError() const { return m_error; }
-
-	template<class AuxParameters>
-	void evaluatePoint(const Model<parameter_size, AuxParameters>& model, const ErrorModel& errorModel, const AuxParameters& auxParams) {
-		m_calculateData(model, auxParams);
-		m_error = errorModel(*m_referenceData, m_data);
-		std::cout << "point evaluated" << std::endl;
-	}
-
-	void evaluatePoint() {
-		if (m_evalCallback) m_evalCallback(*this);
-		std::cout << "point evaluated" << std::endl;
-	}
-
-	void onEvaluate(const CallbackType& cb) {
-		m_evalCallback = cb;
-	}
-
-
-protected:
-	Parameters<parameter_size> m_parameters{};
-
-	double m_error{ -1 };
-	std::shared_ptr<Data> m_referenceData{ nullptr };
-
-	Data m_data{};
-
-	CallbackType m_evalCallback{};
-
-	template<class AuxParameters>
-	void m_calculateData(const Model<parameter_size, AuxParameters>& model, const AuxParameters& auxParams) {
-		model(m_data, m_parameters, auxParams);
-	}
-
-public:
-
-	std::array<double, parameter_size> getParameters() const {
-		return m_parameters.getParameters();
-	}
-
-	bool operator ==(const SimplexPoint<parameter_size>& other) const
-	{
-		return this->m_parameters.getParameters() == other.getParameters();
-	}
-	bool operator == (const std::array<double, parameter_size>& other) const
-	{
-		return this->m_parameters.getParameters() == other;
+	template <size_t parameter_size>
+	class SimplexPoint {
+	public:
+		using CallbackType = std::function<void(SimplexPoint<parameter_size>&)>;
+	
+		SimplexPoint(const Parameters<parameter_size>& parameters)
+			: m_parameters{ parameters } {};
+	
+		virtual ~SimplexPoint() = default;
+		double getError() const { return m_error; }
+		void setError(double error) { m_error = error; }
+		bool hasCallback() const { return m_evalCallback != nullptr; }
+		auto& getCallback() const { return m_evalCallback; }
+	
+		const Data& getData() const { return m_data; }
+		Data& getData() { return m_data; }
+	
+		const auto& getParameters() const {
+			return m_parameters;
+		}
+	
+		void setParameters(const Parameters<parameter_size>& parameters, bool evaluate = true) {
+			m_parameters = parameters;
+			if (evaluate) evaluatePoint();
+		}
+	
+		void evaluatePoint() {
+			m_evalCallback(*this);
+		}
+	
+		void onEvaluate(const CallbackType& cb) {
+			m_evalCallback = cb;
+		}
+	
+		auto begin() { return m_parameters.begin(); }
+		auto end() { return m_parameters.end(); }
+		auto begin() const { return m_parameters.begin(); }
+		auto end() const { return m_parameters.end(); }
+		auto cbegin() const { return m_parameters.cbegin(); }
+		auto cend() const { return m_parameters.cend(); }
+	protected:
+		Parameters<parameter_size> m_parameters{};
+	
+		double m_error{ -1 };
+	
+		Data m_data{};
+	
+		CallbackType m_evalCallback{};
+	
+	
+	
+	public:
+	
+	
+		auto operator <=> (const SimplexPoint<parameter_size>& other) const
+		{
+			return this->m_error <=> other.m_error;
+		}
+	
+		double& operator[](size_t index)
+		{
+			return m_parameters[index];
+		}
+	
+		const double& operator[](size_t index) const
+		{
+			return m_parameters[index];
+		}
+	
+		SimplexPoint<parameter_size>& operator+=(const SimplexPoint<parameter_size>& other) {
+			for (auto [a, b] : std::ranges::views::zip(m_parameters, other.m_parameters)) {
+				a += b;
+			}
+			return *this;
+		}
+		SimplexPoint<parameter_size>& operator-=(const SimplexPoint<parameter_size>& other) {
+			for (auto [a, b] : std::ranges::views::zip(m_parameters, other.m_parameters)) {
+				a -= b;
+			}
+			return *this;
+		}
+	
+		SimplexPoint<parameter_size>& operator*=(double scalar) {
+			for (auto& param : this->m_parameters) {
+				param *= scalar;
+			}
+			return *this;
+		}
+		SimplexPoint<parameter_size>& operator/=(double scalar) {
+			for (auto& param : this->m_parameters) {
+				param /= scalar;
+			}
+			return *this;
+		}
+	
+		SimplexPoint<parameter_size> operator+(const  SimplexPoint<parameter_size>& other) const {
+			SimplexPoint<parameter_size> result = *this;
+			result += other;
+			return result;
+		}
+		SimplexPoint<parameter_size> operator-(const  SimplexPoint<parameter_size>& other) const {
+			SimplexPoint<parameter_size> result = *this;
+			result -= other;
+			return result;
+		}
+	
+		SimplexPoint<parameter_size> operator*(double scalar) const {
+			SimplexPoint<parameter_size> result = *this;
+			result *= scalar;
+			return result;
+		}
+		SimplexPoint<parameter_size> operator/(double scalar) const {
+			SimplexPoint<parameter_size> result = *this;
+			result /= scalar;
+			return result;
+		}
+	
 	};
-	auto operator <=> (const SimplexPoint<parameter_size>& other) const
-	{
-		return this->m_error <=> other.m_error;
-	}
-
-	virtual double& operator[](int index)
-	{
-		return m_parameters[index];
-	}
-
-	virtual const double& operator[](int index) const
-	{
-		return m_parameters[index];
-	}
-
-	SimplexPoint<parameter_size>& operator+=(const SimplexPoint<parameter_size>& other) {
-		for (std::size_t i = 0; i < parameter_size; ++i)
-			this->operator[](i) += other[i];
-		return *this;
-	}
-	SimplexPoint<parameter_size>& operator-=(const SimplexPoint<parameter_size>& other) {
-		for (std::size_t i = 0; i < parameter_size; ++i)
-			this->operator[](i) -= other[i];
-		return *this;
-	}
-
-	SimplexPoint<parameter_size>& operator*=(double scalar) {
-		for (auto& param : this->m_parameters.getParameters()) {
-			param *= scalar;
-		}
-		return *this;
-	}
-	SimplexPoint<parameter_size>& operator/=(double scalar) {
-		for (auto& param : this->m_parameters.getParameters()) {
-			param /= scalar;
-		}
-		return *this;
-	}
-
-	SimplexPoint<parameter_size> operator+(const  SimplexPoint<parameter_size>& other) const {
-		SimplexPoint<parameter_size> result = *this;
-		result += other;
-		return result;
-	}
-	SimplexPoint<parameter_size> operator-(const  SimplexPoint<parameter_size>& other) const {
-		SimplexPoint<parameter_size> result = *this;
-		result -= other;
-		return result;
-	}
-
-	SimplexPoint<parameter_size> operator*(double scalar) const {
-		SimplexPoint<parameter_size> result = *this;
-		result *= scalar;
-		return result;
-	}
-	SimplexPoint<parameter_size> operator/(double scalar) const {
-		SimplexPoint<parameter_size> result = *this;
-		result /= scalar;
-		return result;
-	}
-
-};
 
 }

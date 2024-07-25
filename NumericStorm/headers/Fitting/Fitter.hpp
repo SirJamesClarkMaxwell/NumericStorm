@@ -1,65 +1,44 @@
 #pragma once
-#include <memory>
-#include <concepts>
 
-#include "AdditionalParameters.hpp"
-#include "OptimizerSettings.hpp"
-#include "Parameters.hpp"
-#include "FittingResults.hpp"
-#include "UncertaintyCalculator.hpp"
+#include "Optimizer.hpp"
+
 namespace NumericStorm::Fitting {
 
-template<class DecoratedOptimizer, class OptimizingType, class SetUpOutput>
-concept Optimizer = requires (
-	DecoratedOptimizer optimizer, OptimizingType & initialParameters,
-	Data & fittingData,
-	AdditionalParameters additionalParameters, FittingResults<OptimizingType> result,
-	SetUpOutput output
-	)
-{
-	{ optimizer.setUpFittingProcedure(initialParameters, fittingData, additionalParameters) }-> std::convertible_to<SetUpOutput>;
-	{ optimizer.checkStopConditions() }-> std::convertible_to<bool>;
-	{ optimizer.oneStepAlgorithm(output) }-> std::convertible_to<void>;
-	{ optimizer.calculateUncertainty() }-> std::convertible_to<void>;
-	{ optimizer.getResult() }-> std::convertible_to<OptimizingType&>;
-};
+using namespace NumericStorm::Concepts;
 
 
 
-template<class DecoratedOptimizer, class OptimizingType, class SetUpOutput, class AuxilaryParameters>
-	requires Optimizer<DecoratedOptimizer, OptimizingType, SetUpOutput>&&
-UncertaintyStrategyWrapper<OptimizingType>
+	template<Optimizer OptimizerT>
+	class Fitter
+	{
+	public:
+		explicit Fitter(const OptimizerT& optimizer, bool calculateUncertainty)
+			: m_optimizer{ optimizer }, m_calculateUncertainty{ calculateUncertainty } {};
+	
+		typename OptimizerT::SettingsT::OptimizerOutputT fit(const typename OptimizerT::SettingsT::OptimizerInputT& initialParameters, const Data& fittingData,
+			const typename OptimizerT::SettingsT::AuxParameters& additionalParameters) {
 
-class Fitter
-{
-public:
-	explicit Fitter(const Optimizer& optimizer, bool calculateUncertainty = false)
-		: m_optimizer{ optimizer }, m_calculateUncertainty{ calculateUncertainty } {};
+			auto state = m_optimizer.setUpOptimization(initialParameters, fittingData, additionalParameters);
+			while (m_optimizer.checkStop(state))
+				m_optimizer.oneStep(state);
 
-	FittingResults<OptimizingType> fit(const OptimizingType& initialParameters, const Data& fittingData,
-		const AuxilaryParameters& additionalParameters);
-	void setUncertaintyCalculator(UncertaintyStrategyWrapper uncertaintyCalculator) { m_uncertaintyCalculator = uncertaintyCalculator; };
+			/*if (m_calculateUncertainty)
+				std::vector<std::vector<double>> uncertainty = m_uncertaintyCalculator(m_optimizer.getResults());*/
 
-	virtual ~Fitter() = default;
-private:
-	Optimizer m_optimizer;
-	UncertaintyCalculator m_uncertaintyCalculator;
-};
+			return m_optimizer.getResults(state);
+		}
+	
+	
+		//void setUncertaintyCalculator(UncertaintyStrategyWrapper uncertaintyCalculator) { m_uncertaintyCalculator = uncertaintyCalculator; };
+	
+		virtual ~Fitter() = default;
 
 
-template<class DecoratedOptimizer, class OptimizingType, class SetUpOutput, class AuxilaryParameters>
-FittingResults<OptimizingType> Fitter<DecoratedOptimizer, OptimizingType, SetUpOutput, AuxilaryParameters>::fit(
-	const OptimizingType& initialParameters, const Data& fittingData, const  AuxilaryParameters& additionalParameters)
-{
-	typedef SetUpOutput = Optimizer::SetUpOutput; //! we need to fix this, i don't know how (right now)
-	SetUpOutput output = m_optimizer.setUpFittingProcedure(initialParameters, fittingData, additionalParameters);
-	while (m_optimizer.checkStopCondition())
-		m_optimizer.oneStepOfAlgorithm(output);
-
-	if (m_calculateUncertainty)
-		std::vector<std::vector<double>> uncertainty = m_uncertaintyCalculator(m_optimizer.getResults());
-};
-
+	private:
+		OptimizerT m_optimizer;
+		//UncertaintyCalculator m_uncertaintyCalculator;
+	};
+	
 }
 
 

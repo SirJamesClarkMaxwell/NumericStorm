@@ -1,38 +1,37 @@
 #pragma once
-#include "ISimplexOperation.hpp"
-#include "SimplexOperationSettings.hpp"
-#include "SimplexIntermediatePoints.hpp"
+#include "SimplexOperationBase.hpp"
 
 namespace NumericStorm
 {
 namespace Fitting
 {
-template <size_t parameter_size>
-class Expansion : public ISimplexOperation<parameter_size>
-{
-public:
-	Expansion()
-		: ISimplexOperation<parameter_size>("expansion", SimplexOperationSettings{ 2 }) {};
-	Expansion(const SimplexOperationSettings& settings)
-		: ISimplexOperation<parameter_size>("expansion", settings) {};
 
-	virtual void operator ()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
+	template <size_t parameter_size>
+	class Expansion : public SimplexOperationBase<parameter_size>
 	{
-		const SimplexPoint<parameter_size>& centroid = simplexIntPoints.m_simplexFigure.getCentroid();
-		SimplexPoint<parameter_size>& expanded = simplexIntPoints[Expanded];
-		const SimplexPoint<parameter_size>& reflected = simplexIntPoints[Reflected];
-		double gamma = this->m_settings.getFactor();
-#if DEBUG
-		auto difference = reflected - centroid;
-		auto scaled = difference * gamma;
-		expanded = centroid + scaled;
-#elif RELEASE
-		expanded = centroid + (reflected - centroid) * gamma;
-#endif
-		expanded.evaluatePoint();
-	}
-
-};
+	public:
+	
+		Expansion(const SettingsT& settings)
+			: SimplexOperationBase<parameter_size>{settings} {}
+	
+		typename SettingsT::Out operator()(typename SettingsT::In& state)
+		{
+			const SimplexPoint<parameter_size>& centroid = state.getSimplexFigure().getCentroid();
+			const SimplexPoint<parameter_size>& reflected = state[Reflected];
+			SimplexPoint<parameter_size>& expanded = state[Expanded];
+			
+			double gamma = getSettings().getFactor();
+	#if DEBUG
+			auto difference = reflected - centroid;
+			auto scaled = difference * gamma;
+			expanded = centroid + scaled;
+	#elif RELEASE
+			expanded = centroid + (reflected - centroid) * gamma;
+	#endif
+			expanded.evaluatePoint();
+		}
+	
+	};
 
 }
 }

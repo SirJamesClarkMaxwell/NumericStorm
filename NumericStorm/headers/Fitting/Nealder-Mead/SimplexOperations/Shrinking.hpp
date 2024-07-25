@@ -1,47 +1,34 @@
 #pragma once
-#include "SimplexOperationSettings.hpp"
-#include "ISimplexOperation.hpp"
-#include "SimplexFigure.hpp"
-#include "SimplexPoint.hpp"
-#include "SimplexIntermediatePoints.hpp"
+#include <algorithm>
+
+#include "SimplexOperationBase.hpp"
 
 namespace NumericStorm::Fitting
 {
 
-template <size_t parameter_size>
-class Shrinking : public ISimplexOperation<parameter_size>
-{
-public:
-
-    Shrinking()
-        : ISimplexOperation<parameter_size>("shrinking", SimplexOperationSettings{ 0.5 }) {}
-    Shrinking(const SimplexOperationSettings& settings)
-        : ISimplexOperation<parameter_size>("shrinking", settings) {}
-    virtual void operator()(SimplexIntermediatePoints<parameter_size>& simplexIntPoints) override
+    template <size_t parameter_size>
+    class Shrinking : public SimplexOperationBase<parameter_size>
     {
-        double delta = this->m_settings.getFactor();
-        const SimplexPoint<parameter_size>& bestPoint = simplexIntPoints.m_simplexFigure[SimplexFigure<parameter_size>::bestPoint];
-
-#if DEBUG
-
-        for (size_t i = 0; i < parameter_size - 1; ++i)
+    public:
+    
+        Shrinking(const SettingsT& settings)
+            : SimplexOperationBase<parameter_size>{settings} {}
+    
+    
+        typename SettingsT::Out operator()(typename SettingsT::In& state)
         {
-            auto& shrinked = simplexIntPoints.m_simplexFigure[i];
-            auto difference = shrinked - bestPoint;
-            auto scaled = difference * delta;
-            shrinked = bestPoint + scaled;
-            shrinked.evaluatePoint();
-        }
-#else if RELEASE
-        for (size_t i = 0; i < parameter_size - 1; ++i)
-        {
-            //todo refactor to work with iterators of simplexFigure
-            simplexIntPoints.m_simplexFigure[i] = bestPoint + (simplexIntPoints.m_simplexFigure[i] - bestPoint) * delta;
-            simplexIntPoints.m_simplexFigure[i].evaluatePoint();
-        }
-#endif
+            
+            const SimplexPoint<parameter_size>& bestPoint = state.getBestPoint();
+            double delta = getSettings().getFactor();
+    
 
-    }
-};
+            std::for_each(state.getSimplexFigure().begin(), state.getSimplexFigure().end() - 1,
+                [&](auto& shrunk) {
+                    shrunk = bestPoint + (shrunk - bestPoint) * delta;
+                    shrunk.evaluatePoint();
+                });
+    
+        }
+    };
 
 }
