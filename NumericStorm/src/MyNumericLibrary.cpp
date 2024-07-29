@@ -1,4 +1,4 @@
-#include "../headers/Fitting.hpp"
+#include "../headers/NumericStorm.hpp"
 
 namespace NumericStorm
 {

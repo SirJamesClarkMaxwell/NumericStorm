@@ -13,6 +13,8 @@ namespace NumericStorm::Fitting
 		using In = SimplexIntermediateState<parameter_size, BasicSimplexIndeciesEnum, BasicOperationsEnum>;
 		using Out = void;
 	
+		SimplexOperationSettings() = default;
+
 		SimplexOperationSettings(double factor)
 			: m_factor{ factor } {}
 		

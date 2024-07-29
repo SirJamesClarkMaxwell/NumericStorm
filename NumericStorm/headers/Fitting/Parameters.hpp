@@ -13,6 +13,8 @@ namespace NumericStorm::Fitting {
 template <size_t parameter_size>
     class Parameters {
     public:
+        Parameters() = default;
+
         Parameters(const std::array<double, parameter_size>& parameters)
             : m_parameters{ parameters } {}
         

@@ -9,6 +9,8 @@ namespace NumericStorm::Fitting {
 	class ErrorModel {
 
 	public:
+		ErrorModel() = default;
+
 		ErrorModel(std::function<double(const Data&, const Data&)> errorModel)
 			: m_errorModel{ errorModel } {}
 	
@@ -16,6 +18,7 @@ namespace NumericStorm::Fitting {
 	
 		double operator()(const Data& referencedData, const Data& comparedData) const {
 			double error = m_errorModel(referencedData, comparedData);
+			return error;
 		}
 	
 		auto getErrorModel() const {

@@ -37,12 +37,12 @@ public:
 		return m_optimizer.checkStop(state.getWrappedState());
 	}
 
-	typename SettingsT::OptimizerStateT setUpOptimization(const typename SettingsT::OptimizerInputT& input, const Data& data, const typename SettingsT::AuxParameters& additionalParameters)
+	typename SettingsT::OptimizerStateT setUpOptimization(const typename SettingsT::OptimizerInputT& input, const Data& data, const typename SettingsT::AuxilaryParametersT& additionalParameters)
 	{
 		auto state = m_optimizer.setUpOptimization(input, data, additionalParameters);
 		typename  SettingsT::OptimizerStateT annealingState{ state };
 
-		AdapterT::adapt(annealingState);
+		AdapterT::setUp(annealingState);
 		m_annealing.setUp(annealingState);
 
 		return annealingState;
@@ -51,12 +51,14 @@ public:
 	void oneStep(typename SettingsT::OptimizerStateT& state)
 	{
 		m_optimizer.oneStep(state.getWrappedState());
+		AdapterT::update(state);
 		m_annealing.anneal(state);
 	};
 
-	typename SettingsT::OptimizerOutputT getResult(const typename SettingsT::OpitmizerStateT& state) const
+	typename SettingsT::OptimizerOutputT getResults(const typename SettingsT::OptimizerStateT& state) const
 	{
-		typename SettingsT::OptimizerOutputT result{ m_optimizer.getResult(state.getWrappedState()) };
+		
+		typename SettingsT::OptimizerOutputT result{ m_optimizer.getResults(state.getWrappedState()) };
 		return result;
 	};
 

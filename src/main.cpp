@@ -1,140 +1,96 @@
-#include <iostream>
-#include <concepts>
+#include <ranges>
+
 #include "NumericStorm.hpp"
 #include "../headers/FittingSandBoxFunctions.hpp"
 using namespace NumericStorm::Fitting;
-using namespace NumericStorm::SimulatedAnnealing;
-double sum(const std::array<double, 4>& obj)
-{
-	return std::accumulate(obj.begin(), obj.end(), 0.0);
-};
-class SimplexPointWrapper
-{
-public:
-	SimplexPointWrapper(SimplexPoint<4> referencePoint)
-		:m_referencePoint{ referencePoint } {};
-	double getEnergy(const SimplexPoint<4>& object) { return sum(object.getParameters()) / 4; };
-	std::array<double, 4> doSerialize(const SimplexPoint<4>& point) { return point.getParameters(); };
-	std::unique_ptr<SimplexPoint<4>> createObject(std::vector<double> inputData)
-	{
-		SimplexPoint<4> toReturn{ m_referencePoint };
-		for (int i = 0; i < 4;i++)
-			toReturn[i] = inputData[i];
+using namespace NumericStorm::Annealing;
 
-		return std::make_unique<SimplexPoint<4>>(toReturn);
-	};
-private:
-	SimplexPoint<4> m_referencePoint;
 
-};
+
 int main()
 {
-#if 0
-	bool b1, b2, b3, b4;
-	b1 = true or false;
-	b2 = true and false;
 
-	std::cout << "true or false: " << b1 << std::endl;
-	std::cout << "true and false: " << b2 << std::endl;
+	Parameters<3> trueParameters({ 1.7,3.5, 2.1});
+	Parameters<3> initialParameters({ 3.0, 3.0, 3.0});
 
-	//testingParameters();
-	//testingModelAndErrorModel();
-	static_assert(std::derived_from<OptimizerSettings<4, AdditionalParameters>, OptimizerSettings<4, AdditionalParameters>> == true);
-	static_assert(std::derived_from<SimplexSettings<4, AdditionalParameters>, OptimizerSettings<4, AdditionalParameters>> == true);
-	static_assert(std::derived_from<BasicSimplexOptimizerSettings<4, AdditionalParameters>, OptimizerSettings<4, AdditionalParameters>> == true);
 
-	static_assert(std::derived_from<IDecision<4>, CreatorInterface<SimplexIntermediatePoints<4>&, bool, StrategySettings>> == true);
-	static_assert(std::derived_from<ISimplexOperation<4>, CreatorInterface<SimplexIntermediatePoints<4>&, void, SimplexOperationSettings>> == true);
-	static_assert(std::derived_from<IFigureCreator<4>, CreatorInterface<const CreatorInput<4>&, SimplexFigure<4>, SimplexCreatorSettings>> == true);
-
-	static_assert(std::derived_from<BasicSimplexDecision<4>, CreatorInterface<SimplexIntermediatePoints<4>&, bool, StrategySettings>> == true);
-
-	static_assert(std::derived_from<Reflection<4>, CreatorInterface<SimplexIntermediatePoints<4>&, void, SimplexOperationSettings>> == true);
-	static_assert(std::derived_from<Expansion<4>, CreatorInterface<SimplexIntermediatePoints<4>&, void, SimplexOperationSettings>> == true);
-	static_assert(std::derived_from<Contraction<4>, CreatorInterface<SimplexIntermediatePoints<4>&, void, SimplexOperationSettings>> == true);
-	static_assert(std::derived_from<Shrinking<4>, CreatorInterface<SimplexIntermediatePoints<4>&, void, SimplexOperationSettings>> == true);
-
-	static_assert(std::derived_from<BasicSimplexCreator<4>, CreatorInterface<const CreatorInput<4>&, SimplexFigure<4>, SimplexCreatorSettings>> == true);
-
-	Parameters<4> trueParameters({ 1,1,1,1 });
-	Parameters<4> testingParameters({ 2,2,2,2 });
+	Parameters<3> min({ -1.0, -1.0, -1.0});
+	Parameters<3> max({ 2.0, 2.0, 2.0 });
 
 	AdditionalParameters additionalParameters{};
 
-	Model model = GaussianModel();
-	ErrorModel errorModel = Chi2ErrorModel();
+	GaussianModel model{};
+	Chi2ErrorModel errorModel{};
 
-	Data data1{ 2 };
-	std::array<double, 100> arguments;
-	int i = -50;
-	for (int it = 0;it < 100;it++)
+	Data trueData{ 2 };
+
+
+	for (double it = -1.0;it <= 1.0; it += 0.05)
 	{
-		data1[0].push_back(i);
-		data1[1].push_back(i);
-		i++;
+		trueData[0].push_back(it);
+		trueData[1].push_back(it);
 	}
-	Data data2 = Data(data1);
-	model(data1, trueParameters, additionalParameters);
 
+	model(trueData, trueParameters, additionalParameters);
 
-	using BuilderAlias = BasicSimplexOptimizerSettings<4, AdditionalParameters>::BasicSimplexSettingsBuilder;
-	using SettingsAlias = BasicSimplexOptimizerSettings<4, AdditionalParameters>;
-	using FitterAlias = BasicSimplexOptimizer<4, AdditionalParameters, BasicSimplexOptimizerSettings<4, AdditionalParameters>>;
-
-	BuilderAlias builder{ model, errorModel };
-	CreatorSetUpInfo<SimplexCreatorSettings> sCreatorInfo{ "basic", SimplexCreatorSettings("basic", 0.0) };
-
-	CreatorSetUpInfo<SimplexOperationSettings> sReflection{ "reflection", SimplexOperationSettings(1.2) };
-	CreatorSetUpInfo<SimplexOperationSettings> sExpansion{ "expansion", SimplexOperationSettings(0.5) };
-	CreatorSetUpInfo<SimplexOperationSettings> sContraction{ "contraction", SimplexOperationSettings(1.5) };
-	CreatorSetUpInfo<SimplexOperationSettings> sShrinking{ "shrinking", SimplexOperationSettings(0.3) };
-
-	CreatorSetUpInfo<StrategySettings> sStrategy{ "basic",  StrategySettings() };
-
-	builder.maxIteration(1000)
-		.minError(0.1)
-		.maxParameters(Parameters<4>({ 5,5,5,5 }))
-		.minParameters(Parameters<4>({ 0,0,0,0 }))
-		.refData(std::make_shared<Data>(data2))
-		.addCreatorSettings(sCreatorInfo)
-		.addOperationSettings(sReflection)
-		.addOperationSettings(sExpansion)
-		.addOperationSettings(sContraction)
-		.addOperationSettings(sShrinking)
-		.addStrategySettings(sStrategy);
-
-
-	SettingsAlias fitterSettings = builder.build();
-	FitterAlias fitter(fitterSettings);
-	fitter.setUp();
-	auto results = fitter.fit(testingParameters, additionalParameters);
-#endif
-
-
+	for (auto [a, b] : std::ranges::views::zip(trueData[0], trueData[1]))
 	{
-
-
-		std::cout << "Testing SimulatedAnnealing" << std::endl;
-		Parameters<4> trueParameters({ 1,1,1,1 });
-		AdditionalParameters additionalParameters{};
-		Model model = GaussianModel();
-		ErrorModel errorModel = Chi2ErrorModel();
-		Data data1{ 2 };
-		std::array<double, 100> arguments;
-		int i = -50;
-		for (int it = 0;it < 100;it++)
-		{
-			data1[0].push_back(i);
-			i++;
-		}
-		model(data1, trueParameters, additionalParameters);
-		std::shared_ptr<Data> ptrData = std::make_shared<Data>(data1);
-		SimplexPoint<4> point{ ptrData,{ 1,1,1,1 } };
-		point.evaluatePoint(model, errorModel, additionalParameters);
-
-		SimplexPointWrapper pointWrapper(point);
-		SimulatedAnnealingFactoryTypeEnsure annealingFactory{ pointWrapper };
-
+		std::cout << a << " " << b << std::endl;
 	}
+
+
+	using SSettings = BasicSimplexOptimizerSettings<GaussianModel>;
+	typename SSettings::BasicSimplexSettingsBuilder builder{};
+
+	builder.errorModel(errorModel)
+		.addCreatorSettings({ min, max })
+		.addOperationSettings({ { BasicOperationsEnum::Reflect, 1.2 },
+								{ BasicOperationsEnum::Expand, 1.5 },
+								{ BasicOperationsEnum::Contract, 0.6},
+								{ BasicOperationsEnum::Shrink, 0.5 }
+			})
+		.minError(0.0000001)
+		.maxIteration(3000);
+
+	auto settings = builder.build();
+
+	using ASettings = AnnealingOptimizerSettings<SSettings>;
+
+	ASettings annealingOptimizerSettings{ settings };
+
+	using AnnealingOptimizer = SimulatedAnnealingOptimizer<BasicSimplexOptimizer<SSettings, BasicAdapter>>;
+
+
+	AnnealingSettingsBuilder annealingSettingsBuilder{};
+
+	constexpr double BOLTZMANN_CONSTANT = 1.380649e-23;
+
+	annealingSettingsBuilder.initialTemperature(200)
+		.pointNumber(5)
+		.coolingRate(5)
+		.constantK(BOLTZMANN_CONSTANT)
+		.noiseFactor(0.0);
+
+	auto annealingSettings = annealingSettingsBuilder.build();
+
+	annealingOptimizerSettings.setAnnealingSettings(annealingSettings);
+
+	AnnealingOptimizer optimizer{ annealingOptimizerSettings };
+
+	optimizer.setUp();
+
+	Fitter<AnnealingOptimizer> fitter{ optimizer };
+
+	auto result = fitter.fit(initialParameters, trueData, additionalParameters);
+
+	auto& params = result.getWrappedState().getParameters();
+
+	for (auto& param : params)
+	{
+		std::cout << param << std::endl;
+	}
+
+	std::cout << "Error: " << result.getWrappedState().getError() << std::endl;
+
 	return 0;
 }

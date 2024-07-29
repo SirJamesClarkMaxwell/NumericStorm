@@ -9,6 +9,9 @@ namespace NumericStorm::Fitting
 	{
 	public:
 		using SettingsT = typename SimplexOperationBase<parameter_size>::SettingsT;
+
+		Contraction() = default;
+
 		Contraction(const SettingsT& settings)
 			: SimplexOperationBase<parameter_size>{settings} {}
 	

@@ -11,6 +11,8 @@ namespace NumericStorm::Fitting
 	template<OptimizerStateWrapper WrappedState>
 	class AnnealingOptimizerResults : public StateWrapperBase<WrappedState> {
 	public:
+		AnnealingOptimizerResults() = default;
+
 		AnnealingOptimizerResults(const WrappedState& state)
 			: StateWrapperBase<WrappedState>{ state } {}
 	};

@@ -16,11 +16,19 @@ namespace NumericStorm::Fitting
 	public:
 		using CallbackType = std::function<void(SimplexPoint<parameter_size>&)>;
 	
+		SimplexPoint() = default;
+		SimplexPoint(const SimplexPoint<parameter_size>& other) = default;
+		SimplexPoint(SimplexPoint<parameter_size>&& other) = default;
+
+		SimplexPoint& operator=(const SimplexPoint<parameter_size>& other) = default;
+		SimplexPoint& operator=(SimplexPoint<parameter_size>&& other) = default;
+
 		SimplexPoint(const Parameters<parameter_size>& parameters)
 			: m_parameters{ parameters } {};
 	
 		virtual ~SimplexPoint() = default;
-		double getError() const { return m_error; }
+		double& getError() { return m_error; }
+		const double& getError() const { return m_error; }
 		void setError(double error) { m_error = error; }
 		bool hasCallback() const { return m_evalCallback != nullptr; }
 		auto& getCallback() const { return m_evalCallback; }
@@ -29,6 +37,10 @@ namespace NumericStorm::Fitting
 		Data& getData() { return m_data; }
 	
 		const auto& getParameters() const {
+			return m_parameters;
+		}
+
+		auto& getParameters() {
 			return m_parameters;
 		}
 	

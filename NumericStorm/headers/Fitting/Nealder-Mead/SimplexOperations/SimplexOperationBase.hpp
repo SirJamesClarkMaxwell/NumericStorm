@@ -13,6 +13,8 @@ public:
 	using enum BasicSimplexIndeciesEnum;
 	using SettingsT = typename VisitorOperationBase<SimplexOperationSettings<parameter_size>>::SettingsT;
 
+	SimplexOperationBase() = default;
+
 	SimplexOperationBase(const SettingsT& settings)
 		: VisitorOperationBase<SettingsT>{ settings } {}
 

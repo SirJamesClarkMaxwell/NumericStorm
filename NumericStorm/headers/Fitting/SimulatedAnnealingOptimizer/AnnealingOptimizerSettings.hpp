@@ -18,8 +18,8 @@ using namespace NumericStorm::Annealing;
 		static const int parameter_size = S::parameter_size;
 		using OptimizerInputT = S::OptimizerInputT;
 		using OptimizerStateT = AnnealingOptimizerState<typename S::OptimizerStateT>;
-		using OptimizerOutputT = AnnealingOptimizerResults;
-		using AuxilaryParametersT = typename S::AuxilaryParameters;
+		using OptimizerOutputT = AnnealingOptimizerResults<typename S::OptimizerOutputT>;
+		using AuxilaryParametersT = typename S::AuxilaryParametersT;
 
 		using AnnealingT = BasicSimulatedAnnealing;
 

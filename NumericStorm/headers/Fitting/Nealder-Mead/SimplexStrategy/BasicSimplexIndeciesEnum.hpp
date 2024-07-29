@@ -2,7 +2,7 @@
 
 namespace NumericStorm::Fitting {
 
-	enum  BasicSimplexIndeciesEnum {
+	enum  BasicSimplexIndeciesEnum : unsigned int {
 		Reflected = 0,
 		Expanded,
 		Contracted,

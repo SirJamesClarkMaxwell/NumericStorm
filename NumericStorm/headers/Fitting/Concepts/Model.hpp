@@ -15,7 +15,7 @@ namespace NumericStorm::Concepts {
 		Data & data,
 		const Parameters<M::parameter_size>&parameters,
 		const typename M::AuxParameters & auxParams) {
-		{ M::parameter_size } -> std::same_as<const size_t>;
+		{ M::parameter_size } -> std::convertible_to<const size_t>;
 		typename M::AuxParameters;
 		{ model(data, parameters, auxParams) } -> std::same_as<void>;
 	};

@@ -20,6 +20,9 @@ class BasicSimplexOptimizer : public SimplexOptimizerBase<Settings>
 public:
 	using SettingsT = Settings;
 	using AdapterT = AT;
+
+
+
 	BasicSimplexOptimizer(const SettingsT& settings)
 		: SimplexOptimizerBase<SettingsT>{ settings } {}
 
@@ -36,10 +39,12 @@ public:
 
 	bool checkStop(const typename SettingsT::OptimizerStateT& state) const
 	{
-		return state.getIteration() >= this->m_settings.getMaxIteration() || state.getBestPoint().getError() <= this->m_settings.getMinError();
+		return state.getIteration() > this->m_settings.getMaxIteration() 
+			|| (state.getBestPoint().getError() > -1 
+			&& state.getBestPoint().getError() < this->m_settings.getMinError());
 	}
 
-	typename SettingsT::OptimizerStateT setUpOptimization(const typename SettingsT::OptimizerInputT& input, const Data& data, const typename SettingsT::AuxParameters& additionalParameters)
+	typename SettingsT::OptimizerStateT setUpOptimization(const typename SettingsT::OptimizerInputT& input, const Data& data, const typename SettingsT::AuxilaryParametersT& additionalParameters)
 	{
 
 		SimplexPoint<SettingsT::parameter_size> inputPoint{ input };
@@ -57,11 +62,21 @@ public:
 
 	void oneStep(typename SettingsT::OptimizerStateT& state)
 	{
-		while (m_strategy(state))
+		do {
+			state.getSimplexFigure().sort();
 			m_simplexOperationVisitor.visit(state.getCurrentOperation(), state);
+		} while (m_strategy(state));
+
+		std::cout << state.getIteration() << " " << state.getBestPoint().getError() << std::endl;
+		for(auto& p : state.getBestPoint().getParameters())
+			std::cout << p << " ";
+		std::cout << std::endl;
+
+		state.getIteration()++;
+		
 	};
 
-	typename SettingsT::OptimizerOutputT getResult(const typename SettingsT::OpitmizerStateT& state) const
+	typename SettingsT::OptimizerOutputT getResults(const typename SettingsT::OptimizerStateT& state) const
 	{
 		typename SettingsT::OptimizerOutputT output{};
 		output.getParameters() = state.getBestPoint().getParameters();

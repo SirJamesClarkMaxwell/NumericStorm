@@ -25,7 +25,7 @@ namespace NumericStorm::Fitting
 	{
 	public:
 		static const size_t parameter_size = M::parameter_size;
-		using AuxilaryParameters = typename M::AuxilaryParameters;
+		using AuxilaryParametersT = typename M::AuxParameters;
 		using OptimizerInputT = Parameters<parameter_size>;
 		using OptimizerStateT = SimplexIntermediateState<parameter_size, BasicSimplexIndeciesEnum, BasicOperationsEnum>;
 		using OptimizerOutputT = SimplexOptimizationResults<parameter_size>;

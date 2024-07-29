@@ -15,6 +15,7 @@ namespace NumericStorm::Fitting {
 			: m_state{ state } {}
 
 		WrappedStateT& getWrappedState() { return m_state; }
+		const WrappedStateT& getWrappedState() const { return m_state; }
 
 	protected:
 		WrappedStateT m_state{};

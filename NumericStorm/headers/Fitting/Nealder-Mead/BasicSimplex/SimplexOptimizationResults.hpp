@@ -9,6 +9,8 @@ namespace NumericStorm::Fitting {
 	public:
 		using WrappedStateT = void;
 
+	SimplexOptimizationResults() = default;
+
 	auto& getParameters() { return m_parameters; }
 	const auto& getParameters() const { return m_parameters; }
 

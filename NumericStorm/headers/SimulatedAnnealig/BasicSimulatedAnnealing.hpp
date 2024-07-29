@@ -22,31 +22,37 @@ public:
 
 	template <SimulatedAnnealingState State>
 	void anneal(State& state) {
-		
-		std::for_each(state.getConfigurations().cbegin(), state.getConfigurations().cend() - state.getBackOffset(), [&](const std::vector<double*>& config, size_t index) {
+		size_t index{ 0 };
+		std::for_each(state.getConfigurations().cbegin(), state.getConfigurations().cend() - state.getBackOffset(), [&](const std::vector<double*>& config) {
+			
 			std::transform(config.cbegin(), config.cend() - state.getBackOffset(), state.getAnnealedConfigurations()[index].begin(), [&](const double* value) {
 				return this->fluctuate(*value);
 				});
+
+			index++;
 			});
 
-		std::for_each(state.getAnnealedConfigurations().cbegin(), state.getAnnealedConfigurations().cbegin() - state.getBackOffset(), [&](const std::vector<double>& config, size_t index) {
+		index = 0;
+
+		std::for_each(state.getAnnealedConfigurations().cbegin(), state.getAnnealedConfigurations().cend() - state.getBackOffset(), [&](const std::vector<double>& config) {
 			state.getAnnealedEnergies()[index] = state.getEnergy(config);
+			index++;
 			});
 
-		size_t index{ 0 };
-		for( auto& [newEnergy, oldEnergy] : std::views::zip(state.getAnnealedEnergies(), state.getEnergies())) {
+		index = 0;
+		for( auto [newEnergy, oldEnergy] : std::ranges::views::zip(state.getAnnealedEnergies(), state.getEnergies())) {
 			if(index >= m_settings.getNumberToAnneal()) break;
 
 			if(newEnergy < *oldEnergy) accept(state, index++);
-			else if(challenge(calculateProbability(&oldEnergy, newEnergy, state.getTemperature()))) accept(state, index++);
+			else if(challenge(calculateProbability(*oldEnergy, newEnergy, state.getTemperature()))) accept(state, index++);
 			else ++index;
 		}
 
-		updateTemperature(state.getTemperature());
+		
 	}
 
 	template <SimulatedAnnealingState State>
-	void setUp(const State& state) {
+	void setUp(State& state) {
 		state.getBackOffset() = state.getConfigurations().size() - m_settings.getNumberToAnneal();
 		if(state.getBackOffset() >= state.getConfigurations().size()) state.getBackOffset() = 0;
 
@@ -56,6 +62,8 @@ public:
 		std::for_each(state.getAnnealedConfigurations().begin(), state.getAnnealedConfigurations().end() - state.getBackOffset(), [&](std::vector<double>& config) {
 			config.resize(state.getConfigurations()[0].size());
 			});
+
+		state.getTemperature() = m_settings.getInitialTemp();
 	}
 
 private:
@@ -78,14 +86,19 @@ private:
 
 	template <SimulatedAnnealingState State>
 	void accept(State& state, size_t index) {
-		std::for_each(state.getConfigurations()[index].begin(), state.getConfigurations()[index].end() - state.getBackOffset(), [&](double* value, size_t i) {
-			*value = state.getAnnealedConfigurations()[index][i];
+		size_t i{ 0 };
+
+		std::for_each(state.getConfigurations()[index].begin(), state.getConfigurations()[index].end() - state.getBackOffset(), [&](double* value) {
+			*value = state.getAnnealedConfigurations()[index][i++];
 			});
 
-		std::for_each(state.getEnergies().begin(), state.getEnergies().end() - state.getBackOffset(), [&](double* value, size_t i) {
-			*value = state.getAnnealedEnergies()[i];
+		i = 0;
+
+		std::for_each(state.getEnergies().begin(), state.getEnergies().end() - state.getBackOffset(), [&](double* value) {
+			*value = state.getAnnealedEnergies()[i++];
 			});
 
+		updateTemperature(state.getTemperature());
 	}
 
 private:

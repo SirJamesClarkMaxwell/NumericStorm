@@ -12,6 +12,7 @@ namespace NumericStorm::Fitting
 	template<class DerivedSettings>
 	class SimplexOptimizerBase
 	{
+	public:
 		SimplexOptimizerBase(const DerivedSettings& settings)
 			: m_settings{ settings } {}
 
@@ -20,7 +21,7 @@ namespace NumericStorm::Fitting
 			return m_settings;
 		}
 
-	private:
+	protected:
 		DerivedSettings m_settings;
 	};
 

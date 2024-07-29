@@ -11,6 +11,8 @@ using namespace NumericStorm::Concepts;
 	public:
 		using SettingsT = Settings;
 	
+		VisitorOperationBase() = default;
+
 		VisitorOperationBase(const SettingsT& settings)
 			: m_settings(settings) {}
 	

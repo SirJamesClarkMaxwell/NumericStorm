@@ -9,11 +9,8 @@ class Data
 {
 public:
 	Data() = default;
-	Data(unsigned int dimension) { m_data.resize(dimension); };
-	Data(const Data&) = default;
-	Data(Data&&) = default;
-	Data& operator=(const Data&) = default;
-	Data& operator=(Data&&) = default;
+	Data(size_t dimension) { m_data.resize(dimension); };
+
 	std::vector<double>& operator[](size_t index) {
 		return m_data.at(index);
 	};

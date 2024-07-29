@@ -11,6 +11,9 @@ namespace Fitting
 	{
 	public:
 		using SettingsT = typename SimplexOperationBase<parameter_size>::SettingsT;
+
+		Expansion() = default;
+
 		Expansion(const SettingsT& settings)
 			: SimplexOperationBase<parameter_size>{settings} {}
 	

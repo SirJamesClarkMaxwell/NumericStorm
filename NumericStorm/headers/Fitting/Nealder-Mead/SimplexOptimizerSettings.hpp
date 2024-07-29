@@ -16,7 +16,7 @@ using namespace NumericStorm::Concepts;
 	
 		virtual ~SimplexOptimizerSettings() = default;
 	
-		const M& getFunctionModel() const { return m_functionModel; };
+		const M& getModel() const { return m_functionModel; };
 		const ErrorModel& getErrorModel() const { return m_errorModel; }
 		double getMinError() const { return m_minError; }
 		long int getMaxIteration() const { return m_maxIteration; }

@@ -9,7 +9,7 @@ namespace NumericStorm::Concepts {
         typename St::OptimizerStateT;
         typename St::OptimizerOutputT;
         typename St::AuxilaryParametersT;
-        { St::parameter_size } -> std::same_as<const size_t>;
+        { St::parameter_size } -> std::convertible_to<const size_t>;
     
         requires OptimizerStateWrapper<typename St::OptimizerStateT>;
         requires OptimizerStateWrapper<typename St::OptimizerOutputT>;

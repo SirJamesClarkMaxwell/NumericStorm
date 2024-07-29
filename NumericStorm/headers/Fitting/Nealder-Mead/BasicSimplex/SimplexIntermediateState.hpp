@@ -49,7 +49,7 @@ namespace NumericStorm::Fitting
         WrappedStateT getWrappedState() const {}
     
     protected:
-        OperationEnum m_operation{ OperationEnum::Reflection };
+        OperationEnum m_operation{ OperationEnum::Reflect };
         SimplexFigure<parameter_size> m_simplexFigure{};
         std::vector<SimplexPoint<parameter_size>> m_intermediatePoints{};
         long int m_iteration{ 0 };

@@ -19,6 +19,8 @@ public:
     using SettingsT = typename VisitorOperationBase<SimplexStrategySettings<parameter_size>>::SettingsT;
    using Operations = typename SettingsT::operation_l::operations_e;
    
+   BasicSimplexStrategy() = default;
+
     BasicSimplexStrategy(const SettingsT& settings)
         : VisitorOperationBase<SettingsT>{settings} {}
 
@@ -45,7 +47,7 @@ public:
             break;
         case Operations::Expand:
             if (expansionDecision(state))
-                state.getWorstPopint() = state[Expanded];
+                state.getWorstPoint() = state[Expanded];
             else
                 state.getWorstPoint() = state[Reflected];
 
@@ -63,14 +65,14 @@ public:
             break;
         case Operations::Shrink:
 
-            return reset();
+            return reset(state);
             break;
         default:
             break;
         }
     }
 
-    bool reset(typename SettingsT::In& state) { state.getCurrentOperation = Operations::Reflect; return false; }
+    bool reset(typename SettingsT::In& state) { state.getCurrentOperation() = Operations::Reflect; return false; }
 private:
 
     bool contractionDecision(const typename SettingsT::In& state) const

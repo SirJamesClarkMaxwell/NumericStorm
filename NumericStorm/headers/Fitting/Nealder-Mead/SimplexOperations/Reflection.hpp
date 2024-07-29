@@ -8,6 +8,9 @@ namespace NumericStorm::Fitting
 	{
 	public:
 		using SettingsT = typename SimplexOperationBase<parameter_size>::SettingsT;
+
+		Reflection() = default;
+
 		Reflection(const SettingsT& settings)
 			: SimplexOperationBase<parameter_size>{settings} {};
 	
