@@ -86,7 +86,7 @@ public:
 	};
 
 
-private:
+protected:
 	BasicSimplexStrategy<SettingsT::parameter_size> m_strategy{};
 	BasicSimplexCreator<SettingsT::parameter_size> m_simplexCreator{};
 	SimplexOperationVisitor<SettingsT::parameter_size, typename SimplexStrategySettings<SettingsT::parameter_size>::operation_l> m_simplexOperationVisitor{};

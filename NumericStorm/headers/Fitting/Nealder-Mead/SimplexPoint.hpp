@@ -6,7 +6,7 @@
 #include <utility>
 
 #include "Parameters.hpp"
-#include "Data.hpp"
+#include "../Data.hpp"
 
 
 namespace NumericStorm::Fitting

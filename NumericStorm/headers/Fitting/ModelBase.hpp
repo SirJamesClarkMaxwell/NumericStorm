@@ -19,6 +19,7 @@ public:
     using AuxParameters = AuxilaryParameters;
     using ModelFunction = std::function<void(Data&, const Parameters<parameter_size>&, const AuxParameters&)>;
     
+    ModelBase() = default;
 
     ModelBase(const ModelFunction& model)
         : m_model{ model } {};
