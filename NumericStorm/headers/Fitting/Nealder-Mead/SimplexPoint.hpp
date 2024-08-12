@@ -101,6 +101,7 @@ namespace NumericStorm::Fitting
 		SimplexPoint<parameter_size>& operator-=(const SimplexPoint<parameter_size>& other) {
 			for (auto [a, b] : std::ranges::views::zip(m_parameters, other.m_parameters)) {
 				a -= b;
+				//a = std::abs(a);
 			}
 			return *this;
 		}

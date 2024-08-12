@@ -62,15 +62,11 @@ public:
 
 	void oneStep(typename SettingsT::OptimizerStateT& state)
 	{
+		state.getSimplexFigure().sort();
 		do {
-			state.getSimplexFigure().sort();
 			m_simplexOperationVisitor.visit(state.getCurrentOperation(), state);
 		} while (m_strategy(state));
 
-		std::cout << state.getIteration() << " " << state.getBestPoint().getError() << std::endl;
-		for(auto& p : state.getBestPoint().getParameters())
-			std::cout << p << " ";
-		std::cout << std::endl;
 
 		state.getIteration()++;
 		

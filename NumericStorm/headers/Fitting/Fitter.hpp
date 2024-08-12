@@ -7,6 +7,7 @@ namespace NumericStorm::Fitting {
 using namespace NumericStorm::Concepts;
 
 
+	
 
 	template<Optimizer OptimizerT>
 	class Fitter

@@ -13,6 +13,8 @@ namespace NumericStorm::Fitting
     {
     public:
         using WrappedStateT = void;
+
+        SimplexIntermediateState() = default;
     
         SimplexIntermediateState(const SimplexFigure<parameter_size>& simplexFigure, IndeciesEnum pCount)
             : m_simplexFigure{ simplexFigure }, m_intermediatePoints{ pCount, simplexFigure[parameter_size] } {}

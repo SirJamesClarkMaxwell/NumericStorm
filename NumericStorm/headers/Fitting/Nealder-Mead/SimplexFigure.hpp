@@ -14,6 +14,8 @@ template<size_t parameter_size>
 class SimplexFigure {
 public:
 
+	SimplexFigure() = default;
+
 	SimplexFigure(const std::array<SimplexPoint<parameter_size>, parameter_size + 1>& points)
 		: m_points{ points }, m_centroid{ calculateCentroid() } {}
 
@@ -61,7 +63,7 @@ public:
 
 
 protected:
-	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points;
+	std::array<SimplexPoint<parameter_size>, parameter_size + 1> m_points{};
 	SimplexPoint<parameter_size> m_centroid{};
 	bool m_centroid_valid{ false };
 	bool m_sorted{ false };
@@ -74,11 +76,11 @@ public:
 		auto start = m_points.begin() + 1;
 		auto end = m_points.end();
 
-		SimplexPoint<parameter_size> base_point{};
-		base_point.getData() = start->getData();
-		base_point.onEvaluate(start->getCallback());
+		SimplexPoint<parameter_size> base_point{*start};
+		//base_point.getData() = start->getData();
+		//base_point.onEvaluate(start->getCallback());
 
-		SimplexPoint<parameter_size> centroid = std::accumulate(start, end, base_point);
+		SimplexPoint<parameter_size> centroid = std::accumulate(start + 2, end, base_point);
 		centroid /= parameter_size;
 
 		return centroid;
