@@ -48,7 +48,7 @@ public:
 
 
 		if (reverse) std::sort(m_points.begin(), m_points.end(), std::greater<>{});
-		else std::sort(m_points.begin(), m_points.end(), std::less_equal<>());
+		else std::sort(m_points.begin(), m_points.end(), std::less<>());
 
 	}
 
@@ -76,11 +76,11 @@ public:
 		auto start = m_points.begin() + 1;
 		auto end = m_points.end();
 
-		SimplexPoint<parameter_size> base_point{*start};
-		//base_point.getData() = start->getData();
-		//base_point.onEvaluate(start->getCallback());
+		SimplexPoint<parameter_size> base_point{};
+		base_point.getData() = start->getData();
+		base_point.onEvaluate(start->getCallback());
 
-		SimplexPoint<parameter_size> centroid = std::accumulate(start + 2, end, base_point);
+		SimplexPoint<parameter_size> centroid = std::accumulate(start, end, base_point);
 		centroid /= parameter_size;
 
 		return centroid;

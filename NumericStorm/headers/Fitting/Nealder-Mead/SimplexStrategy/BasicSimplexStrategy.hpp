@@ -85,7 +85,7 @@ private:
     }
     bool expansionCondition(const typename SettingsT::In& state) const
     {
-        return state[Reflected] < state.getBestPoint();
+        return state[Reflected] < state.getWorstPoint();
     }
     bool reflectionDecision(const typename SettingsT::In& state) const
     {

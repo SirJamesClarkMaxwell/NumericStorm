@@ -41,7 +41,7 @@ namespace NumericStorm::Fitting
 			const auto& reflectedPoint = state[Reflected];
 			const auto& worst = state.getWorstPoint();
 	
-			return (reflectedPoint <= worst) ? reflectedPoint : worst;
+			return (reflectedPoint < worst) ? reflectedPoint : worst;
 		}
 	};
 
