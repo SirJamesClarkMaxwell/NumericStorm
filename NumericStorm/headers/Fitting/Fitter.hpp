@@ -2,6 +2,10 @@
 
 #include "Optimizer.hpp"
 
+
+extern std::vector<std::vector<double>> globalErrors;
+
+
 namespace NumericStorm::Fitting {
 
 using namespace NumericStorm::Concepts;
@@ -18,11 +22,14 @@ using namespace NumericStorm::Concepts;
 	
 		typename OptimizerT::SettingsT::OptimizerOutputT fit(const typename OptimizerT::SettingsT::OptimizerInputT& initialParameters, const Data& fittingData,
 			const typename OptimizerT::SettingsT::AuxilaryParametersT& additionalParameters) {
-
+			std::vector<double> errors{};
 			auto state = m_optimizer.setUpOptimization(initialParameters, fittingData, additionalParameters);
 			while (!m_optimizer.checkStop(state)) {
 				m_optimizer.oneStep(state);
+				errors.push_back(state.getBestPoint().getError());
 			}
+
+			globalErrors.push_back(errors);
 				
 
 			/*if (m_calculateUncertainty)
