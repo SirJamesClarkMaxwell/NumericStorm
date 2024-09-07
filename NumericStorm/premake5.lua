@@ -1,5 +1,5 @@
 project "NumericStorm"
-	kind "StaticLib"
+	kind "None"
 	language "C++"
 	cppdialect "c++latest"
 	location "%{wks.location}/NumericStorm"
