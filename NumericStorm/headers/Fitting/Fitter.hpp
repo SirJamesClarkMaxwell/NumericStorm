@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Optimizer.hpp"
+#include <mutex>
 
 
-extern std::vector<std::vector<double>> globalErrors;
 
-
+static std::mutex g_ErrorMutex;
 namespace NumericStorm::Fitting {
 
 using namespace NumericStorm::Concepts;
@@ -28,9 +28,9 @@ using namespace NumericStorm::Concepts;
 				m_optimizer.oneStep(state);
 				errors.push_back(state.getBestPoint().getError());
 			}
-
-			globalErrors.push_back(errors);
-				
+			g_ErrorMutex.lock();
+			//globalErrors.push_back(errors);
+			g_ErrorMutex.unlock();
 
 			/*if (m_calculateUncertainty)
 				std::vector<std::vector<double>> uncertainty = m_uncertaintyCalculator(m_optimizer.getResults());*/
