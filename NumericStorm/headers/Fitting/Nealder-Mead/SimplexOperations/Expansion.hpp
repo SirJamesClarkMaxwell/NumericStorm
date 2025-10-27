@@ -30,7 +30,6 @@ namespace Fitting
 			expanded = centroid + (reflected - centroid) * gamma;
 	#endif
 			expanded.evaluatePoint();
-			JFM_Trace();
 		}
 	};
 } // namespace Fitting

@@ -28,7 +28,6 @@ namespace NumericStorm::Fitting
 			reflected = centroid + (centroid - wPoint) * alpha;
 #		endif
 			reflected.evaluatePoint();
-			JFM_Trace();
 		}
 	};
 } // namespace NumericStorm::Fitting

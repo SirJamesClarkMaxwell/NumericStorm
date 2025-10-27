@@ -28,7 +28,6 @@ namespace NumericStorm::Fitting
 					shrunk = bestPoint + (shrunk - bestPoint) * delta;
 					shrunk.evaluatePoint();
 				});
-			JFM_Trace();
 		}
 	};
 } // namespace NumericStorm::Fitting
