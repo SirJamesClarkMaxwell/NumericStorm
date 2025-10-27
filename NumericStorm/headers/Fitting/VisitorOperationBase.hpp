@@ -10,24 +10,26 @@ using namespace NumericStorm::Concepts;
 	{
 	public:
 		using SettingsT = Settings;
-	
+
 		VisitorOperationBase() = default;
 
 		VisitorOperationBase(const SettingsT& settings)
 			: m_settings(settings) {}
-	
+
 		void updateSettings(const SettingsT& settings)
 		{
 			m_settings = settings;
 		}
-	
+
 		const SettingsT& getSettings() const
 		{
 			return m_settings;
 		}
-	
+
 		virtual ~VisitorOperationBase() = default;
-	
+
+		virtual SettingsT::Out operator()(typename SettingsT::In& state) {  }
+
 	protected:
 		SettingsT m_settings{};
 	};
