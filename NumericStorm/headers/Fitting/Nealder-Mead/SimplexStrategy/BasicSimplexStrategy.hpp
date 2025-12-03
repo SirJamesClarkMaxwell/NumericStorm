@@ -70,6 +70,7 @@ public:
         default:
             break;
         }
+        Unreachable();
     }
 
     bool reset(typename SettingsT::In& state) { state.getCurrentOperation() = Operations::Reflect; return false; }
