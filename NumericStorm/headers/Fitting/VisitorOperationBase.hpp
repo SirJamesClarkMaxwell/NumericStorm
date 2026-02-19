@@ -28,12 +28,7 @@ using namespace NumericStorm::Concepts;
 
 		virtual ~VisitorOperationBase() = default;
 
-		virtual SettingsT::Out operator()(typename SettingsT::In& state) {
-            if constexpr (std::is_same_v<typename Settings::Out, void>)
-                {  }
-            else
-                return typename SettingsT::Out {};
-        }
+		virtual SettingsT::Out operator()(typename SettingsT::In& state) {  }
 
 	protected:
 		SettingsT m_settings{};
