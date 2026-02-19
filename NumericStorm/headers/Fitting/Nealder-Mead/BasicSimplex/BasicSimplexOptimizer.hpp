@@ -39,8 +39,8 @@ public:
 
 	bool checkStop(const typename SettingsT::OptimizerStateT& state) const
 	{
-		return state.getIteration() > this->m_settings.getMaxIteration()
-			|| (state.getBestPoint().getError() > -1
+		return state.getIteration() > this->m_settings.getMaxIteration() 
+			|| (state.getBestPoint().getError() > -1 
 			&& state.getBestPoint().getError() < this->m_settings.getMinError());
 	}
 
@@ -67,7 +67,9 @@ public:
 			m_simplexOperationVisitor.visit(state.getCurrentOperation(), state);
 		} while (m_strategy(state));
 
+
 		state.getIteration()++;
+		
 	};
 
 	typename SettingsT::OptimizerOutputT getResults(const typename SettingsT::OptimizerStateT& state) const

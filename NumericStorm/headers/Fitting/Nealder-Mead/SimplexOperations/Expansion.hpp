@@ -5,6 +5,7 @@ namespace NumericStorm
 {
 namespace Fitting
 {
+
 	template <size_t parameter_size>
 	class Expansion : public SimplexOperationBase<parameter_size>
 	{
@@ -15,12 +16,13 @@ namespace Fitting
 
 		Expansion(const SettingsT& settings)
 			: SimplexOperationBase<parameter_size>{settings} {}
-
-		typename SettingsT::Out operator()(typename SettingsT::In& state) override
+	
+		typename SettingsT::Out operator()(typename SettingsT::In& state)
 		{
 			const SimplexPoint<parameter_size>& centroid = state.getSimplexFigure().getCentroid();
 			const SimplexPoint<parameter_size>& reflected = state[Reflected];
 			SimplexPoint<parameter_size>& expanded = state[Expanded];
+			
 			double gamma = this->getSettings().getFactor();
 	#if DEBUG
 			auto difference = reflected - centroid;
@@ -30,8 +32,9 @@ namespace Fitting
 			expanded = centroid + (reflected - centroid) * gamma;
 	#endif
 			expanded.evaluatePoint();
-			JFM_Trace();
 		}
+	
 	};
-} // namespace Fitting
-} // namespace NumericStorm
+
+}
+}
