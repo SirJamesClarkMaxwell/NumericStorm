@@ -16,13 +16,8 @@ namespace NumericStorm::Utils
 	template<class Head, class... Tail>
 	struct pop_front<type_list<Head, Tail...>>
 	{
-#if !defined(JFM_PLATFORM_NIX)
 		using out = typename Head;
 		using type = typename type_list<Tail...>;
-#else
-		using out = Head;
-		using type = type_list<Tail...>;
-#endif
 	};
 
 	template<>

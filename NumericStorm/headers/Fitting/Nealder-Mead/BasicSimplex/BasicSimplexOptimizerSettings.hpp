@@ -57,13 +57,11 @@ namespace NumericStorm::Fitting
 		friend class BasicSimplexOptimizerSettingsBuilderBase;
 		friend class BasicSimplexSettingsBuilder;
 	
+	protected:
+		
 	
 		template<class BuildingType, OptimizerSettings Settings>
-#ifdef __clang__
-		class BasicSimplexOptimizerSettingsBuilderBase : public SimplexOptimizerSettings<M>::template SimplexOptimizerSettingsBuilderBase<BuildingType, Settings> {
-#else
 		class BasicSimplexOptimizerSettingsBuilderBase : public SimplexOptimizerSettings<M>::SimplexOptimizerSettingsBuilderBase<BuildingType, Settings> {
-#endif
 		public:
 
 			BuildingType& addOperationSettings(const SettingsPair& settings)
