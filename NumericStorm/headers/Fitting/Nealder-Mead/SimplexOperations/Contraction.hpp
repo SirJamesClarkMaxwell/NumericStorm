@@ -30,6 +30,7 @@ namespace NumericStorm::Fitting
 			contracted = centroid + (pointToContractAround - centroid) * beta;
 #		endif
 			contracted.evaluatePoint();
+			JFM_Trace();
 		}
 
 	private:
